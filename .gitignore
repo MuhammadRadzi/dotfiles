@@ -1,1 +1,6 @@
-assets/
+hypr/assets/**
+
+!hypr/assets/thumbnails/
+hypr/assets/thumbnails/*
+
+!hypr/assets/thumbnails/.gitkeep
