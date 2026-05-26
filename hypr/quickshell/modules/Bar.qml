@@ -39,7 +39,7 @@ PanelWindow {
                 WallpaperSelector {
                     id: ws
                 }
-
+                
                 Rectangle {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
@@ -140,8 +140,8 @@ PanelWindow {
 
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    implicitWidth: rightRow.implicitWidth + 20
-                    implicitHeight: rightRow.implicitHeight + 25
+                    implicitWidth: rightRow.implicitWidth + 18
+                    implicitHeight: rightRow.implicitHeight + -5
                     radius: 8
                     color: ccMouseArea.containsMouse ? "#22ffffff" : "transparent"
 
@@ -150,6 +150,9 @@ PanelWindow {
 
                         anchors.centerIn: parent
                         spacing: 10
+
+                        SystemGraph {
+                        }
 
                         Weather {
                         }
