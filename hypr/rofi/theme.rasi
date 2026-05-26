@@ -1,0 +1,83 @@
+* {
+    bg:         rgba(13, 13, 13, 0.92);
+    bg-alt:     rgba(26, 26, 26, 1);
+    fg:         rgba(224, 224, 224, 1);
+    fg-alt:     rgba(136, 136, 136, 1);
+    accent:     rgba(255, 255, 255, 1);
+    border:     rgba(51, 51, 51, 1);
+    selected:   rgba(38, 38, 38, 1);
+
+    font:               "JetBrainsMono Nerd Font 12";
+    background-color:   transparent;
+    text-color:         @fg;
+}
+
+window {
+    background-color:   @bg;
+    border:             1px;
+    border-color:       @border;
+    border-radius:      12px;
+    width:              520px;
+    padding:            0;
+}
+
+mainbox {
+    background-color:   transparent;
+    children:           [ inputbar, listview ];
+    spacing:            0;
+    padding:            12px;
+}
+
+inputbar {
+    background-color:   @bg-alt;
+    border-radius:      8px;
+    padding:            10px 14px;
+    margin:             0 0 10px 0;
+    children:           [ prompt, entry ];
+    spacing:            8px;
+}
+
+prompt {
+    background-color:   transparent;
+    text-color:         @accent;
+    font:               "JetBrainsMono Nerd Font Bold 12";
+}
+
+entry {
+    background-color:   transparent;
+    text-color:         @fg;
+    placeholder:        "Search...";
+    placeholder-color:  @fg-alt;
+}
+
+listview {
+    background-color:   transparent;
+    columns:            1;
+    lines:              8;
+    spacing:            4px;
+    scrollbar:          false;
+}
+
+element {
+    background-color:   transparent;
+    border-radius:      6px;
+    padding:            8px 10px;
+    spacing:            10px;
+    children:           [ element-icon, element-text ];
+}
+
+element selected {
+    background-color:   @selected;
+    text-color:         @accent;
+}
+
+element-icon {
+    background-color:   transparent;
+    size:               24px;
+}
+
+element-text {
+    background-color:   transparent;
+    text-color:         inherit;
+    vertical-align:     0.5;
+}
