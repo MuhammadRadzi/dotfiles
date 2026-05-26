@@ -1,0 +1,17 @@
+Bar 1.0 Bar.qml
+Workspaces 1.0 Workspaces.qml
+Clock 1.0 Clock.qml
+SysTray 1.0 SysTray.qml
+Battery 1.0 Battery.qml
+Volume 1.0 Volume.qml
+Network 1.0 Network.qml
+ResourceMonitor 1.0 ResourceMonitor.qml
+MediaPlayer 1.0 MediaPlayer.qml
+Weather 1.0 Weather.qml
+VolumeSlider 1.0 VolumeSlider.qml
+BrightnessSlider 1.0 BrightnessSlider.qml
+NetworkList 1.0 NetworkList.qml
+BatteryDetail 1.0 BatteryDetail.qml
+ControlCenter 1.0 ControlCenter.qml
+CalendarPopup 1.0 CalendarPopup.qml
+WallpaperSelector 1.0 WallpaperSelector.qml

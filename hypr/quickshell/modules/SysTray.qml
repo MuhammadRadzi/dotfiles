@@ -16,14 +16,21 @@ Item {
         Repeater {
             model: SystemTray.items
 
-            Image {
-                source: modelData.icon
-                width: 16
-                height: 16
+            Item {
+                width: 18
+                height: 18
+
+                Image {
+                    anchors.fill: parent
+                    source: modelData.icon
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                }
 
                 MouseArea {
                     anchors.fill: parent
                     onClicked: modelData.activate()
+                    cursorShape: Qt.PointingHandCursor
                 }
             }
         }
