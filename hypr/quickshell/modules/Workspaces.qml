@@ -2,44 +2,46 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import "../theme"
 
-Item {
-    implicitWidth: row.implicitWidth
-    implicitHeight: parent.height
+RowLayout {
+    spacing: 8
 
-    RowLayout {
-        id: row
-        anchors.centerIn: parent
-        spacing: 5
+    Repeater {
+        model: Hyprland.workspaces
 
-        Repeater {
-            model: 9
+        delegate: Rectangle {
+            required property var modelData
 
-            Rectangle {
-                property var ws: Hyprland.workspaces.values.find(w => w.id === index + 1)
-                property bool isActive: Hyprland.focusedWorkspace?.id === (index + 1)
-                property bool hasWindows: ws !== undefined
+            readonly property bool active:
+                Hyprland.focusedWorkspace?.id === modelData.id
 
-                width: isActive ? 28 : 10
-                height: 10
-                radius: 5
+            implicitWidth: active ? 34 : 12
+            implicitHeight: 12
 
-                color: isActive    ? Colors.accent
-                     : hasWindows  ? "#555555"
-                     :               "#2a2a2a"
+            radius: 999
 
-                Behavior on width {
-                    NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+            color: active ? "#f2f2f2" : "#44ffffff"
+
+            Behavior on implicitWidth {
+                NumberAnimation {
+                    duration: 180
+                    easing.type: Easing.OutCubic
                 }
-                Behavior on color {
-                    ColorAnimation { duration: 180 }
-                }
+            }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: Hyprland.dispatch("workspace " + (index + 1))
-                    cursorShape: Qt.PointingHandCursor
+            Behavior on color {
+                ColorAnimation {
+                    duration: 160
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    Hyprland.dispatch(
+                        "workspace " + modelData.id
+                    )
                 }
             }
         }

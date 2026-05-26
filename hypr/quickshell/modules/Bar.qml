@@ -1,61 +1,110 @@
 import QtQuick
 import QtQuick.Layouts
+
 import Quickshell
 import Quickshell.Wayland
-import "../theme"
 
 PanelWindow {
     id: root
-    anchors.top: true
-    anchors.left: true
-    anchors.right: true
-    height: 40
-    color: Colors.base
 
-    Item {
+    anchors {
+        top: true
+        left: true
+        right: true
+    }
+
+    implicitHeight: 56
+
+    color: "transparent"
+
+    Rectangle {
         anchors.fill: parent
+        anchors.margins: 8
+
+        radius: 18
+
+        color: "#d916181c"
+
+        border.width: 1
+        border.color: "#22ffffff"
 
         RowLayout {
             anchors.fill: parent
+
             anchors.leftMargin: 16
             anchors.rightMargin: 16
-            spacing: 0
+            anchors.topMargin: 8
+            anchors.bottomMargin: 8
 
-            // === KIRI ===
-            Workspaces {}
+            // =========================
+            // LEFT
+            // =========================
 
-            // === TENGAH ===
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
 
-            RowLayout {
-                spacing: 12
-                MediaPlayer {}
-                Clock {}
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    implicitWidth: leftRow.implicitWidth + 20
+
+                    RowLayout {
+                        id: leftRow
+
+                        anchors.centerIn: parent
+                        spacing: 6
+
+                        Workspaces {}
+                    }
+                }
             }
 
-            Item { Layout.fillWidth: true }
+            // =========================
+            // CENTER
+            // =========================
 
-            // === KANAN ===
-            RowLayout {
-                spacing: 0
+            Item {
+                Layout.fillWidth: true
 
-                Weather {}
+                RowLayout {
+                    id: centerRow
 
-                Rectangle { width: 1; height: 14; color: Colors.overlay; Layout.leftMargin: 8; Layout.rightMargin: 8 }
+                    anchors.centerIn: parent
+                    spacing: 10
 
-                ResourceMonitor {}
+                    MediaPlayer {}
+                    Clock {}
+                    
+                }
+            }
 
-                Rectangle { width: 1; height: 14; color: Colors.overlay; Layout.leftMargin: 8; Layout.rightMargin: 8 }
+            // =========================
+            // RIGHT
+            // =========================
 
-                Network {}
-                Item { Layout.preferredWidth: 10 }
-                Volume {}
-                Item { Layout.preferredWidth: 10 }
-                Battery {}
+            Item {
+                Layout.fillWidth: true
 
-                Rectangle { width: 1; height: 14; color: Colors.overlay; Layout.leftMargin: 8; Layout.rightMargin: 8 }
+                Rectangle {
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
 
-                SysTray {}
+                    implicitWidth: rightRow.implicitWidth + 20
+
+                    RowLayout {
+                        id: rightRow
+
+                        anchors.centerIn: parent
+                        spacing: 10
+
+                        Weather {}
+                        Network {}
+                        Volume {}
+                        Battery {}
+                        SysTray {}
+                    }
+                }
             }
         }
     }
