@@ -1,83 +1,68 @@
 [global]
     monitor = 0
     follow = mouse
-    width = 320
-    height = 120
+
+    width = 340
+    height = 300
+
     origin = top-right
     offset = 10x10
+
     scale = 0
-    notification_limit = 5
+
+    notification_limit = 8
 
     progress_bar = true
-    progress_bar_height = 4
+    progress_bar_height = 6
     progress_bar_frame_width = 0
-    progress_bar_min_width = 150
-    progress_bar_max_width = 300
 
-    indicate_hidden = yes
-    transparency = 10
-    separator_height = 1
-    padding = 12
-    horizontal_padding = 14
-    text_icon_padding = 10
+    transparency = 0
+
+    corner_radius = 18
+
+    padding = 16
+    horizontal_padding = 16
+    text_icon_padding = 12
+
+    gap_size = 10
+
+    separator_height = 0
+
     frame_width = 1
-    frame_color = "#333333"
-    separator_color = "#333333"
-    sort = yes
-    idle_threshold = 120
+    frame_color = "#ffffff12"
 
     font = JetBrainsMono Nerd Font 11
-    line_height = 4
+
+    line_height = 6
+
     markup = full
     format = "<b>%s</b>\n%b"
+
     alignment = left
     vertical_alignment = center
-    show_age_threshold = 60
-    ellipsize = middle
-    ignore_newline = no
-    stack_duplicates = true
-    hide_duplicate_count = false
-    show_indicators = yes
 
-    icon_theme = Papirus-Dark
-    enable_recursive_icon_lookup = true
+    icon_corner_radius = 12
     icon_position = left
-    min_icon_size = 32
-    max_icon_size = 48
+    min_icon_size = 42
+    max_icon_size = 56
 
-    sticky_history = yes
-    history_length = 20
-
-    browser = firefox
-    always_run_script = true
-    title = Dunst
-    class = Dunst
-    corner_radius = 10
-    ignore_dbusclose = false
-    force_xwayland = false
-    force_xinerama = false
     mouse_left_click = close_current
-    mouse_middle_click = do_action, close_current
+    mouse_middle_click = do_action
     mouse_right_click = close_all
 
-[experimental]
-    per_monitor_dpi = false
-
 [urgency_low]
-    background = "#0d0d0dcc"
-    foreground = "#e0e0e0"
-    frame_color = "#2a2a2a"
+    background = "#101217ee"
+    foreground = "#f5f7fa"
     timeout = 4
-    icon = dialog-information
 
 [urgency_normal]
-    background = "#0d0d0dcc"
-    foreground = "#e0e0e0"
-    frame_color = "#333333"
+    background = "#12141af2"
+    foreground = "#f5f7fa"
+    frame_color = "#ffffff10"
     timeout = 6
 
 [urgency_critical]
-    background = "#0d0d0dcc"
-    foreground = "#ffffff"
-    frame_color = "#ff5555"
+    background = "#1b1b22ee"
+    foreground = "#ffb4b4"
+    frame_color = "#ff808044"
     timeout = 0
