@@ -16,6 +16,7 @@ ShellRoot {
     WallpaperSelector { id: ws }
     NotificationCenter { id: nc }
     KeybindCheatsheet { id: ks }
+    OSD { id: osd }
 
     CalendarPopup {
         id: cal
@@ -42,5 +43,17 @@ ShellRoot {
     IpcHandler {
         target: "toggle-cheatsheet"
         function handle(): void { ks.isOpen = !ks.isOpen }
+    }
+    IpcHandler {
+        target: "show-volume-osd"
+        function handle(val: int, muted: bool): void {
+            osd.showVolume(val, muted)
+        }
+    }
+    IpcHandler {
+        target: "show-brightness-osd"
+        function handle(val: int): void {
+            osd.showBrightness(val)
+        }
     }
 }

@@ -35,7 +35,7 @@ PanelWindow {
             width: 360
             height: contentCol.implicitHeight + 48
             radius: 20
-            color: "#e6161920"
+            color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"
 

@@ -19,3 +19,4 @@ SystemGraph 1.0 SystemGraph.qml
 NotificationCenter 1.0 NotificationCenter.qml
 PowerMenu 1.0 PowerMenu.qml
 KeybindCheatsheet 1.0 KeybindCheatsheet.qml
+OSD 1.0 OSD.qml
