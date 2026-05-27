@@ -44,7 +44,7 @@ PanelWindow {
             width: 360
             height: Math.min(notifCol.implicitHeight + 32, 600)
             radius: 16
-            color: "#e6161920"
+            color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"
             clip: true

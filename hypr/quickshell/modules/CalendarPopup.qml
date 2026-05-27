@@ -33,7 +33,7 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: "#e6161920"
+        color: "#d916181c"
         border.width: 1
         border.color: "#22ffffff"
 
@@ -51,7 +51,8 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
                 text: Qt.formatTime(now, "HH:mm:ss")
                 color: Colors.text
                 font.pixelSize: 48
-                font.family: "JetBrainsMono Nerd Font Bold"
+                font.family: "JetBrainsMono Nerd Font"
+                font.bold: true
             }
 
             Text {
@@ -81,7 +82,7 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
                     Layout.fillWidth: true
 
                     Text {
-                        text: "󰔠"
+                        text: ""
                         color: Colors.subtle
                         font.pixelSize: 14
                         font.family: "JetBrainsMono Nerd Font"
@@ -113,7 +114,7 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
                     Item { Layout.fillWidth: true }
 
                     Text {
-                        text: "󰔟"
+                        text: ""
                         color: Colors.subtle
                         font.pixelSize: 14
                         font.family: "JetBrainsMono Nerd Font"
@@ -131,7 +132,7 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
                     }
                 }
 
-                // Hari header
+                // Day header
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 0
@@ -148,7 +149,7 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
                     }
                 }
 
-                // Grid tanggal
+                // Date Grid
                 Grid {
                     id: calGrid
                     Layout.fillWidth: true

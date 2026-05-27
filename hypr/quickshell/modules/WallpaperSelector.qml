@@ -43,7 +43,7 @@ PanelWindow {
             width: 600
             height: Math.min(wallpaperGrid.implicitHeight + 80, 500)
             radius: 16
-            color: "#e6161920"
+            color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"
 

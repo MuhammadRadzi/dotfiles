@@ -26,7 +26,7 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: "#e6161920"
+        color: "#d916181c"
         border.width: 1
         border.color: "#22ffffff"
 
