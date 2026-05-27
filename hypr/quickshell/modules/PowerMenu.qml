@@ -81,6 +81,11 @@ PanelWindow {
                             "label": "Shutdown",
                             "cmd": "systemctl poweroff",
                             "color": Colors.red
+                        }, {
+                            "icon": "\udb80\udf43",
+                            "label": "Logout",
+                            "cmd": "loginctl terminate-user $USER",
+                            "color": Colors.blue
                         }]
 
                         Rectangle {

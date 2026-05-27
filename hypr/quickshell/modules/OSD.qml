@@ -52,7 +52,7 @@ PanelWindow {
         width: 280
         height: 52
         radius: 14
-        color: "#e6161920"
+        color: "#d916181c"
         border.width: 1
         border.color: "#22ffffff"
 

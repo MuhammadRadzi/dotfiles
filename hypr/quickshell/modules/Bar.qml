@@ -145,12 +145,12 @@ PanelWindow {
                             anchors.centerIn: parent
                             spacing: 10
 
+                            SysTray {}
                             SystemGraph {}
                             Weather {}
                             Network {}
                             Volume {}
                             Battery {}
-                            SysTray {}
                         }
 
                         MouseArea {
