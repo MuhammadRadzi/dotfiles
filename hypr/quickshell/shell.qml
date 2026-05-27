@@ -15,6 +15,7 @@ ShellRoot {
     PowerMenu { id: pm }
     WallpaperSelector { id: ws }
     NotificationCenter { id: nc }
+    KeybindCheatsheet { id: ks }
 
     CalendarPopup {
         id: cal
@@ -37,5 +38,9 @@ ShellRoot {
     IpcHandler {
         target: "toggle-power"
         function handle(): void { pm.isOpen = !pm.isOpen }
+    }
+    IpcHandler {
+        target: "toggle-cheatsheet"
+        function handle(): void { ks.isOpen = !ks.isOpen }
     }
 }
