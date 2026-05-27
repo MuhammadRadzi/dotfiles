@@ -16,3 +16,5 @@ ControlCenter 1.0 ControlCenter.qml
 CalendarPopup 1.0 CalendarPopup.qml
 WallpaperSelector 1.0 WallpaperSelector.qml
 SystemGraph 1.0 SystemGraph.qml
+NotificationCenter 1.0 NotificationCenter.qml
+PowerMenu 1.0 PowerMenu.qml

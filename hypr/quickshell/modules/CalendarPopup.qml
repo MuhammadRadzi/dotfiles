@@ -11,9 +11,11 @@ PopupWindow {
     function toggle() { isOpen = !isOpen }
 
     visible: isOpen
-    anchor.window: root
-    anchor.rect.x: (root.width / 2) - 160
-    anchor.rect.y: root.implicitHeight + 8
+    property var barWindow: null
+
+anchor.window: barWindow
+anchor.rect.x: barWindow ? (barWindow.width / 2) - 160 : 0
+anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
 
     width: 320
     height: calCol.implicitHeight + 32

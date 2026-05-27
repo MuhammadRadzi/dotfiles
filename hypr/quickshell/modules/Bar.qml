@@ -6,6 +6,12 @@ import Quickshell.Wayland
 PanelWindow {
     id: root
 
+    signal togglePower()
+    signal toggleWallpaper()
+    signal toggleNotif()
+    signal toggleCal()
+    signal toggleCC()
+
     implicitHeight: 56
     color: "transparent"
 
@@ -36,28 +42,36 @@ PanelWindow {
             Item {
                 Layout.fillWidth: true
 
-                WallpaperSelector {
-                    id: ws
-                }
-                
-                Rectangle {
+                RowLayout {
+                    id: leftRow
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    implicitWidth: leftRow.implicitWidth + 20
-                    color: "transparent"
+                    spacing: 8
 
-                    RowLayout {
-                        id: leftRow
+                    Text {
+                        text: "⏻"
+                        color: powerArea.containsMouse ? "#e0e0e0" : "#888888"
+                        font.pixelSize: 14
+                        font.family: "JetBrainsMono Nerd Font"
+                        Behavior on color { ColorAnimation { duration: 150 } }
 
-                        anchors.centerIn: parent
-                        spacing: 6
-
-                        Workspaces {
+                        MouseArea {
+                            id: powerArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.togglePower()
                         }
                     }
 
-                }
+                    Rectangle {
+                        width: 1
+                        height: 14
+                        color: "#333333"
+                    }
 
+                    Workspaces {}
+                }
             }
 
             // =========================
@@ -66,28 +80,22 @@ PanelWindow {
             Item {
                 Layout.fillWidth: true
 
-                CalendarPopup {
-                    id: cal
-                }
-
                 RowLayout {
                     id: centerRow
-
                     anchors.centerIn: parent
                     spacing: 10
 
-                    MediaPlayer {
-                    }
+                    MediaPlayer {}
 
                     Rectangle {
                         implicitWidth: clockText.implicitWidth + 16
                         implicitHeight: clockText.implicitHeight + 8
                         radius: 8
                         color: clockArea.containsMouse ? "#22ffffff" : "transparent"
+                        Behavior on color { ColorAnimation { duration: 150 } }
 
                         Text {
                             id: clockText
-
                             anchors.centerIn: parent
                             text: Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
                             color: "#e0e0e0"
@@ -100,29 +108,17 @@ PanelWindow {
                                 repeat: true
                                 onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
                             }
-
                         }
 
                         MouseArea {
                             id: clockArea
-
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: cal.toggle()
+                            onClicked: root.toggleCal()
                         }
-
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: 150
-                            }
-
-                        }
-
                     }
-
                 }
-
             }
 
             // =========================
@@ -131,68 +127,74 @@ PanelWindow {
             Item {
                 Layout.fillWidth: true
 
-                ControlCenter {
-                    id: cc
-                }
-
-                Rectangle {
-                    id: rightPill
-
+                RowLayout {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    implicitWidth: rightRow.implicitWidth + 18
-                    implicitHeight: rightRow.implicitHeight + -5
-                    radius: 8
-                    color: ccMouseArea.containsMouse ? "#22ffffff" : "transparent"
+                    spacing: 8
 
-                    RowLayout {
-                        id: rightRow
+                    Rectangle {
+                        id: rightPill
+                        implicitWidth: rightRow.implicitWidth + 18
+                        implicitHeight: rightRow.implicitHeight - 5
+                        radius: 8
+                        color: ccMouseArea.containsMouse ? "#22ffffff" : "transparent"
+                        Behavior on color { ColorAnimation { duration: 150 } }
 
-                        anchors.centerIn: parent
-                        spacing: 10
+                        RowLayout {
+                            id: rightRow
+                            anchors.centerIn: parent
+                            spacing: 10
 
-                        SystemGraph {
+                            SystemGraph {}
+                            Weather {}
+                            Network {}
+                            Volume {}
+                            Battery {}
+                            SysTray {}
                         }
 
-                        Weather {
+                        MouseArea {
+                            id: ccMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.toggleCC()
                         }
-
-                        Network {
-                        }
-
-                        Volume {
-                        }
-
-                        Battery {
-                        }
-
-                        SysTray {
-                        }
-
                     }
 
-                    MouseArea {
-                        id: ccMouseArea
+                    Text {
+                        text: "󰋯"
+                        color: wpArea.containsMouse ? "#e0e0e0" : "#888888"
+                        font.pixelSize: 14
+                        font.family: "JetBrainsMono Nerd Font"
+                        Behavior on color { ColorAnimation { duration: 150 } }
 
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: cc.toggle()
-                    }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
+                        MouseArea {
+                            id: wpArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.toggleWallpaper()
                         }
-
                     }
 
+                    Text {
+                        text: "󰂚"
+                        color: notifBellArea.containsMouse ? "#e0e0e0" : "#888888"
+                        font.pixelSize: 14
+                        font.family: "JetBrainsMono Nerd Font"
+                        Behavior on color { ColorAnimation { duration: 150 } }
+
+                        MouseArea {
+                            id: notifBellArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.toggleNotif()
+                        }
+                    }
                 }
-
             }
-
         }
-
     }
-
 }

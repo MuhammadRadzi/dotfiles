@@ -1,0 +1,184 @@
+import "../theme"
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Io
+import Quickshell.Wayland
+
+PanelWindow {
+    id: powerMenu
+
+    property bool isOpen: false
+
+    visible: isOpen
+    implicitWidth: 1920
+    implicitHeight: 1080
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.exclusiveZone: -1
+    WlrLayershell.anchors.top: true
+    WlrLayershell.anchors.bottom: true
+    WlrLayershell.anchors.left: true
+    WlrLayershell.anchors.right: true
+    color: "transparent"
+
+    Rectangle {
+        anchors.fill: parent
+        color: "#88000000"
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: powerMenu.isOpen = false
+        }
+
+        Rectangle {
+            anchors.centerIn: parent
+            width: 360
+            height: contentCol.implicitHeight + 48
+            radius: 20
+            color: "#e6161920"
+            border.width: 1
+            border.color: "#22ffffff"
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                }
+            }
+
+            ColumnLayout {
+                id: contentCol
+
+                anchors.centerIn: parent
+                width: parent.width - 48
+                spacing: 24
+
+               
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    columns: 2
+                    rowSpacing: 12
+                    columnSpacing: 12
+
+                    Repeater {
+                        model: [{
+                            "icon": "\uf023",
+                            "label": "Lock",
+                            "cmd": "hyprlock",
+                            "color": Colors.accent
+                        }, {
+                            "icon": "\uf186",
+                            "label": "Suspend",
+                            "cmd": "systemctl suspend",
+                            "color": Colors.yellow
+                        }, {
+                            "icon": "\uf021",
+                            "label": "Reboot",
+                            "cmd": "systemctl reboot",
+                            "color": Colors.green
+                        }, {
+                            "icon": "\uf011",
+                            "label": "Shutdown",
+                            "cmd": "systemctl poweroff",
+                            "color": Colors.red
+                        }]
+
+                        Rectangle {
+                            Layout.fillWidth: true
+                            implicitHeight: 80
+                            radius: 12
+                            color: btnArea.containsMouse ? "#22ffffff" : "#11ffffff"
+
+                            ColumnLayout {
+                                anchors.centerIn: parent
+                                spacing: 6
+
+                                Text {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    text: modelData.icon
+                                    color: modelData.color
+                                    font.pixelSize: 28
+                                    font.family: "JetBrainsMono Nerd Font"
+                                }
+
+                                Text {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    text: modelData.label
+                                    color: Colors.text
+                                    font.pixelSize: 12
+                                    font.family: "JetBrainsMono Nerd Font"
+                                }
+
+                            }
+
+                            MouseArea {
+                                id: btnArea
+
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    powerMenu.isOpen = false;
+                                    execProc.command = ["sh", "-c", modelData.cmd];
+                                    execProc.running = true;
+                                }
+                            }
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: 40
+                    radius: 10
+                    color: cancelArea.containsMouse ? "#22ffffff" : "#11ffffff"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "Cancel"
+                        color: Colors.subtle
+                        font.pixelSize: 12
+                        font.family: "JetBrainsMono Nerd Font"
+                    }
+
+                    MouseArea {
+                        id: cancelArea
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: powerMenu.isOpen = false
+                    }
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    Process {
+        id: execProc
+
+        running: false
+    }
+
+}
