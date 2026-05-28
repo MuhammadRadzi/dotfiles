@@ -72,6 +72,11 @@ PanelWindow {
                             "cmd": "systemctl suspend",
                             "color": Colors.yellow
                         }, {
+                            "icon": "\uf2ce",
+                            "label": "Hibernate",
+                            "cmd": "systemctl hibernate",
+                            "color": "#ffa500"
+                        }, {
                             "icon": "\uf021",
                             "label": "Reboot",
                             "cmd": "systemctl reboot",

@@ -223,9 +223,8 @@ anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
 
                 Repeater {
                     model: [
-                        { label: "WIB",   offset: 7  },
+                        { label: "Jakarta",offset: 7  },
                         { label: "WITA",  offset: 8  },
-                        { label: "WIT",   offset: 9  },
                         { label: "UTC",   offset: 0  },
                         { label: "Tokyo", offset: 9  },
                         { label: "London",offset: 1  },

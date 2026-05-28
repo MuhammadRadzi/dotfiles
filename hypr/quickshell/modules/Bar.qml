@@ -131,6 +131,9 @@ PanelWindow {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 8
+                    
+                    SysTray {}
+
 
                     Rectangle {
                         id: rightPill
@@ -145,7 +148,6 @@ PanelWindow {
                             anchors.centerIn: parent
                             spacing: 10
 
-                            SysTray {}
                             SystemGraph {}
                             Weather {}
                             Network {}
