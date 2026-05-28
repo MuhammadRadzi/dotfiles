@@ -8,16 +8,16 @@ configuration {
 * {
     font: "JetBrainsMono Nerd Font 11";
 
-    bg0: #101217ee;
-    bg1: #171a21;
-    bg2: #20242d;
+    bg0: #16181cd9;
+    bg1: #16181c;
+    bg2: #252933;
 
-    fg0: #f5f7fa;
-    fg1: #b7c0cc;
+    fg0: #111111;
+    fg1: #222222;
 
-    accent: #ffffff;
+    accent: #e0e0e0;
 
-    border: #ffffff12;
+    border: #ffffff22;
 
     radius: 16px;
 }
@@ -66,19 +66,15 @@ inputbar {
 
 prompt {
     background-color: transparent;
-
-    text-color: @fg1;
+    text-color: #ffffff;
 }
 
 entry {
     background-color: transparent;
-
-    text-color: @fg0;
-
+    text-color: #ffffff;
     placeholder: "Search...";
-    placeholder-color: @fg1;
-
-    cursor-color: @fg0;
+    placeholder-color: #ffffff58;
+    cursor-color: #ffffff;
 }
 
 listview {
@@ -106,14 +102,12 @@ element {
 
 element normal.normal {
     background-color: transparent;
-
-    text-color: @fg0;
+    text-color: #111111;
 }
 
 element selected.normal {
-    background-color: #ffffff12;
-
-    text-color: @fg0;
+    background-color: #ffffff22;
+    text-color: #ffffff;
 }
 
 element-icon {
@@ -126,14 +120,15 @@ element-icon {
 
 element-text {
     background-color: transparent;
-
-    text-color: inherit;
-
+    text-color: #ffffff;
     vertical-align: 0.5;
 }
 
 element-text,
-element-text normal.normal,
+element-text normal.normal {
+    text-color: #ffffff;
+}
+
 element-text selected.normal {
-    text-color: #f5f7fa;
+    text-color: #ffffff;
 }
