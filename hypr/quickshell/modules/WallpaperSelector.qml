@@ -129,8 +129,8 @@ PanelWindow {
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
                                         setWallProc.command = ["awww", "img", modelData,
-                                            "--transition-type", "fade",
-                                            "--transition-duration", "2"]
+                                            "--transition-type", "random",
+                                            "--transition-duration", "1"]
                                         setWallProc.running = true
                                         wallpaperSelector.isOpen = false
                                     }
