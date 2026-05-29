@@ -16,7 +16,11 @@ ShellRoot {
     WallpaperSelector { id: ws }
     NotificationCenter { id: nc }
     KeybindCheatsheet { id: ks }
-    OSD { id: osd }
+    
+    OSD {
+        id: osd
+        bar: bar
+    }
 
     CalendarPopup {
         id: cal

@@ -2,15 +2,19 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Io
 import "../theme"
 
-PanelWindow {
+PopupWindow {
     id: osd
 
-    property string type: ""   // "volume" atau "brightness"
+    property var bar: null
+    property string type: ""
     property int value: 0
     property bool muted: false
+
+    anchor.window: bar
+    anchor.rect.x: bar ? (bar.width - 280) / 2 : 0
+    anchor.rect.y: bar ? bar.implicitHeight + 8 : 64
 
     function showVolume(val, isMuted) {
         type = "volume"
@@ -28,14 +32,8 @@ PanelWindow {
     }
 
     visible: false
-    implicitWidth: 1920
-    implicitHeight: 1080
-
-    WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.exclusiveZone: -1
-    WlrLayershell.anchors.top: true
-    WlrLayershell.anchors.left: true
-    WlrLayershell.anchors.right: true
+    implicitWidth: 280
+    implicitHeight: 52
 
     color: "transparent"
 
@@ -47,10 +45,7 @@ PanelWindow {
     }
 
     Rectangle {
-        x: (parent.width - width) / 2
-        y: 64
-        width: 280
-        height: 52
+        anchors.fill: parent
         radius: 14
         color: "#d916181c"
         border.width: 1
@@ -62,7 +57,6 @@ PanelWindow {
             anchors.rightMargin: 16
             spacing: 12
 
-            // Icon
             Text {
                 text: {
                     if (type === "volume") {
@@ -76,7 +70,6 @@ PanelWindow {
                 font.family: "JetBrainsMono Nerd Font"
             }
 
-            // Bar
             Rectangle {
                 Layout.fillWidth: true
                 height: 4
@@ -96,7 +89,6 @@ PanelWindow {
                 }
             }
 
-            // Value
             Text {
                 text: muted ? "mute" : value + "%"
                 color: Colors.subtle
