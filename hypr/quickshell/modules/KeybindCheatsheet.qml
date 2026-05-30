@@ -1,8 +1,8 @@
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import "../theme"
 
 PanelWindow {
     id: cheatsheet
@@ -10,25 +10,20 @@ PanelWindow {
     property bool isOpen: false
 
     visible: overlayRect.opacity > 0
-
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true
     WlrLayershell.anchors.bottom: true
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
-
     color: "transparent"
 
     Rectangle {
         id: overlayRect
+
         anchors.fill: parent
         color: "#cc000000"
-
-        opacity: isOpen ? 1.0 : 0.0
-        Behavior on opacity {
-            NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-        }
+        opacity: isOpen ? 1 : 0
 
         MouseArea {
             anchors.fill: parent
@@ -38,6 +33,7 @@ PanelWindow {
 
         Rectangle {
             id: panelRect
+
             x: (parent.width - width) / 2
             y: (parent.height - height) / 2
             width: 800
@@ -46,19 +42,17 @@ PanelWindow {
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"
-
-            scale: isOpen ? 1.0 : 0.95
-            Behavior on scale {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-            }
+            scale: isOpen ? 1 : 0.95
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {}
+                onClicked: {
+                }
             }
 
             ColumnLayout {
                 id: contentCol
+
                 anchors.fill: parent
                 anchors.margins: 24
                 spacing: 16
@@ -75,7 +69,9 @@ PanelWindow {
                         font.letterSpacing: 2
                     }
 
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
 
                     Text {
                         text: "Super + F1 to close"
@@ -83,6 +79,7 @@ PanelWindow {
                         font.pixelSize: 11
                         font.family: "JetBrainsMono Nerd Font"
                     }
+
                 }
 
                 // Divider
@@ -105,24 +102,53 @@ PanelWindow {
                         spacing: 0
 
                         Repeater {
-                            model: [
-                                { category: "APPS" },
-                                { key: "Super + T",       desc: "Terminal (kitty)" },
-                                { key: "Super + E",       desc: "File manager" },
-                                { key: "Super + D",       desc: "App launcher" },
-                                { key: "Super + F",       desc: "Browser" },
-                                { key: "",                desc: "" },
-                                { category: "WINDOWS" },
-                                { key: "Super + Q",       desc: "Close window" },
-                                { key: "Super + X",       desc: "Toggle float" },
-                                { key: "Super + Shift + F",   desc: "Fullscreen" },
-                                { key: "Super + J",       desc: "Toggle split" },
-                                { key: "Super + Arrows",  desc: "Move focus" },
-                                { key: "Super + Shift + Arrows",  desc: "Move window" },
-                                { key: "Super + Alt + Arrows",    desc: "Resize window" },
-                                { key: "Super + Left Click",   desc: "Move window" },
-                                { key: "Super + Right Click",  desc: "Resize window" },
-                            ]
+                            model: [{
+                                "category": "APPS"
+                            }, {
+                                "key": "Super + T",
+                                "desc": "Terminal (kitty)"
+                            }, {
+                                "key": "Super + E",
+                                "desc": "File manager"
+                            }, {
+                                "key": "Super + D",
+                                "desc": "App launcher"
+                            }, {
+                                "key": "Super + F",
+                                "desc": "Browser"
+                            }, {
+                                "key": "",
+                                "desc": ""
+                            }, {
+                                "category": "WINDOWS"
+                            }, {
+                                "key": "Super + Q",
+                                "desc": "Close window"
+                            }, {
+                                "key": "Super + X",
+                                "desc": "Toggle float"
+                            }, {
+                                "key": "Super + Shift + F",
+                                "desc": "Fullscreen"
+                            }, {
+                                "key": "Super + J",
+                                "desc": "Toggle split"
+                            }, {
+                                "key": "Super + Arrows",
+                                "desc": "Move focus"
+                            }, {
+                                "key": "Super + Shift + Arrows",
+                                "desc": "Move window"
+                            }, {
+                                "key": "Super + Alt + Arrows",
+                                "desc": "Resize window"
+                            }, {
+                                "key": "Super + Left Click",
+                                "desc": "Move window"
+                            }, {
+                                "key": "Super + Right Click",
+                                "desc": "Resize window"
+                            }]
 
                             delegate: Item {
                                 Layout.fillWidth: true
@@ -153,15 +179,19 @@ PanelWindow {
 
                                         Text {
                                             id: keyText
+
                                             anchors.centerIn: parent
                                             text: modelData.key || ""
                                             color: Colors.text
                                             font.pixelSize: 11
                                             font.family: "JetBrainsMono Nerd Font"
                                         }
+
                                     }
 
-                                    Item { Layout.fillWidth: true }
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
 
                                     Text {
                                         text: modelData.desc || ""
@@ -169,9 +199,13 @@ PanelWindow {
                                         font.pixelSize: 12
                                         font.family: "JetBrainsMono Nerd Font"
                                     }
+
                                 }
+
                             }
+
                         }
+
                     }
 
                     // Right Column
@@ -180,24 +214,52 @@ PanelWindow {
                         spacing: 0
 
                         Repeater {
-                            model: [
-                                { category: "WORKSPACES" },
-                                { key: "Super + 1-9",     desc: "Switch workspace" },
-                                { key: "Super + Shift + 1-9", desc: "Move to workspace" },
-                                { key: "Super + scroll",  desc: "Scroll workspace" },
-                                { key: "",                desc: "" },
-                                { category: "QUICKSHELL" },
-                                { key: "Super + W",       desc: "Wallpaper selector" },
-                                { key: "Super + N",       desc: "Notifications" },
-                                { key: "Super + Esc",     desc: "Power menu" },
-                                { key: "Super + F1",      desc: "This cheatsheet" },
-                                { key: "",                desc: "" },
-                                { category: "SYSTEM" },
-                                { key: "Super + L",       desc: "Lock screen" },
-                                { key: "Print",           desc: "Screenshot area" },
-                                { key: "Super + Print",   desc: "Screenshot full" },
-                                { key: "Super + Shift + S",   desc: "Screenshot area" },
-                            ]
+                            model: [{
+                                "category": "WORKSPACES"
+                            }, {
+                                "key": "Super + 1-9",
+                                "desc": "Switch workspace"
+                            }, {
+                                "key": "Super + Shift + 1-9",
+                                "desc": "Move to workspace"
+                            }, {
+                                "key": "Super + scroll",
+                                "desc": "Scroll workspace"
+                            }, {
+                                "key": "",
+                                "desc": ""
+                            }, {
+                                "category": "QUICKSHELL"
+                            }, {
+                                "key": "Super + W",
+                                "desc": "Wallpaper selector"
+                            }, {
+                                "key": "Super + N",
+                                "desc": "Notifications"
+                            }, {
+                                "key": "Super + Esc",
+                                "desc": "Power menu"
+                            }, {
+                                "key": "Super + F1",
+                                "desc": "This cheatsheet"
+                            }, {
+                                "key": "",
+                                "desc": ""
+                            }, {
+                                "category": "SYSTEM"
+                            }, {
+                                "key": "Super + L",
+                                "desc": "Lock screen"
+                            }, {
+                                "key": "Print",
+                                "desc": "Screenshot area"
+                            }, {
+                                "key": "Super + Print",
+                                "desc": "Screenshot full"
+                            }, {
+                                "key": "Super + Shift + S",
+                                "desc": "Screenshot area"
+                            }]
 
                             delegate: Item {
                                 Layout.fillWidth: true
@@ -228,15 +290,19 @@ PanelWindow {
 
                                         Text {
                                             id: keyText2
+
                                             anchors.centerIn: parent
                                             text: modelData.key || ""
                                             color: Colors.text
                                             font.pixelSize: 11
                                             font.family: "JetBrainsMono Nerd Font"
                                         }
+
                                     }
 
-                                    Item { Layout.fillWidth: true }
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
 
                                     Text {
                                         text: modelData.desc || ""
@@ -244,12 +310,37 @@ PanelWindow {
                                         font.pixelSize: 12
                                         font.family: "JetBrainsMono Nerd Font"
                                     }
+
                                 }
+
                             }
+
                         }
+
                     }
+
                 }
+
             }
+
+            Behavior on scale {
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
+            }
+
         }
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 220
+                easing.type: Easing.OutCubic
+            }
+
+        }
+
     }
+
 }

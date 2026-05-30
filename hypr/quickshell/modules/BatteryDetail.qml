@@ -1,16 +1,15 @@
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
-import "../theme"
 
 Item {
-    implicitWidth: parent.width
-    implicitHeight: 40
-
     property int level: 0
     property string status: ""
     property string timeLeft: ""
 
+    implicitWidth: parent.width
+    implicitHeight: 40
     Component.onCompleted: batProc.running = true
 
     RowLayout {
@@ -39,8 +38,16 @@ Item {
                     height: parent.height
                     radius: 2
                     color: status === "Charging" ? Colors.green : level < 20 ? Colors.red : Colors.accent
-                    Behavior on width { NumberAnimation { duration: 300 } }
+
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 300
+                        }
+
+                    }
+
                 }
+
             }
 
             Text {
@@ -49,6 +56,7 @@ Item {
                 font.pixelSize: 11
                 font.family: "JetBrainsMono Nerd Font"
             }
+
         }
 
         Text {
@@ -58,21 +66,27 @@ Item {
             font.family: "JetBrainsMono Nerd Font"
             Layout.minimumWidth: 36
         }
+
     }
 
     Process {
         id: batProc
+
         command: ["sh", "-c", "cat /sys/class/power_supply/BAT0/capacity && cat /sys/class/power_supply/BAT0/status"]
+
         stdout: SplitParser {
             property var lines: []
-            onRead: data => {
-                lines.push(data.trim())
+
+            onRead: (data) => {
+                lines.push(data.trim());
                 if (lines.length >= 2) {
-                    level = parseInt(lines[0]) || 0
-                    status = lines[1]
-                    lines = []
+                    level = parseInt(lines[0]) || 0;
+                    status = lines[1];
+                    lines = [];
                 }
             }
         }
+
     }
+
 }

@@ -1,26 +1,26 @@
+import "."
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import "."
-import "../theme"
 
 PanelWindow {
     id: controlCenter
 
     property bool isOpen: false
 
-    function toggle() { isOpen = !isOpen }
+    function toggle() {
+        isOpen = !isOpen;
+    }
 
     visible: panelRect.opacity > 0
-
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true
     WlrLayershell.anchors.bottom: true
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
-
     color: "transparent"
 
     Rectangle {
@@ -40,7 +40,6 @@ PanelWindow {
             anchors.top: parent.top
             anchors.rightMargin: 16
             anchors.topMargin: 56 + 8
-
             width: 320
             height: ccCol.implicitHeight + 32
             radius: 16
@@ -48,26 +47,17 @@ PanelWindow {
             border.width: 1
             border.color: "#22ffffff"
             clip: true
-
-            opacity: isOpen ? 1.0 : 0.0
-            Behavior on opacity {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-            }
-
-            transform: Translate {
-                x: isOpen ? 0 : 24
-                Behavior on x {
-                    NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-                }
-            }
+            opacity: isOpen ? 1 : 0
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {}
+                onClicked: {
+                }
             }
 
             ColumnLayout {
                 id: ccCol
+
                 anchors.fill: parent
                 anchors.margins: 16
                 spacing: 16
@@ -93,7 +83,11 @@ PanelWindow {
                         font.family: "JetBrainsMono Nerd Font"
                         font.letterSpacing: 1.5
                     }
-                    VolumeSlider { Layout.fillWidth: true }
+
+                    VolumeSlider {
+                        Layout.fillWidth: true
+                    }
+
                 }
 
                 // Brightness
@@ -108,7 +102,11 @@ PanelWindow {
                         font.family: "JetBrainsMono Nerd Font"
                         font.letterSpacing: 1.5
                     }
-                    BrightnessSlider { Layout.fillWidth: true }
+
+                    BrightnessSlider {
+                        Layout.fillWidth: true
+                    }
+
                 }
 
                 // Battery
@@ -123,7 +121,11 @@ PanelWindow {
                         font.family: "JetBrainsMono Nerd Font"
                         font.letterSpacing: 1.5
                     }
-                    BatteryDetail { Layout.fillWidth: true }
+
+                    BatteryDetail {
+                        Layout.fillWidth: true
+                    }
+
                 }
 
                 // Divider
@@ -145,9 +147,38 @@ PanelWindow {
                         font.family: "JetBrainsMono Nerd Font"
                         font.letterSpacing: 1.5
                     }
-                    NetworkList { Layout.fillWidth: true }
+
+                    NetworkList {
+                        Layout.fillWidth: true
+                    }
+
                 }
+
             }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
+            }
+
+            transform: Translate {
+                x: isOpen ? 0 : 24
+
+                Behavior on x {
+                    NumberAnimation {
+                        duration: 220
+                        easing.type: Easing.OutCubic
+                    }
+
+                }
+
+            }
+
         }
+
     }
+
 }

@@ -1,31 +1,31 @@
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Wayland
 import Quickshell.Io
-import "../theme"
+import Quickshell.Wayland
 
 PanelWindow {
     id: wallpaperSelector
 
     property bool isOpen: false
+    property var wallpapers: []
+    property string wallpaperDir: Quickshell.env("HOME") + "/.config/hypr/assets/wallpapers"
+    property string thumbDir: Quickshell.env("HOME") + "/.config/hypr/assets/thumbnails"
 
     visible: panelRect.opacity > 0
-
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true
     WlrLayershell.anchors.bottom: true
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
-
     color: "transparent"
-
-    property var wallpapers: []
-    property string wallpaperDir: Quickshell.env("HOME") + "/.config/hypr/assets/wallpapers"
-    property string thumbDir: Quickshell.env("HOME") + "/.config/hypr/assets/thumbnails"
-
-    onIsOpenChanged: if (isOpen) scanProc.running = true
+    onIsOpenChanged: {
+        if (isOpen) {
+            scanProc.running = true;
+        }
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -39,6 +39,7 @@ PanelWindow {
 
         Rectangle {
             id: panelRect
+
             anchors.centerIn: parent
             width: 600
             height: Math.min(wallpaperGrid.implicitHeight + 80, 500)
@@ -46,20 +47,13 @@ PanelWindow {
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"
-
-            opacity: isOpen ? 1.0 : 0.0
-            Behavior on opacity {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-            }
-
-            scale: isOpen ? 1.0 : 0.95
-            Behavior on scale {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-            }
+            opacity: isOpen ? 1 : 0
+            scale: isOpen ? 1 : 0.95
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {}
+                onClicked: {
+                }
             }
 
             ColumnLayout {
@@ -79,7 +73,9 @@ PanelWindow {
                         font.letterSpacing: 1.5
                     }
 
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
 
                     Text {
                         text: wallpapers.length + " files"
@@ -87,6 +83,7 @@ PanelWindow {
                         font.pixelSize: 10
                         font.family: "JetBrainsMono Nerd Font"
                     }
+
                 }
 
                 // Grid
@@ -98,6 +95,7 @@ PanelWindow {
 
                     Grid {
                         id: wallpaperGrid
+
                         width: parent.width
                         columns: 3
                         spacing: 8
@@ -112,7 +110,6 @@ PanelWindow {
                                 clip: true
                                 border.width: 2
                                 border.color: thumbArea.containsMouse ? Colors.accent : "transparent"
-                                Behavior on border.color { ColorAnimation { duration: 150 } }
 
                                 Image {
                                     anchors.fill: parent
@@ -128,55 +125,94 @@ PanelWindow {
                                     color: Colors.surface
                                     visible: parent.children[0].status !== Image.Ready
                                     radius: 8
+
                                     Text {
                                         anchors.centerIn: parent
-                                        text: "󰋯"
+                                        text: "\uf03e"
                                         color: Colors.subtle
                                         font.pixelSize: 20
                                         font.family: "JetBrainsMono Nerd Font"
                                     }
+
                                 }
 
                                 MouseArea {
                                     id: thumbArea
+
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        setWallProc.command = ["awww", "img", modelData,
-                                            "--transition-type", "random",
-                                            "--transition-duration", "1"]
-                                        setWallProc.running = true
-                                        wallpaperSelector.isOpen = false
+                                        setWallProc.command = ["awww", "img", modelData, "--transition-type", "random", "--transition-duration", "1"];
+                                        setWallProc.running = true;
+                                        wallpaperSelector.isOpen = false;
                                     }
                                 }
+
+                                Behavior on border.color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+
+                                }
+
                             }
+
                         }
+
                     }
+
                 }
+
             }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
+            }
+
+            Behavior on scale {
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
+            }
+
         }
+
     }
 
     Process {
         id: scanProc
+
         command: ["sh", "-c", "find " + wallpaperDir + " -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) | sort"]
-        stdout: SplitParser {
-            property var list: []
-            onRead: data => {
-                if (data.trim()) list.push(data.trim())
-            }
-        }
         onRunningChanged: {
             if (!running) {
-                wallpapers = scanProc.stdout.list.slice()
-                scanProc.stdout.list = []
+                wallpapers = scanProc.stdout.list.slice();
+                scanProc.stdout.list = [];
             }
         }
+
+        stdout: SplitParser {
+            property var list: []
+
+            onRead: (data) => {
+                if (data.trim())
+                    list.push(data.trim());
+
+            }
+        }
+
     }
 
     Process {
         id: setWallProc
+
         running: false
     }
+
 }

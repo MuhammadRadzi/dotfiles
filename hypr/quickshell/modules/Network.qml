@@ -1,15 +1,16 @@
+import "../theme"
 import QtQuick
 import Quickshell.Io
-import "../theme"
 
 Item {
+    property string netInfo: "..."
+
     implicitWidth: label.implicitWidth
     implicitHeight: parent.height
 
-    property string netInfo: "..."
-
     Text {
         id: label
+
         anchors.centerIn: parent
         text: netInfo
         color: Colors.text
@@ -19,13 +20,16 @@ Item {
 
     Process {
         id: netProc
+
         command: ["sh", "-c", "nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2"]
+        Component.onCompleted: running = true
+
         stdout: SplitParser {
-            onRead: data => {
-                netInfo = data.trim() !== "" ? "󰤨 " + data.trim() : "󰤭 offline"
+            onRead: (data) => {
+                netInfo = data.trim() !== "" ? "󰤨 " + data.trim() : "󰤭 offline";
             }
         }
-        Component.onCompleted: running = true
+
     }
 
     Timer {
@@ -34,4 +38,5 @@ Item {
         repeat: true
         onTriggered: netProc.running = true
     }
+
 }

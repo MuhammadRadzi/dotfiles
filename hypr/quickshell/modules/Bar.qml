@@ -44,24 +44,33 @@ PanelWindow {
 
                 RowLayout {
                     id: leftRow
+
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 8
 
                     Text {
-                        text: "⏻"
+                        text: "\u23fb"
                         color: powerArea.containsMouse ? "#e0e0e0" : "#888888"
                         font.pixelSize: 14
                         font.family: "JetBrainsMono Nerd Font"
-                        Behavior on color { ColorAnimation { duration: 150 } }
 
                         MouseArea {
                             id: powerArea
+
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: root.togglePower()
                         }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
 
                     Rectangle {
@@ -70,8 +79,11 @@ PanelWindow {
                         color: "#333333"
                     }
 
-                    Workspaces {}
+                    Workspaces {
+                    }
+
                 }
+
             }
 
             // =========================
@@ -82,20 +94,22 @@ PanelWindow {
 
                 RowLayout {
                     id: centerRow
+
                     anchors.centerIn: parent
                     spacing: 10
 
-                    MediaPlayer {}
+                    MediaPlayer {
+                    }
 
                     Rectangle {
                         implicitWidth: clockText.implicitWidth + 16
                         implicitHeight: clockText.implicitHeight + 8
                         radius: 8
                         color: clockArea.containsMouse ? "#22ffffff" : "transparent"
-                        Behavior on color { ColorAnimation { duration: 150 } }
 
                         Text {
                             id: clockText
+
                             anchors.centerIn: parent
                             text: Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
                             color: "#e0e0e0"
@@ -108,17 +122,29 @@ PanelWindow {
                                 repeat: true
                                 onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
                             }
+
                         }
 
                         MouseArea {
                             id: clockArea
+
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: root.toggleCal()
                         }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
+
                 }
+
             }
 
             // =========================
@@ -131,72 +157,114 @@ PanelWindow {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 8
-                    
-                    SysTray {}
 
+                    SysTray {
+                        barWindow: root
+                    }
 
                     Rectangle {
                         id: rightPill
+
                         implicitWidth: rightRow.implicitWidth + 18
                         implicitHeight: rightRow.implicitHeight - 5
                         radius: 8
                         color: ccMouseArea.containsMouse ? "#22ffffff" : "transparent"
-                        Behavior on color { ColorAnimation { duration: 150 } }
 
                         RowLayout {
                             id: rightRow
+
                             anchors.centerIn: parent
                             spacing: 10
 
-                            SystemGraph {}
-                            Weather {}
-                            Network {}
-                            Volume {}
-                            Battery {}
+                            SystemGraph {
+                            }
+
+                            Weather {
+                            }
+
+                            Network {
+                            }
+
+                            Volume {
+                            }
+
+                            Battery {
+                            }
+
                         }
 
                         MouseArea {
                             id: ccMouseArea
+
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: root.toggleCC()
                         }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
 
                     Text {
-                        text: "󰋯"
+                        text: "\uf03e"
                         color: wpArea.containsMouse ? "#e0e0e0" : "#888888"
                         font.pixelSize: 14
                         font.family: "JetBrainsMono Nerd Font"
-                        Behavior on color { ColorAnimation { duration: 150 } }
 
                         MouseArea {
                             id: wpArea
+
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: root.toggleWallpaper()
                         }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
 
                     Text {
-                        text: "󰂚"
+                        text: "\uf0f3"
                         color: notifBellArea.containsMouse ? "#e0e0e0" : "#888888"
                         font.pixelSize: 14
                         font.family: "JetBrainsMono Nerd Font"
-                        Behavior on color { ColorAnimation { duration: 150 } }
 
                         MouseArea {
                             id: notifBellArea
+
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: root.toggleNotif()
                         }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
+
                 }
+
             }
+
         }
+
     }
+
 }

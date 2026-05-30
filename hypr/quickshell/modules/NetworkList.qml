@@ -1,19 +1,19 @@
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
-import "../theme"
 
 Item {
-    implicitWidth: parent.width
-    implicitHeight: networkCol.implicitHeight
-
     property var networks: []
     property string connectingTo: ""
 
+    implicitWidth: parent.width
+    implicitHeight: networkCol.implicitHeight
     Component.onCompleted: netProc.running = true
 
     ColumnLayout {
         id: networkCol
+
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 4
@@ -31,24 +31,30 @@ Item {
                 anchors.rightMargin: 8
 
                 Text {
-                    text: "󰑐  Refresh"
+                    text: "\udb81\udc53  Refresh"
                     color: Colors.subtle
                     font.pixelSize: 11
                     font.family: "JetBrainsMono Nerd Font"
                 }
-                Item { Layout.fillWidth: true }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
             }
 
             MouseArea {
                 id: reloadArea
+
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    networks = []
-                    netProc.running = true
+                    networks = [];
+                    netProc.running = true;
                 }
             }
+
         }
 
         // Network List
@@ -71,7 +77,7 @@ Item {
                     spacing: 8
 
                     Text {
-                        text: modelData.active ? "󰤨" : "󰤫"
+                        text: modelData.active ? "\udb82\udd28" : "\udb82\udd2b"
                         color: modelData.active ? Colors.accent : Colors.subtle
                         font.pixelSize: 14
                         font.family: "JetBrainsMono Nerd Font"
@@ -88,7 +94,7 @@ Item {
 
                     Text {
                         visible: modelData.active
-                        text: "󰄬"
+                        text: "\uf00c"
                         color: Colors.green
                         font.pixelSize: 13
                         font.family: "JetBrainsMono Nerd Font"
@@ -101,51 +107,69 @@ Item {
                         font.pixelSize: 12
                         font.family: "JetBrainsMono Nerd Font"
                     }
+
                 }
 
                 MouseArea {
                     id: netItemArea
+
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: modelData.active ? Qt.ArrowCursor : Qt.PointingHandCursor
                     visible: !modelData.active
                     onClicked: {
-                        connectingTo = modelData.ssid
-                        askPassProc.command = [
-                            "sh", "-c",
-                            "pass=$(rofi -dmenu -password -p 'Password: " + modelData.ssid + "' -theme-str 'entry { placeholder: \"\"; }' -config ~/.config/hypr/rofi/config.rasi) && [ -n \"$pass\" ] && nmcli dev wifi connect '" + modelData.ssid + "' password \"$pass\""
-                        ]
-                        askPassProc.running = true
+                        connectingTo = modelData.ssid;
+                        askPassProc.command = ["sh", "-c", "pass=$(rofi -dmenu -password -p 'Password: " + modelData.ssid + "' -theme-str 'entry { placeholder: \"\"; }' -config ~/.config/hypr/rofi/config.rasi) && [ -n \"$pass\" ] && nmcli dev wifi connect '" + modelData.ssid + "' password \"$pass\""];
+                        askPassProc.running = true;
                     }
                 }
+
             }
+
         }
+
     }
 
     Process {
         id: netProc
+
         command: ["sh", "-c", "nmcli -t -f active,ssid dev wifi 2>/dev/null | head -10"]
-        stdout: SplitParser {
-            property var list: []
-            onRead: data => {
-                if (!data.trim()) return
-                var parts = data.trim().split(":")
-                if (parts[1] && parts[1].trim() !== "")
-                    list.push({ active: parts[0] === "yes", ssid: parts[1].trim() })
-            }
-        }
         onRunningChanged: {
             if (!running) {
-                networks = netProc.stdout.list.slice()
-                netProc.stdout.list = []
-                connectingTo = ""
+                networks = netProc.stdout.list.slice();
+                netProc.stdout.list = [];
+                connectingTo = "";
             }
         }
+
+        stdout: SplitParser {
+            property var list: []
+
+            onRead: (data) => {
+                if (!data.trim())
+                    return ;
+
+                var parts = data.trim().split(":");
+                if (parts[1] && parts[1].trim() !== "")
+                    list.push({
+                    "active": parts[0] === "yes",
+                    "ssid": parts[1].trim()
+                });
+
+            }
+        }
+
     }
 
     Process {
         id: askPassProc
+
         running: false
-        onRunningChanged: if (!running) netProc.running = true
+        onRunningChanged: {
+            if (!running)
+                netProc.running = true;
+
+        }
     }
+
 }

@@ -1,15 +1,14 @@
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
-import "../theme"
 
 Item {
-    implicitWidth: parent.width
-    implicitHeight: 40
-
     property int vol: 0
     property bool muted: false
 
+    implicitWidth: parent.width
+    implicitHeight: 40
     Component.onCompleted: volProc.running = true
 
     RowLayout {
@@ -17,15 +16,17 @@ Item {
         spacing: 10
 
         Text {
-            text: muted ? "󰝟" : vol >= 50 ? "󰕾" : "󰖀"
+            text: muted ? "\ueb24" : vol >= 50 ? "\uf028 " : "\uf027 "
             color: Colors.text
             font.pixelSize: 16
             font.family: "JetBrainsMono Nerd Font"
+
             MouseArea {
                 anchors.fill: parent
                 onClicked: muteProc.running = true
                 cursorShape: Qt.PointingHandCursor
             }
+
         }
 
         Rectangle {
@@ -40,25 +41,34 @@ Item {
                 radius: 2
                 color: muted ? Colors.subtle : Colors.accent
 
-                Behavior on width { NumberAnimation { duration: 100 } }
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 100
+                    }
+
+                }
+
             }
 
             MouseArea {
                 anchors.fill: parent
                 preventStealing: true
-                onClicked: mouse => {
-                    var newVol = Math.min(100, Math.max(0, Math.round((mouse.x / width) * 100)))
-                    setVolProc.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", newVol + "%"]
-                    setVolProc.running = true
+                onClicked: (mouse) => {
+                    var newVol = Math.min(100, Math.max(0, Math.round((mouse.x / width) * 100)));
+                    setVolProc.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", newVol + "%"];
+                    setVolProc.running = true;
                 }
-                onPositionChanged: mouse => {
-                    if (!pressed) return
-                    var newVol = Math.min(100, Math.max(0, Math.round((mouse.x / width) * 100)))
-                    setVolProc.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", newVol + "%"]
-                    setVolProc.running = true
+                onPositionChanged: (mouse) => {
+                    if (!pressed)
+                        return ;
+
+                    var newVol = Math.min(100, Math.max(0, Math.round((mouse.x / width) * 100)));
+                    setVolProc.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", newVol + "%"];
+                    setVolProc.running = true;
                 }
                 cursorShape: Qt.PointingHandCursor
             }
+
         }
 
         Text {
@@ -68,20 +78,50 @@ Item {
             font.family: "JetBrainsMono Nerd Font"
             Layout.minimumWidth: 36
         }
+
     }
 
     Process {
         id: volProc
+
         command: ["sh", "-c", "wpctl get-volume @DEFAULT_AUDIO_SINK@"]
+
         stdout: SplitParser {
-            onRead: data => {
-                if (!data) return
-                muted = data.includes("MUTED")
-                var match = data.match(/[\d.]+/)
-                if (match) vol = Math.round(parseFloat(match[0]) * 100)
+            onRead: (data) => {
+                if (!data)
+                    return ;
+
+                muted = data.includes("MUTED");
+                var match = data.match(/[\d.]+/);
+                if (match)
+                    vol = Math.round(parseFloat(match[0]) * 100);
+
+            }
+        }
+
+    }
+
+    Process {
+        id: muteProc
+
+        command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]
+        running: false
+        onRunningChanged: {
+            if (!running) {
+                volProc.running = true;
             }
         }
     }
-    Process { id: muteProc; command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]; running: false; onRunningChanged: if (!running) volProc.running = true }
-    Process { id: setVolProc; running: false; onRunningChanged: if (!running) volProc.running = true }
+
+    Process {
+        id: setVolProc
+
+        running: false
+        onRunningChanged: {
+            if (!running) {
+                volProc.running = true;
+            }
+        }
+    }
+
 }

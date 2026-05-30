@@ -12,18 +12,16 @@ PanelWindow {
     property var now: new Date()
 
     function toggle() {
-        isOpen = !isOpen
+        isOpen = !isOpen;
     }
 
     visible: panelRect.opacity > 0
-
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true
     WlrLayershell.anchors.bottom: true
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
-
     color: "transparent"
 
     Timer {
@@ -49,7 +47,6 @@ PanelWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 56 + 8
-
             width: 320
             height: calCol.implicitHeight + 32
             radius: 16
@@ -57,22 +54,12 @@ PanelWindow {
             border.width: 1
             border.color: "#22ffffff"
             clip: true
-
-            opacity: isOpen ? 1.0 : 0.0
-            Behavior on opacity {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-            }
-
-            transform: Translate {
-                y: isOpen ? 0 : -10
-                Behavior on y {
-                    NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
-                }
-            }
+            opacity: isOpen ? 1 : 0
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {}
+                onClicked: {
+                }
             }
 
             ColumnLayout {
@@ -121,7 +108,7 @@ PanelWindow {
                         Layout.fillWidth: true
 
                         Text {
-                            text: "<"
+                            text: "\uf060"
                             color: Colors.subtle
                             font.pixelSize: 14
                             font.family: "JetBrainsMono Nerd Font"
@@ -130,16 +117,19 @@ PanelWindow {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    calGrid.viewMonth -= 1
+                                    calGrid.viewMonth -= 1;
                                     if (calGrid.viewMonth < 0) {
-                                        calGrid.viewMonth = 11
-                                        calGrid.viewYear -= 1
+                                        calGrid.viewMonth = 11;
+                                        calGrid.viewYear -= 1;
                                     }
                                 }
                             }
+
                         }
 
-                        Item { Layout.fillWidth: true }
+                        Item {
+                            Layout.fillWidth: true
+                        }
 
                         Text {
                             text: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][calGrid.viewMonth] + " " + calGrid.viewYear
@@ -149,10 +139,12 @@ PanelWindow {
                             Layout.alignment: Qt.AlignHCenter
                         }
 
-                        Item { Layout.fillWidth: true }
+                        Item {
+                            Layout.fillWidth: true
+                        }
 
                         Text {
-                            text: ">"
+                            text: "\uf061"
                             color: Colors.subtle
                             font.pixelSize: 14
                             font.family: "JetBrainsMono Nerd Font"
@@ -161,14 +153,16 @@ PanelWindow {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    calGrid.viewMonth += 1
+                                    calGrid.viewMonth += 1;
                                     if (calGrid.viewMonth > 11) {
-                                        calGrid.viewMonth = 0
-                                        calGrid.viewYear += 1
+                                        calGrid.viewMonth = 0;
+                                        calGrid.viewYear += 1;
                                     }
                                 }
                             }
+
                         }
+
                     }
 
                     // Day Header
@@ -187,7 +181,9 @@ PanelWindow {
                                 font.pixelSize: 11
                                 font.family: "JetBrainsMono Nerd Font"
                             }
+
                         }
+
                     }
 
                     // Date Grid
@@ -200,8 +196,8 @@ PanelWindow {
                         property int todayMonth: now.getMonth()
                         property int todayYear: now.getFullYear()
                         property int firstDay: {
-                            var d = new Date(viewYear, viewMonth, 1).getDay()
-                            return d === 0 ? 6 : d - 1
+                            var d = new Date(viewYear, viewMonth, 1).getDay();
+                            return d === 0 ? 6 : d - 1;
                         }
                         property int daysInMonth: new Date(viewYear, viewMonth + 1, 0).getDate()
                         property int totalCells: firstDay + daysInMonth
@@ -231,9 +227,13 @@ PanelWindow {
                                     font.family: "JetBrainsMono Nerd Font"
                                     font.bold: isToday
                                 }
+
                             }
+
                         }
+
                     }
+
                 }
 
                 // Divider
@@ -259,13 +259,22 @@ PanelWindow {
                     }
 
                     Repeater {
-                        model: [
-                            { "label": "Jakarta", "tz": "Asia/Jakarta"  },
-                            { "label": "WITA",    "tz": "Asia/Makassar" },
-                            { "label": "UTC",     "tz": "UTC"           },
-                            { "label": "Tokyo",   "tz": "Asia/Tokyo"    },
-                            { "label": "London",  "tz": "Europe/London" }
-                        ]
+                        model: [{
+                            "label": "Jakarta",
+                            "tz": "Asia/Jakarta"
+                        }, {
+                            "label": "WITA",
+                            "tz": "Asia/Makassar"
+                        }, {
+                            "label": "UTC",
+                            "tz": "UTC"
+                        }, {
+                            "label": "Tokyo",
+                            "tz": "Asia/Tokyo"
+                        }, {
+                            "label": "London",
+                            "tz": "Europe/London"
+                        }]
 
                         RowLayout {
                             Layout.fillWidth: true
@@ -278,7 +287,9 @@ PanelWindow {
                                 Layout.minimumWidth: 60
                             }
 
-                            Item { Layout.fillWidth: true }
+                            Item {
+                                Layout.fillWidth: true
+                            }
 
                             Text {
                                 id: tzLabel
@@ -291,27 +302,62 @@ PanelWindow {
                                 font.family: "JetBrainsMono Nerd Font"
 
                                 Connections {
-                                    target: calendarPopup
                                     function onNowChanged() {
-                                        tzProc.running = true
+                                        tzProc.running = true;
                                     }
+
+                                    target: calendarPopup
                                 }
 
                                 Process {
                                     id: tzProc
+
                                     command: ["sh", "-c", "TZ=" + tzLabel.tz + " date +'%H:%M'"]
                                     Component.onCompleted: running = true
+
                                     stdout: SplitParser {
-                                        onRead: data => {
-                                            if (data.trim()) tzLabel.text = data.trim()
+                                        onRead: (data) => {
+                                            if (data.trim())
+                                                tzLabel.text = data.trim();
+
                                         }
                                     }
+
                                 }
+
                             }
+
                         }
+
                     }
+
                 }
+
             }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
+            }
+
+            transform: Translate {
+                y: isOpen ? 0 : -10
+
+                Behavior on y {
+                    NumberAnimation {
+                        duration: 220
+                        easing.type: Easing.OutCubic
+                    }
+
+                }
+
+            }
+
         }
+
     }
+
 }

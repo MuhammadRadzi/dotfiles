@@ -1,8 +1,8 @@
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import "../theme"
 
 PopupWindow {
     id: osd
@@ -12,33 +12,32 @@ PopupWindow {
     property int value: 0
     property bool muted: false
 
-    anchor.window: bar
-    anchor.rect.x: bar ? (bar.width - 280) / 2 : 0
-    anchor.rect.y: bar ? bar.implicitHeight + 8 : 64
-
     function showVolume(val, isMuted) {
-        type = "volume"
-        value = val
-        muted = isMuted
-        visible = true
-        hideTimer.restart()
+        type = "volume";
+        value = val;
+        muted = isMuted;
+        visible = true;
+        hideTimer.restart();
     }
 
     function showBrightness(val) {
-        type = "brightness"
-        value = val
-        visible = true
-        hideTimer.restart()
+        type = "brightness";
+        value = val;
+        visible = true;
+        hideTimer.restart();
     }
 
+    anchor.window: bar
+    anchor.rect.x: bar ? (bar.width - 280) / 2 : 0
+    anchor.rect.y: bar ? bar.implicitHeight + 8 : 64
     visible: false
     implicitWidth: 280
     implicitHeight: 52
-
     color: "transparent"
 
     Timer {
         id: hideTimer
+
         interval: 2000
         repeat: false
         onTriggered: osd.visible = false
@@ -59,11 +58,10 @@ PopupWindow {
 
             Text {
                 text: {
-                    if (type === "volume") {
-                        return muted ? "\udb81\udf5f" : value >= 50 ? "\uf028" : "\uf027"
-                    } else {
-                        return value > 50 ? "\uf185" : "\uf186"
-                    }
+                    if (type === "volume")
+                        return muted ? "\udb81\udf5f" : value >= 50 ? "\uf028" : "\uf027";
+                    else
+                        return value > 50 ? "\uf185" : "\uf186";
                 }
                 color: type === "volume" ? (muted ? Colors.subtle : Colors.text) : Colors.yellow
                 font.pixelSize: 16
@@ -81,12 +79,24 @@ PopupWindow {
                     height: parent.height
                     radius: 2
                     color: {
-                        if (type === "brightness") return Colors.yellow
-                        if (muted) return Colors.subtle
-                        return Colors.accent
+                        if (type === "brightness")
+                            return Colors.yellow;
+
+                        if (muted)
+                            return Colors.subtle;
+
+                        return Colors.accent;
                     }
-                    Behavior on width { NumberAnimation { duration: 100 } }
+
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 100
+                        }
+
+                    }
+
                 }
+
             }
 
             Text {
@@ -97,6 +107,9 @@ PopupWindow {
                 Layout.minimumWidth: 36
                 horizontalAlignment: Text.AlignRight
             }
+
         }
+
     }
+
 }

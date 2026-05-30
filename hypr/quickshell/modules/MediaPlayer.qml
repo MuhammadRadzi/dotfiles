@@ -112,9 +112,9 @@ Item {
         command: ["playerctl", "previous"]
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 metaProc.running = true;
-            }
+
         }
     }
 
@@ -124,9 +124,9 @@ Item {
         command: ["playerctl", "play-pause"]
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 metaProc.running = true;
-            }
+
         }
     }
 
@@ -136,9 +136,9 @@ Item {
         command: ["playerctl", "next"]
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 metaProc.running = true;
-            }
+
         }
     }
 

@@ -1,5 +1,5 @@
-import QtQuick
 import "../theme"
+import QtQuick
 
 Item {
     implicitWidth: label.implicitWidth
@@ -7,6 +7,7 @@ Item {
 
     Text {
         id: label
+
         anchors.centerIn: parent
         text: Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
         color: Colors.text
@@ -19,5 +20,7 @@ Item {
             repeat: true
             onTriggered: label.text = Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
         }
+
     }
+
 }
