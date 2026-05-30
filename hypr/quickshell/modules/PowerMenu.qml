@@ -10,7 +10,8 @@ PanelWindow {
 
     property bool isOpen: false
 
-    visible: isOpen
+    visible: overlayRect.opacity > 0
+
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true
@@ -20,15 +21,23 @@ PanelWindow {
     color: "transparent"
 
     Rectangle {
+        id: overlayRect
         anchors.fill: parent
         color: "#88000000"
 
+        opacity: isOpen ? 1.0 : 0.0
+        Behavior on opacity {
+            NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+        }
+
         MouseArea {
             anchors.fill: parent
+            enabled: isOpen
             onClicked: powerMenu.isOpen = false
         }
 
         Rectangle {
+            id: panelRect
             anchors.centerIn: parent
             width: 360
             height: contentCol.implicitHeight + 48
@@ -37,20 +46,21 @@ PanelWindow {
             border.width: 1
             border.color: "#22ffffff"
 
+            scale: isOpen ? 1.0 : 0.95
+            Behavior on scale {
+                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+            }
+
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
-                }
+                onClicked: {}
             }
 
             ColumnLayout {
                 id: contentCol
-
                 anchors.centerIn: parent
                 width: parent.width - 48
                 spacing: 24
-
-               
 
                 GridLayout {
                     Layout.fillWidth: true
@@ -96,6 +106,7 @@ PanelWindow {
                             implicitHeight: 80
                             radius: 12
                             color: btnArea.containsMouse ? "#22ffffff" : "#11ffffff"
+                            Behavior on color { ColorAnimation { duration: 150 } }
 
                             ColumnLayout {
                                 anchors.centerIn: parent
@@ -116,33 +127,21 @@ PanelWindow {
                                     font.pixelSize: 12
                                     font.family: "JetBrainsMono Nerd Font"
                                 }
-
                             }
 
                             MouseArea {
                                 id: btnArea
-
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    powerMenu.isOpen = false;
-                                    execProc.command = ["sh", "-c", modelData.cmd];
-                                    execProc.running = true;
+                                    powerMenu.isOpen = false
+                                    execProc.command = ["sh", "-c", modelData.cmd]
+                                    execProc.running = true
                                 }
                             }
-
-                            Behavior on color {
-                                ColorAnimation {
-                                    duration: 150
-                                }
-
-                            }
-
                         }
-
                     }
-
                 }
 
                 Rectangle {
@@ -150,6 +149,7 @@ PanelWindow {
                     implicitHeight: 40
                     radius: 10
                     color: cancelArea.containsMouse ? "#22ffffff" : "#11ffffff"
+                    Behavior on color { ColorAnimation { duration: 150 } }
 
                     Text {
                         anchors.centerIn: parent
@@ -161,32 +161,18 @@ PanelWindow {
 
                     MouseArea {
                         id: cancelArea
-
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: powerMenu.isOpen = false
                     }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-
-                    }
-
                 }
-
             }
-
         }
-
     }
 
     Process {
         id: execProc
-
         running: false
     }
-
 }

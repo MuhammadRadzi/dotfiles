@@ -10,7 +10,7 @@ PanelWindow {
 
     property bool isOpen: false
 
-    visible: isOpen
+    visible: panelRect.opacity > 0
 
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
@@ -27,18 +27,18 @@ PanelWindow {
 
     onIsOpenChanged: if (isOpen) scanProc.running = true
 
-    // Background overlay
     Rectangle {
         anchors.fill: parent
         color: "transparent"
 
         MouseArea {
             anchors.fill: parent
+            enabled: isOpen
             onClicked: wallpaperSelector.isOpen = false
         }
 
-        // Panel tengah
         Rectangle {
+            id: panelRect
             anchors.centerIn: parent
             width: 600
             height: Math.min(wallpaperGrid.implicitHeight + 80, 500)
@@ -46,6 +46,21 @@ PanelWindow {
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"
+
+            opacity: isOpen ? 1.0 : 0.0
+            Behavior on opacity {
+                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+            }
+
+            scale: isOpen ? 1.0 : 0.95
+            Behavior on scale {
+                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {}
+            }
 
             ColumnLayout {
                 anchors.fill: parent

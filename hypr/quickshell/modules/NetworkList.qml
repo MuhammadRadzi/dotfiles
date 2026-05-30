@@ -18,7 +18,7 @@ Item {
         anchors.right: parent.right
         spacing: 4
 
-        // Reload button
+        // Reload Button
         Rectangle {
             Layout.fillWidth: true
             height: 28
@@ -51,7 +51,7 @@ Item {
             }
         }
 
-        // Network list
+        // Network List
         Repeater {
             model: networks
 

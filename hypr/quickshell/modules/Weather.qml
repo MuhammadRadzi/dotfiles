@@ -23,6 +23,7 @@ Item {
             "bash", "-c",
             "KEY=$(cat /home/murasa/.config/hypr/.env.local | grep OPENWEATHER_KEY | cut -d= -f2) && curl -s 'https://api.openweathermap.org/data/2.5/weather?q=Makassar&appid='\"$KEY\"'&units=metric' | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d['weather'][0]['main']+'|'+str(round(d['main']['temp']))+'|'+str(d['main']['humidity']))\""
         ]
+
         stdout: SplitParser {
             onRead: data => {
                 if (!data || data.trim() === "") return

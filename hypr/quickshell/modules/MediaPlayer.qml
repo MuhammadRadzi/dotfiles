@@ -20,7 +20,7 @@ Item {
 
         // Prev
         Text {
-            text: "󰒮"
+            text: "\udb81\udcae"
             color: Colors.subtle
             font.pixelSize: 14
             font.family: "JetBrainsMono Nerd Font"
@@ -35,7 +35,7 @@ Item {
 
         // Play/Pause
         Text {
-            text: status === "Playing" ? "󰏤" : "󰐊"
+            text: status === "Playing" ? "\udb80\udfe4" : "\udb81\udc0a"
             color: Colors.text
             font.pixelSize: 14
             font.family: "JetBrainsMono Nerd Font"
@@ -50,7 +50,7 @@ Item {
 
         // Next
         Text {
-            text: "󰒭"
+            text: "\udb81\udcad"
             color: Colors.subtle
             font.pixelSize: 14
             font.family: "JetBrainsMono Nerd Font"

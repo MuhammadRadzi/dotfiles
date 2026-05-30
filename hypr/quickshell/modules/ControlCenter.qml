@@ -5,119 +5,149 @@ import Quickshell.Wayland
 import "."
 import "../theme"
 
-PopupWindow {
+PanelWindow {
     id: controlCenter
-    
+
     property bool isOpen: false
 
     function toggle() { isOpen = !isOpen }
 
-    visible: isOpen
-    property var barWindow: null
+    visible: panelRect.opacity > 0
 
-anchor.window: barWindow
-anchor.rect.x: barWindow ? barWindow.width - 320 - 16 : 0
-anchor.rect.y: barWindow ? barWindow.implicitHeight + 8 : 64
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.exclusiveZone: -1
+    WlrLayershell.anchors.top: true
+    WlrLayershell.anchors.bottom: true
+    WlrLayershell.anchors.left: true
+    WlrLayershell.anchors.right: true
 
-    width: 320
-    height: ccCol.implicitHeight + 32
     color: "transparent"
 
     Rectangle {
         anchors.fill: parent
-        radius: 16
-        color: "#d916181c"
-        border.width: 1
-        border.color: "#22ffffff"
+        color: "transparent"
 
-        ColumnLayout {
-            id: ccCol
+        MouseArea {
             anchors.fill: parent
-            anchors.margins: 16
-            spacing: 16
+            enabled: isOpen
+            onClicked: controlCenter.isOpen = false
+        }
 
-            // Header
-            Text {
-                text: "Control Center"
-                color: Colors.subtle
-                font.pixelSize: 11
-                font.family: "JetBrainsMono Nerd Font"
-                font.letterSpacing: 1.5
+        Rectangle {
+            id: panelRect
+
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.rightMargin: 16
+            anchors.topMargin: 56 + 8
+
+            width: 320
+            height: ccCol.implicitHeight + 32
+            radius: 16
+            color: "#d916181c"
+            border.width: 1
+            border.color: "#22ffffff"
+            clip: true
+
+            opacity: isOpen ? 1.0 : 0.0
+            Behavior on opacity {
+                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
             }
 
-            // Volume
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 6
+            transform: Translate {
+                x: isOpen ? 0 : 24
+                Behavior on x {
+                    NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+                }
+            }
 
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {}
+            }
+
+            ColumnLayout {
+                id: ccCol
+                anchors.fill: parent
+                anchors.margins: 16
+                spacing: 16
+
+                // Header
                 Text {
-                    text: "VOLUME"
+                    text: "Control Center"
                     color: Colors.subtle
-                    font.pixelSize: 10
+                    font.pixelSize: 11
                     font.family: "JetBrainsMono Nerd Font"
                     font.letterSpacing: 1.5
                 }
-                VolumeSlider { Layout.fillWidth: true }
-            }
 
-            // Brightness
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 6
+                // Volume
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
 
-                Text {
-                    text: "BRIGHTNESS"
-                    color: Colors.subtle
-                    font.pixelSize: 10
-                    font.family: "JetBrainsMono Nerd Font"
-                    font.letterSpacing: 1.5
+                    Text {
+                        text: "VOLUME"
+                        color: Colors.subtle
+                        font.pixelSize: 10
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.letterSpacing: 1.5
+                    }
+                    VolumeSlider { Layout.fillWidth: true }
                 }
-                BrightnessSlider { Layout.fillWidth: true }
-            }
 
-            // Battery
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 6
+                // Brightness
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
 
-                Text {
-                    text: "BATTERY"
-                    color: Colors.subtle
-                    font.pixelSize: 10
-                    font.family: "JetBrainsMono Nerd Font"
-                    font.letterSpacing: 1.5
+                    Text {
+                        text: "BRIGHTNESS"
+                        color: Colors.subtle
+                        font.pixelSize: 10
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.letterSpacing: 1.5
+                    }
+                    BrightnessSlider { Layout.fillWidth: true }
                 }
-                BatteryDetail { Layout.fillWidth: true }
-            }
 
-            // Divider
-            Rectangle {
-                Layout.fillWidth: true
-                height: 1
-                color: Colors.overlay
-            }
+                // Battery
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
 
-            // Network
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 6
-
-                Text {
-                    text: "NETWORK"
-                    color: Colors.subtle
-                    font.pixelSize: 10
-                    font.family: "JetBrainsMono Nerd Font"
-                    font.letterSpacing: 1.5
+                    Text {
+                        text: "BATTERY"
+                        color: Colors.subtle
+                        font.pixelSize: 10
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.letterSpacing: 1.5
+                    }
+                    BatteryDetail { Layout.fillWidth: true }
                 }
-                NetworkList { Layout.fillWidth: true }
+
+                // Divider
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Colors.overlay
+                }
+
+                // Network
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
+
+                    Text {
+                        text: "NETWORK"
+                        color: Colors.subtle
+                        font.pixelSize: 10
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.letterSpacing: 1.5
+                    }
+                    NetworkList { Layout.fillWidth: true }
+                }
             }
         }
-    }
-
-    // Tutup kalau klik di luar
-    MouseArea {
-        anchors.fill: parent
-        onClicked: controlCenter.isOpen = false
-        z: -1
     }
 }

@@ -10,7 +10,7 @@ PanelWindow {
 
     property bool isOpen: false
 
-    visible: isOpen
+    visible: panelRect.opacity > 0
 
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
@@ -32,10 +32,13 @@ PanelWindow {
         MouseArea {
             anchors.fill: parent
             onClicked: notifCenter.isOpen = false
+            enabled: isOpen
         }
 
-        // Panel kanan
+        // Panel
         Rectangle {
+            id: panelRect
+
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.rightMargin: 16
@@ -48,6 +51,18 @@ PanelWindow {
             border.width: 1
             border.color: "#22ffffff"
             clip: true
+
+            opacity: isOpen ? 1.0 : 0.0
+            Behavior on opacity {
+                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+            }
+
+            transform: Translate {
+                x: isOpen ? 0 : 24
+                Behavior on x {
+                    NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+                }
+            }
 
             MouseArea {
                 anchors.fill: parent
@@ -74,7 +89,7 @@ PanelWindow {
 
                     Item { Layout.fillWidth: true }
 
-                    // Clear all
+                    // Clear All
                     Text {
                         text: "Clear all"
                         color: clearArea.containsMouse ? Colors.text : Colors.subtle
@@ -94,7 +109,7 @@ PanelWindow {
                     }
                 }
 
-                // Empty state
+                // Empty State
                 Item {
                     visible: notifications.length === 0
                     Layout.fillWidth: true
@@ -212,7 +227,7 @@ PanelWindow {
                                     }
                                 }
 
-                                // Close button
+                                // Close Button
                                 Text {
                                     anchors.right: parent.right
                                     anchors.top: parent.top
@@ -249,7 +264,7 @@ PanelWindow {
         }
     }
 
-    // Fetch history
+    // Fetch History
     Process {
         id: historyProc
         command: ["dunstctl", "history"]

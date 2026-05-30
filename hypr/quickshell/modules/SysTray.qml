@@ -16,7 +16,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 4
 
-        // Tombol Toggle (Dropdown/Expander)
+        // Toggle Button (Expander)
         Text {
             id: toggleBtn
             text: root.expanded ? "󰅁" : "󰅀"
@@ -34,8 +34,8 @@ Item {
                 cursorShape: Qt.PointingHandCursor
             }
         }
-
-        // Container untuk icon tray dengan animasi lebar
+        
+        // System Tray Icons Container
         Item {
             id: trayContainer
             Layout.preferredWidth: root.expanded ? trayRow.implicitWidth : 0

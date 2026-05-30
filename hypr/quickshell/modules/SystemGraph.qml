@@ -10,16 +10,16 @@ Rectangle {
 
     color: "transparent"
 
-    // ── state ──────────────────────────────────────────────────────────────
+    // ── State ──────────────────────────────────────────────────────────────
     property var ramHistory: [0,0,0,0,0,0,0,0,0,0,0,0]
     property var gpuHistory: [0,0,0,0,0,0,0,0,0,0,0,0]
 
-    // RAM: parsed dari /proc/meminfo
+    // RAM
     property int memTotal: 1
     property int memAvail: 0
     property int ramPct:   0
 
-    // GPU: frekuensi saat ini vs max (Intel Iris Xe)
+    // GPU
     property int gpuCur: 0
     property int gpuMax: 1
     property int gpuPct: 0
@@ -103,9 +103,9 @@ Rectangle {
         }
     }
 
-    // ── data sources ───────────────────────────────────────────────────────
+    // ── Data Sources ───────────────────────────────────────────────────────
 
-    // RAM: baca /proc/meminfo, ambil MemTotal + MemAvailable
+    // RAM
     Process {
         id: ramProc
         command: ["sh", "-c", "grep -E '^(MemTotal|MemAvailable):' /proc/meminfo"]
@@ -129,7 +129,6 @@ Rectangle {
                     root.ramPct = Math.round((total - avail) / total * 100)
                     lineCount = 0
 
-                    // push ke history (reassign biar QML detect perubahan)
                     var h = root.ramHistory.slice(1)
                     h.push(root.ramPct)
                     root.ramHistory = h
@@ -140,8 +139,7 @@ Rectangle {
         Component.onCompleted: running = true
     }
 
-    // GPU: cur_freq / max_freq * 100
-    // Coba card1 dulu (Intel Iris Xe pada i5-1135G7), fallback card0
+    // GPU
     Process {
         id: gpuProc
         command: [
@@ -168,9 +166,9 @@ Rectangle {
         Component.onCompleted: running = true
     }
 
-    // ── poll timer ─────────────────────────────────────────────────────────
+    // ── Poll Timer ─────────────────────────────────────────────────────────
     Timer {
-        interval: 2000   // 2 detik cukup, /proc/meminfo murah tapi GPU sysfs bisa lambat
+        interval: 2000
         running: true
         repeat: true
         onTriggered: {

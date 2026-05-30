@@ -24,12 +24,10 @@ ShellRoot {
 
     CalendarPopup {
         id: cal
-        barWindow: bar
     }
 
     ControlCenter {
         id: cc
-        barWindow: bar
     }
 
     IpcHandler {
