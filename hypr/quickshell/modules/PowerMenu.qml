@@ -11,8 +11,6 @@ PanelWindow {
     property bool isOpen: false
 
     visible: isOpen
-    implicitWidth: 1920
-    implicitHeight: 1080
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true
