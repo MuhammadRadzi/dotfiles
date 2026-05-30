@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Io
 
 Rectangle {
     id: root
@@ -9,129 +10,176 @@ Rectangle {
 
     color: "transparent"
 
+    // ── state ──────────────────────────────────────────────────────────────
+    property var ramHistory: [0,0,0,0,0,0,0,0,0,0,0,0]
+    property var gpuHistory: [0,0,0,0,0,0,0,0,0,0,0,0]
 
-    property var ramHistory: [20,24,22,28,32,25,23,35,42,38,30,28]
-    property int ramUsage: 73
-    property var gpuHistory: [10,12,14,20,28,18,12,25,35,30,22,16]
-    property int gpuUsage: 0
+    // RAM: parsed dari /proc/meminfo
+    property int memTotal: 1
+    property int memAvail: 0
+    property int ramPct:   0
 
+    // GPU: frekuensi saat ini vs max (Intel Iris Xe)
+    property int gpuCur: 0
+    property int gpuMax: 1
+    property int gpuPct: 0
+
+    // ── UI ─────────────────────────────────────────────────────────────────
     RowLayout {
-    anchors.fill: parent
-    anchors.margins: 4
-    spacing: 10
+        anchors.fill: parent
+        anchors.margins: 4
+        spacing: 10
 
-    // GPU
-    RowLayout {
-        spacing: 4
+        // GPU
+        RowLayout {
+            spacing: 4
 
-        Text {
-            text: "GPU"
-            color: "#f38ba8"
-            font.pixelSize: 13
-            font.bold: true
-            font.family: "JetBrainsMono Nerd Font"
+            Text {
+                text: "GPU"
+                color: "#f38ba8"
+                font.pixelSize: 13
+                font.bold: true
+                font.family: "JetBrainsMono Nerd Font"
+            }
+
+            Canvas {
+                id: gpuGraph
+                width: 45
+                height: 16
+
+                onPaint: {
+                    let ctx = getContext("2d")
+                    ctx.reset()
+                    let step = width / (root.gpuHistory.length - 1)
+                    ctx.beginPath()
+                    ctx.strokeStyle = "#f38ba8"
+                    ctx.lineWidth = 2
+                    ctx.lineCap = "round"
+                    for (let i = 0; i < root.gpuHistory.length; i++) {
+                        let x = i * step
+                        let y = height - (root.gpuHistory[i] / 100) * height
+                        if (i === 0) ctx.moveTo(x, y)
+                        else         ctx.lineTo(x, y)
+                    }
+                    ctx.stroke()
+                }
+            }
         }
 
-        Canvas {
-            id: gpuGraph
+        // RAM
+        RowLayout {
+            spacing: 4
 
-            width: 45
-            height: 16
+            Text {
+                text: "RAM"
+                color: "#89b4fa"
+                font.pixelSize: 13
+                font.bold: true
+                font.family: "JetBrainsMono Nerd Font"
+            }
 
-            onPaint: {
-                let ctx = getContext("2d")
-                ctx.reset()
+            Canvas {
+                id: ramGraph
+                width: 45
+                height: 16
 
-                let step = width / (root.gpuHistory.length - 1)
-
-                ctx.beginPath()
-                ctx.strokeStyle = "#f38ba8"
-                ctx.lineWidth = 2
-                ctx.lineCap = "round"
-
-                for (let i = 0; i < root.gpuHistory.length; i++) {
-                    let x = i * step
-                    let y = height - (root.gpuHistory[i] / 100) * height
-
-                    if (i === 0)
-                        ctx.moveTo(x, y)
-                    else
-                        ctx.lineTo(x, y)
+                onPaint: {
+                    let ctx = getContext("2d")
+                    ctx.reset()
+                    let step = width / (root.ramHistory.length - 1)
+                    ctx.beginPath()
+                    ctx.strokeStyle = "#89b4fa"
+                    ctx.lineWidth = 2
+                    ctx.lineCap = "round"
+                    for (let i = 0; i < root.ramHistory.length; i++) {
+                        let x = i * step
+                        let y = height - (root.ramHistory[i] / 100) * height
+                        if (i === 0) ctx.moveTo(x, y)
+                        else         ctx.lineTo(x, y)
+                    }
+                    ctx.stroke()
                 }
-
-                ctx.stroke()
             }
         }
     }
 
-    // RAM
-    RowLayout {
-        spacing: 4
+    // ── data sources ───────────────────────────────────────────────────────
 
-        Text {
-            text: "RAM"
-            color: "#89b4fa"
-            font.pixelSize: 13
-            font.bold: true
-            font.family: "JetBrainsMono Nerd Font"
-        }
+    // RAM: baca /proc/meminfo, ambil MemTotal + MemAvailable
+    Process {
+        id: ramProc
+        command: ["sh", "-c", "grep -E '^(MemTotal|MemAvailable):' /proc/meminfo"]
+        stdout: SplitParser {
+            property int total: 0
+            property int avail: 0
+            property int lineCount: 0
 
-        Canvas {
-            id: ramGraph
-
-            width: 45
-            height: 16
-
-            onPaint: {
-                let ctx = getContext("2d")
-                ctx.reset()
-
-                let step = width / (root.ramHistory.length - 1)
-
-                ctx.beginPath()
-                ctx.strokeStyle = "#89b4fa"
-                ctx.lineWidth = 2
-                ctx.lineCap = "round"
-
-                for (let i = 0; i < root.ramHistory.length; i++) {
-                    let x = i * step
-                    let y = height - (root.ramHistory[i] / 100) * height
-
-                    if (i === 0)
-                        ctx.moveTo(x, y)
-                    else
-                        ctx.lineTo(x, y)
+            onRead: data => {
+                var line = data.trim()
+                if (line.startsWith("MemTotal:")) {
+                    total = parseInt(line.replace(/[^0-9]/g, "")) || 1
+                    lineCount++
+                } else if (line.startsWith("MemAvailable:")) {
+                    avail = parseInt(line.replace(/[^0-9]/g, "")) || 0
+                    lineCount++
                 }
+                if (lineCount >= 2) {
+                    root.memTotal = total
+                    root.memAvail = avail
+                    root.ramPct = Math.round((total - avail) / total * 100)
+                    lineCount = 0
 
-                ctx.stroke()
+                    // push ke history (reassign biar QML detect perubahan)
+                    var h = root.ramHistory.slice(1)
+                    h.push(root.ramPct)
+                    root.ramHistory = h
+                    ramGraph.requestPaint()
+                }
             }
         }
+        Component.onCompleted: running = true
     }
-}
 
+    // GPU: cur_freq / max_freq * 100
+    // Coba card1 dulu (Intel Iris Xe pada i5-1135G7), fallback card0
+    Process {
+        id: gpuProc
+        command: [
+            "sh", "-c",
+            "CUR=$(cat /sys/class/drm/card1/gt/gt0/rps_cur_freq_mhz 2>/dev/null || cat /sys/class/drm/card0/gt/gt0/rps_cur_freq_mhz 2>/dev/null || echo 0); " +
+            "MAX=$(cat /sys/class/drm/card1/gt/gt0/rps_max_freq_mhz 2>/dev/null || cat /sys/class/drm/card0/gt/gt0/rps_max_freq_mhz 2>/dev/null || echo 1); " +
+            "echo $CUR $MAX"
+        ]
+        stdout: SplitParser {
+            onRead: data => {
+                var parts = data.trim().split(" ")
+                var cur = parseInt(parts[0]) || 0
+                var max = parseInt(parts[1]) || 1
+                root.gpuCur = cur
+                root.gpuMax = max
+                root.gpuPct = max > 0 ? Math.round(cur / max * 100) : 0
+
+                var h = root.gpuHistory.slice(1)
+                h.push(root.gpuPct)
+                root.gpuHistory = h
+                gpuGraph.requestPaint()
+            }
+        }
+        Component.onCompleted: running = true
+    }
+
+    // ── poll timer ─────────────────────────────────────────────────────────
     Timer {
-    interval: 1000
-    running: true
-    repeat: true
-
-    onTriggered: {
-        ramUsage = Math.floor(Math.random() * 40) + 40
-        gpuUsage = Math.floor(Math.random() * 50) + 10
-
-        ramHistory.shift()
-        gpuHistory.shift()
-
-        ramHistory.push(ramUsage)
-        gpuHistory.push(gpuUsage)
-
-        ramGraph.requestPaint()
-        gpuGraph.requestPaint()
+        interval: 2000   // 2 detik cukup, /proc/meminfo murah tapi GPU sysfs bisa lambat
+        running: true
+        repeat: true
+        onTriggered: {
+            ramProc.running = true
+            gpuProc.running = true
+        }
     }
-}
 
     Behavior on color {
-        ColorAnimation {
-            duration: 200
-        }
+        ColorAnimation { duration: 200 }
     }
 }
