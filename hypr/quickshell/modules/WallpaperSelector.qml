@@ -22,9 +22,9 @@ PanelWindow {
     WlrLayershell.anchors.right: true
     color: "transparent"
     onIsOpenChanged: {
-        if (isOpen) {
+        if (isOpen)
             scanProc.running = true;
-        }
+
     }
 
     Rectangle {
@@ -143,7 +143,7 @@ PanelWindow {
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        setWallProc.command = ["awww", "img", modelData, "--transition-type", "random", "--transition-duration", "1"];
+                                        setWallProc.command = ["bash", "/home/murasa/.config/hypr/scripts/wallpaper.sh", modelData];
                                         setWallProc.running = true;
                                         wallpaperSelector.isOpen = false;
                                     }

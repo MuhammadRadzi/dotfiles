@@ -5,20 +5,9 @@ configuration {
     drun-display-format: "{name}";
 }
 
+@import "~/.config/hypr/rofi/colors.rasi"
+
 * {
-    font: "JetBrainsMono Nerd Font 11";
-
-    bg0: #16181cd9;
-    bg1: #16181c;
-    bg2: #252933;
-
-    fg0: #111111;
-    fg1: #222222;
-
-    accent: #e0e0e0;
-
-    border: #ffffff22;
-
     radius: 16px;
 }
 

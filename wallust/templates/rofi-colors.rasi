@@ -1,0 +1,9 @@
+* {
+    bg0: {{color0}}d9;
+    bg1: {{color0}};
+    bg2: {{color8}};
+    fg0: {{foreground}};
+    fg1: {{color7}};
+    accent: {{foreground}};
+    border: {{color8}}44;
+}

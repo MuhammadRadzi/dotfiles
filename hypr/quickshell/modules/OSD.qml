@@ -63,7 +63,7 @@ PopupWindow {
                     else
                         return value > 50 ? "\uf185" : "\uf186";
                 }
-                color: type === "volume" ? (muted ? Colors.subtle : Colors.text) : Colors.yellow
+                color: type === "volume" ? (muted ? Colors.subtle : Colors.accent) : Colors.accent
                 font.pixelSize: 16
                 font.family: "JetBrainsMono Nerd Font"
             }
@@ -80,7 +80,7 @@ PopupWindow {
                     radius: 2
                     color: {
                         if (type === "brightness")
-                            return Colors.yellow;
+                            return Colors.accent;
 
                         if (muted)
                             return Colors.subtle;

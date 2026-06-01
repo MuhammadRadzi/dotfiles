@@ -31,7 +31,7 @@ Item {
                 width: parent.width * (brightness / 100)
                 height: parent.height
                 radius: 2
-                color: Colors.yellow
+                color: Colors.accent
 
                 Behavior on width {
                     NumberAnimation {
