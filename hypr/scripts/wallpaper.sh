@@ -153,7 +153,7 @@ input-field {
     rounding = 16
     check_color = rgba(255, 255, 255, 0)
     fail_color = rgba(255,80,80,0)
-    fail_text = <span foreground="##$(echo $c1 | tr -d '#')">Wrong password</span>
+    fail_text = <span foreground="##FB4934">Wrong password</span>
     halign = center
     valign = center
 }

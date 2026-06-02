@@ -13,23 +13,20 @@ ShellRoot {
         onToggleCC: cc.toggle()
     }
 
+    MusicPlayer { id: mp }
+
     PowerMenu { id: pm }
     WallpaperSelector { id: ws }
     NotificationCenter { id: nc }
     KeybindCheatsheet { id: ks }
-    
+
     OSD {
         id: osd
         bar: bar
     }
 
-    CalendarPopup {
-        id: cal
-    }
-
-    ControlCenter {
-        id: cc
-    }
+    CalendarPopup { id: cal }
+    ControlCenter { id: cc }
 
     IpcHandler {
         target: "toggle-wallpaper"

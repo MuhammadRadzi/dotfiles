@@ -1,9 +1,9 @@
 * {
-    bg0: #03060Cd9;
-    bg1: #03060C;
-    bg2: #009BCB;
-    fg0: #7EF1FF;
-    fg1: #74E8FF;
-    accent: #7EF1FF;
-    border: #009BCB44;
+    bg0: #040607d9;
+    bg1: #040607;
+    bg2: #CC6F43;
+    fg0: #FFBE8C;
+    fg1: #FFB583;
+    accent: #FFBE8C;
+    border: #CC6F4344;
 }

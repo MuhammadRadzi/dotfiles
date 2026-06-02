@@ -1,14 +1,14 @@
 [urgency_low]
-    background = "#03060Cee"
-    foreground = "#7EF1FF"
-    frame_color = "#009BCB44"
+    background = "#040607ee"
+    foreground = "#FFBE8C"
+    frame_color = "#CC6F4344"
 
 [urgency_normal]
-    background = "#03060Cf2"
-    foreground = "#7EF1FF"
-    frame_color = "#009BCB44"
+    background = "#040607f2"
+    foreground = "#FFBE8C"
+    frame_color = "#CC6F4344"
 
 [urgency_critical]
-    background = "#03060Cee"
-    foreground = "#646793"
-    frame_color = "#64679344"
+    background = "#040607ee"
+    foreground = "#5D6248"
+    frame_color = "#5D624844"

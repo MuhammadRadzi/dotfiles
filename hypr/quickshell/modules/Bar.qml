@@ -98,9 +98,6 @@ PanelWindow {
                     anchors.centerIn: parent
                     spacing: 10
 
-                    MediaPlayer {
-                    }
-
                     Rectangle {
                         implicitWidth: clockText.implicitWidth + 16
                         implicitHeight: clockText.implicitHeight + 8
