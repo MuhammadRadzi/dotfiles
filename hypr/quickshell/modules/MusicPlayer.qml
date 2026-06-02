@@ -188,7 +188,6 @@ PanelWindow {
                         id: prevArea
 
                         anchors.fill: parent
-                        hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: prevProc.running = true
                     }
@@ -226,7 +225,6 @@ PanelWindow {
                         id: nextArea
 
                         anchors.fill: parent
-                        hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: nextProc.running = true
                     }
