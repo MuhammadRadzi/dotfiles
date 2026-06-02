@@ -46,10 +46,10 @@ PanelWindow {
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: 56 + 8
+            anchors.topMargin: 65
             width: 320
             height: calCol.implicitHeight + 32
-            radius: 16
+            radius: 10
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"

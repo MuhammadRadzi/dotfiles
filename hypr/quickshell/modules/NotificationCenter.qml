@@ -22,6 +22,9 @@ PanelWindow {
     onIsOpenChanged: {
         if (isOpen) {
             historyProc.running = true;
+            pollTimer.running = true;
+        } else {
+            pollTimer.running = false;
         }
     }
 
@@ -41,11 +44,11 @@ PanelWindow {
 
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.rightMargin: 16
-            anchors.topMargin: 56 + 8
+            anchors.rightMargin: 10
+            anchors.topMargin: 65
             width: 360
             height: Math.min(notifCol.implicitHeight + 32, 600)
-            radius: 16
+            radius: 10
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"
@@ -359,14 +362,23 @@ PanelWindow {
 
     }
 
+    Timer {
+        id: pollTimer
+
+        interval: 3000
+        running: false
+        repeat: true
+        onTriggered: historyProc.running = true
+    }
+
     Process {
         id: dismissProc
 
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 historyProc.running = true;
-            }
+
         }
     }
 
