@@ -375,7 +375,7 @@ PanelWindow {
     Process {
         id: btStatusProc
 
-        command: ["sh", "-c", "bluetoothctl show | grep 'Powered:' | awk '{print $2}'"]
+        command: ["sh", "-c", "bluetoothctl show | grep 'Powered:' | awk '{print $2}' | tr -d '[:space:]'"]
 
         stdout: SplitParser {
             onRead: (data) => {

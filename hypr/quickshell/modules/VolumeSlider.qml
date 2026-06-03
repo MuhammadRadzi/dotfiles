@@ -101,6 +101,13 @@ Item {
 
     }
 
+    Timer {
+        interval: 1000
+        running:  true
+        repeat:   true
+        onTriggered: volProc.running = true
+    }
+
     Process {
         id: muteProc
 

@@ -92,6 +92,13 @@ Item {
 
     }
 
+    Timer {
+        interval: 1000
+        running:  true
+        repeat:   true
+        onTriggered: brightProc.running = true
+    }
+
     Process {
         id: setBrightProc
 
