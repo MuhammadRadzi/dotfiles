@@ -365,34 +365,32 @@ PanelWindow {
 
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 wifiStatusProc.running = true;
-            }
+
         }
     }
 
     // Bluetooth
-    Process {
-        id: btStatusProc
-
-        command: ["sh", "-c", "bluetoothctl show | grep 'Powered:' | awk '{print $2}' | tr -d '[:space:]'"]
-
-        stdout: SplitParser {
-            onRead: (data) => {
-                btToggle.btEnabled = data.trim() === "yes";
-            }
+  Process {
+    id: btStatusProc
+    command: ["sh", "-c", "bluetoothctl show | grep 'Powered:' | awk '{print $2}'"]
+    stdout: SplitParser {
+        onRead: (data) => {
+            console.log("BT data: '" + data + "' trim: '" + data.trim() + "'")
+            btToggle.btEnabled = data.trim().startsWith("yes")
         }
-
     }
+}
 
     Process {
         id: btToggleProc
 
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 btStatusProc.running = true;
-            }
+
         }
     }
 
