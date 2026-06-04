@@ -14,21 +14,23 @@ ShellRoot {
     }
 
     MusicPlayer { id: mp }
-
     PowerMenu { id: pm }
     WallpaperSelector { id: ws }
     NotificationCenter { id: nc }
     KeybindCheatsheet { id: ks }
     AppLauncher { id: al }
-
+    ClipboardManager { id: cm }
     OSD {
         id: osd
         bar: bar
     }
-
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
 
+    IpcHandler {
+        target: "toggle-clipboard"
+        function handle(): void { cm.toggle() }
+    }
     IpcHandler {
         target: "toggle-launcher"
         function handle(): void { al.toggle() }

@@ -45,7 +45,7 @@ PanelWindow {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.rightMargin: 10
-            anchors.topMargin: 65
+            anchors.topMargin: 41 + 8
             width: 360
             height: Math.min(notifCol.implicitHeight + 32, 600)
             radius: 10
