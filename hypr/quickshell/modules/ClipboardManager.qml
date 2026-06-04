@@ -67,7 +67,7 @@ PanelWindow {
             anchors.topMargin: 41 + 8
             width: 360
             height: Math.min(panelCol.implicitHeight + 32, 600)
-            radius: 16
+            radius: 10
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"

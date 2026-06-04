@@ -36,7 +36,7 @@ Rectangle {
 
             Text {
                 text: "GPU"
-                color: Colors.accent
+                color: Colors.text
                 font.pixelSize: 13
                 font.bold: true
                 font.family: "JetBrainsMono Nerd Font"
@@ -52,7 +52,7 @@ Rectangle {
                     ctx.reset();
                     let step = width / (root.gpuHistory.length - 1);
                     ctx.beginPath();
-                    ctx.strokeStyle = Colors.accent
+                    ctx.strokeStyle = Colors.text
                     ctx.lineWidth = 2;
                     ctx.lineCap = "round";
                     for (let i = 0; i < root.gpuHistory.length; i++) {
@@ -75,7 +75,7 @@ Rectangle {
 
             Text {
                 text: "RAM"
-                color: Colors.blue
+                color: Colors.text
                 font.pixelSize: 13
                 font.bold: true
                 font.family: "JetBrainsMono Nerd Font"
@@ -91,7 +91,7 @@ Rectangle {
                     ctx.reset();
                     let step = width / (root.ramHistory.length - 1);
                     ctx.beginPath();
-                    ctx.strokeStyle = Colors.blue
+                    ctx.strokeStyle = Colors.text
                     ctx.lineWidth = 2;
                     ctx.lineCap = "round";
                     for (let i = 0; i < root.ramHistory.length; i++) {
