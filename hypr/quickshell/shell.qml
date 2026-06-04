@@ -19,6 +19,7 @@ ShellRoot {
     WallpaperSelector { id: ws }
     NotificationCenter { id: nc }
     KeybindCheatsheet { id: ks }
+    AppLauncher { id: al }
 
     OSD {
         id: osd
@@ -28,6 +29,10 @@ ShellRoot {
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
 
+    IpcHandler {
+        target: "toggle-launcher"
+        function handle(): void { al.toggle() }
+    }
     IpcHandler {
         target: "toggle-wallpaper"
         function handle(): void { ws.isOpen = !ws.isOpen }
