@@ -21,3 +21,4 @@ OSD 1.0 OSD.qml
 MusicPlayer 1.0 MusicPlayer.qml
 AppLauncher 1.0 app-launcher/AppLauncher.qml
 ClipboardManager 1.0 clipboard/ClipboardManager.qml
+FileBrowser 1.0 file-browser/FileBrowser.qml

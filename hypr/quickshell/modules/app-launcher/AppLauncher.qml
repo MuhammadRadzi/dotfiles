@@ -98,7 +98,7 @@ PanelWindow {
             anchors.centerIn: parent
             width: 560
             height: panelCol.implicitHeight + 32
-            radius: 16
+            radius: 10
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"

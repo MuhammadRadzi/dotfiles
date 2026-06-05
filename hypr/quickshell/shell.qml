@@ -20,6 +20,7 @@ ShellRoot {
     KeybindCheatsheet { id: ks }
     AppLauncher { id: al }
     ClipboardManager { id: cm }
+    FileBrowser { id: fb }
     OSD {
         id: osd
         bar: bar
@@ -27,6 +28,10 @@ ShellRoot {
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
 
+    IpcHandler {
+        target: "toggle-filebrowser"
+        function handle(): void { fb.toggle() }
+    }
     IpcHandler {
         target: "toggle-clipboard"
         function handle(): void { cm.toggle() }
