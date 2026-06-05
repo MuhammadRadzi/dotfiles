@@ -14,7 +14,7 @@ PanelWindow {
     property var filteredItems: []
     property var imagePreviews: ({
     })
-    property string homePath: Quickshell.env("HOME") !== "" ? Quickshell.env("HOME") : "/home/murasa"
+    property string homePath: Quickshell.env("HOME")
     property bool initialized: false
 
     function toggle() {

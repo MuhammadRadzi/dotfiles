@@ -16,7 +16,7 @@ PanelWindow {
     property var filteredEntries: []
     property string searchText: ""
     property var pathHistory: []
-    property string homePath: "/home/murasa"
+    property string homePath: Quickshell.env("HOME")
 
     function toggle() {
         isOpen = !isOpen;

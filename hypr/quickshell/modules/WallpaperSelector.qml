@@ -143,7 +143,7 @@ PanelWindow {
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        setWallProc.command = ["bash", "/home/murasa/.config/hypr/scripts/wallpaper.sh", modelData];
+                                        setWallProc.command = ["bash", "$HOME/.config/hypr/scripts/wallpaper.sh", modelData];
                                         setWallProc.running = true;
                                         wallpaperSelector.isOpen = false;
                                     }

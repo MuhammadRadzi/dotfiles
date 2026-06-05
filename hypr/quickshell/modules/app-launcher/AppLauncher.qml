@@ -13,7 +13,7 @@ PanelWindow {
     property var filteredApps: []
     property int selectedIndex: 0
     property string searchText: ""
-    property string homePath: Quickshell.env("HOME") !== "" ? Quickshell.env("HOME") : "/home/murasa"
+    property string homePath: Quickshell.env("HOME")
     property bool initialized: false
 
     function toggle() {
