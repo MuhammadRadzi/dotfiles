@@ -1,4 +1,4 @@
-import "../theme"
+import "../../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -13,6 +13,8 @@ PanelWindow {
     property var filteredApps: []
     property int selectedIndex: 0
     property string searchText: ""
+    property string homePath: Quickshell.env("HOME") !== "" ? Quickshell.env("HOME") : "/home/murasa"
+    property bool initialized: false
 
     function toggle() {
         isOpen = !isOpen;
@@ -47,16 +49,20 @@ PanelWindow {
         isOpen = false;
     }
 
-    visible: overlayRect.opacity > 0
+    visible: initialized && (isOpen || overlayRect.opacity > 0)
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true
     WlrLayershell.anchors.bottom: true
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
+    WlrLayershell.keyboardFocus: isOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     color: "transparent"
     onIsOpenChanged: {
         if (isOpen) {
+            if (allApps.length === 0)
+                scanProc.running = true;
+
             searchText = "";
             selectedIndex = 0;
             filterApps("");
@@ -64,6 +70,9 @@ PanelWindow {
         }
     }
     Component.onCompleted: {
+        initialized = true;
+        console.log("AppLauncher: HOME =", Quickshell.env("HOME"));
+        console.log("AppLauncher: starting scan");
         scanProc.running = true;
     }
 
@@ -78,6 +87,7 @@ PanelWindow {
         MouseArea {
             anchors.fill: parent
             enabled: isOpen
+            visible: isOpen
             onClicked: appLauncher.isOpen = false
         }
 
@@ -380,9 +390,10 @@ PanelWindow {
     Process {
         id: scanProc
 
-        command: ["python3", Quickshell.env("HOME") + "/.config/hypr/scripts/list_apps.py"]
+        command: ["python3", homePath + "/.config/hypr/quickshell/modules/app-launcher/list_apps.py"]
         running: false
         onRunningChanged: {
+            console.log("AppLauncher: scan done, raw length:", scanProc.stdout.buf.length);
             if (!running) {
                 var raw = scanProc.stdout.buf;
                 scanProc.stdout.buf = "";
