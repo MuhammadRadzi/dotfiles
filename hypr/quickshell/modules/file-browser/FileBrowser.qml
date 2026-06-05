@@ -217,10 +217,8 @@ PanelWindow {
 
                     // Toggle hidden files button
                     Text {
-                        text: "\uf023"
-                        color: showHidden
-                            ? Colors.accent
-                            : (hiddenArea.containsMouse ? Colors.text : Colors.subtle)
+                        text: showHidden ? "\udb80\ude08" : "\udb80\ude09"
+                        color: hiddenArea.containsMouse ? Colors.text : Colors.subtle
                         font.pixelSize: 13
                         font.family: "JetBrainsMono Nerd Font"
 
