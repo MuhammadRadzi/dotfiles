@@ -21,7 +21,7 @@ Item {
     Process {
         id: weatherProc
 
-        command: ["bash", "-c", "KEY=$(cat $HOME/.config/hypr/.env.local | grep OPENWEATHER_KEY | cut -d= -f2) && curl -s 'https://api.openweathermap.org/data/2.5/weather?q=Makassar&appid='\"$KEY\"'&units=metric' | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d['weather'][0]['main']+'|'+str(round(d['main']['temp']))+'|'+str(d['main']['humidity']))\""]
+        command: ["bash", "-c", "ENV=$HOME/.config/hypr/.env.local; KEY=$(grep OPENWEATHER_KEY \"$ENV\" | cut -d= -f2 | tr -d ' '); CITY=$(grep WEATHER_CITY \"$ENV\" | cut -d= -f2 | tr -d ' '); [ -z \"$KEY\" ] && echo 'ERR_NO_KEY' && exit 0; [ -z \"$CITY\" ] && echo 'ERR_NO_CITY' && exit 0; curl -s \"https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${KEY}&units=metric\" | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d['weather'][0]['main']+'|'+str(round(d['main']['temp']))+'|'+str(d['main']['humidity']))\""]
         Component.onCompleted: running = true
 
         stdout: SplitParser {
@@ -29,6 +29,14 @@ Item {
                 if (!data || data.trim() === "")
                     return ;
 
+                if (data.trim() === "ERR_NO_KEY") {
+                    weatherText = "⚠ No API key";
+                    return ;
+                }
+                if (data.trim() === "ERR_NO_CITY") {
+                    weatherText = "⚠ No city set";
+                    return ;
+                }
                 var parts = data.trim().split("|");
                 var cond = parts[0] || "";
                 var temp = parts[1] || "?";

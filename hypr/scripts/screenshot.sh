@@ -40,16 +40,3 @@ wl-copy < "$FILE"
 notify-send "Screenshot" "Saved to $FILE\nCopied to clipboard" \
     -i "$FILE" \
     -t 4000 \
-    --action="open=Open Folder" &
-
-# Capture notification action
-NOTIF_PID=$!
-ACTION=$(wait $NOTIF_PID && dunstctl history | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-" 2>/dev/null)
-
-# Open folder if user clicks notification
-if [ "$ACTION" = "open" ]; then
-    xdg-open "$SCREENSHOT_DIR"
-fi

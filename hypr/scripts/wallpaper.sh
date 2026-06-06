@@ -2,6 +2,19 @@
 
 WALLPAPER="$1"
 
+# Fallback to default wallpaper if no argument is provided
+if [ -z "$WALLPAPER" ]; then
+    LAST_WALLPAPER="$HOME/.config/hypr/.last_wallpaper"
+    if [ -f "$LAST_WALLPAPER" ]; then
+        WALLPAPER=$(cat "$LAST_WALLPAPER")
+    else
+        WALLPAPER="$HOME/.config/hypr/assets/wallpapers/jr.jpg"
+    fi
+fi
+
+# Save current wallpaper path for next startup
+echo "$WALLPAPER" > "$HOME/.config/hypr/.last_wallpaper"
+
 command -v convert &>/dev/null || {
     notify-send "wallpaper.sh" "Hey, it seems like you don't have ImageMagick installed."
     exit 1
@@ -68,7 +81,7 @@ shape {
 # Battery — pojok kanan atas
 label {
     monitor =
-    text = cmd[update:30000] echo "\$(cat /sys/class/power_supply/BAT0/capacity)% \$(cat /sys/class/power_supply/BAT0/status | sed 's/Charging/[CHR]/;s/Discharging/[BAT]/;s/Full/[FULL]/;s/Not charging/[~]/')"
+    text = cmd[update:30000] bash -c 'BAT=\$(ls /sys/class/power_supply | grep -m1 BAT); [ -z "\$BAT" ] && echo "No battery" && exit 0; echo "\$(cat /sys/class/power_supply/\$BAT/capacity)% \$(cat /sys/class/power_supply/\$BAT/status | sed \"s/Charging/[CHR]/;s/Discharging/[BAT]/;s/Full/[FULL]/;s/Not charging/[~]/\")"'
     color = rgba($(hex2rgb $fg), 0.8)
     font_size = 13
     font_family = JetBrainsMono Nerd Font
