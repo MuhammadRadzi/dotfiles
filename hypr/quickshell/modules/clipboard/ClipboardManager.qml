@@ -48,9 +48,9 @@ PanelWindow {
         imagePreviews = updated;
         var cmd;
         if (entryType === "image-uri")
-            cmd = ["python3", Quickshell.env("HOME") + "/.config/hypr/quickshell/modules/clipboard/decode_preview.py", entryId, entryPreview];
+            cmd = ["python3", homePath + "/.config/hypr/quickshell/modules/clipboard/decode_preview.py", entryId, entryPreview];
         else
-            cmd = ["python3", Quickshell.env("HOME") + "/.config/hypr/quickshell/modules/clipboard/decode_preview.py", entryId];
+            cmd = ["python3", homePath + "/.config/hypr/quickshell/modules/clipboard/decode_preview.py", entryId];
         var proc = Qt.createQmlObject(`
             import Quickshell.Io
             Process { property string eid: ""; running: false }

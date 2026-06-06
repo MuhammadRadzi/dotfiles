@@ -12,6 +12,7 @@ PanelWindow {
     property var wallpapers: []
     property string wallpaperDir: Quickshell.env("HOME") + "/.config/hypr/assets/wallpapers"
     property string thumbDir: Quickshell.env("HOME") + "/.config/hypr/assets/thumbnails"
+    property string homePath: Quickshell.env("HOME")
 
     visible: panelRect.opacity > 0
     WlrLayershell.layer: WlrLayer.Overlay
@@ -143,7 +144,7 @@ PanelWindow {
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        setWallProc.command = ["bash", "$HOME/.config/hypr/scripts/wallpaper.sh", modelData];
+                                        setWallProc.command = ["bash", homePath + "/.config/hypr/scripts/wallpaper.sh", modelData];
                                         setWallProc.running = true;
                                         wallpaperSelector.isOpen = false;
                                     }

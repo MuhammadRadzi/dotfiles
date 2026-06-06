@@ -9,6 +9,9 @@ command -v convert &>/dev/null || {
 
 awww img "$WALLPAPER" --transition-type random --transition-duration 1
 
+convert "$WALLPAPER" -resize 300x180^ -gravity Center -extent 300x180 \
+    ~/.config/hypr/assets/thumbnails/$(basename "$WALLPAPER")
+
 wallust run "$WALLPAPER" -q || true
 
 pkill -SIGUSR1 cava || true
