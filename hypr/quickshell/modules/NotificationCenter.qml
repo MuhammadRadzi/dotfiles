@@ -9,17 +9,20 @@ PanelWindow {
     id: notifCenter
 
     property bool isOpen: false
+    property bool initialized: false
     property var notifications: []
 
-    visible: panelRect.opacity > 0
+    visible: initialized && (isOpen || panelRect.opacity > 0)
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     WlrLayershell.anchors.top: true
     WlrLayershell.anchors.bottom: true
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
     color: "transparent"
     onIsOpenChanged: {
+        initialized = true;
         if (isOpen) {
             historyProc.running = true;
             pollTimer.running = true;
@@ -334,7 +337,7 @@ PanelWindow {
                         var date = new Date(ts / 1000);
                         var now = new Date();
                         var diff = Math.floor((now - date) / 60000);
-                        var timeStr = diff < 1 ? "just now" : diff < 60 ? diff + "m ago" : Math.floor(diff / 60) + "h ago";
+                        var timeStr = (isNaN(date.getTime()) || ts === 0 || diff < 0) ? "" : diff < 1 ? "just now" : diff < 60 ? diff + "m ago" : Math.floor(diff / 60) + "h ago";
                         list.push({
                             "id": n.id.data,
                             "summary": n.summary.data,

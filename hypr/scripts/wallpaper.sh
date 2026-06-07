@@ -8,7 +8,7 @@ if [ -z "$WALLPAPER" ]; then
     if [ -f "$LAST_WALLPAPER" ]; then
         WALLPAPER=$(cat "$LAST_WALLPAPER")
     else
-        WALLPAPER="$HOME/.config/hypr/assets/wallpapers/jr.jpg"
+        WALLPAPER="$HOME/Pictures/Wallpapers/jr.jpg"
     fi
 fi
 
@@ -22,8 +22,9 @@ command -v convert &>/dev/null || {
 
 awww img "$WALLPAPER" --transition-type random --transition-duration 1
 
+mkdir -p ~/.cache/hypr/thumbnails
 convert "$WALLPAPER" -resize 300x180^ -gravity Center -extent 300x180 \
-    ~/.config/hypr/assets/thumbnails/$(basename "$WALLPAPER")
+    ~/.cache/hypr/thumbnails/$(basename "$WALLPAPER")
 
 wallust run "$WALLPAPER" -q || true
 

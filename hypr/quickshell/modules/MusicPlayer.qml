@@ -1,6 +1,7 @@
 import "../theme"
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Window
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -64,8 +65,7 @@ PanelWindow {
                 var parts = data.trim().split(", ");
                 var x = parseInt(parts[0]);
                 var y = parseInt(parts[1]);
-                // zona pojok kanan bawah — x >= 1070, y >= 1070 (1920x1080)
-                root.cursorInZone = (x >= 1070 && y >= 1070);
+                root.cursorInZone = (x >= Screen.width - 850 && y >= Screen.height - 10);
             }
         }
 
@@ -76,9 +76,9 @@ PanelWindow {
         running: true
         repeat: true
         onTriggered: {
-            if (root.hasPlayer) {
+            if (root.hasPlayer)
                 cursorProc.running = true;
-            }
+
         }
     }
 
@@ -360,9 +360,9 @@ PanelWindow {
         command: ["playerctl", "previous"]
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 metaProc.running = true;
-            }
+
         }
     }
 
@@ -372,9 +372,9 @@ PanelWindow {
         command: ["playerctl", "play-pause"]
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 metaProc.running = true;
-            }
+
         }
     }
 
@@ -384,9 +384,9 @@ PanelWindow {
         command: ["playerctl", "next"]
         running: false
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 metaProc.running = true;
-            }
+
         }
     }
 

@@ -2,6 +2,7 @@
 import Quickshell
 import Quickshell.Io
 import "modules"
+import "modules/ruleseditor"
 
 ShellRoot {
     Bar {
@@ -21,13 +22,19 @@ ShellRoot {
     AppLauncher { id: al }
     ClipboardManager { id: cm }
     FileBrowser { id: fb }
+    RulesEditor { id: rulesEditorPanel }
     OSD {
         id: osd
         bar: bar
     }
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
-
+    IpcHandler {
+        target: "toggle-rules"
+        function handle() {
+            rulesEditorPanel.isOpen = !rulesEditorPanel.isOpen;
+        }
+    }
     IpcHandler {
         target: "toggle-filebrowser"
         function handle(): void { fb.toggle() }

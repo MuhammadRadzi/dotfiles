@@ -10,8 +10,8 @@ PanelWindow {
 
     property bool isOpen: false
     property var wallpapers: []
-    property string wallpaperDir: Quickshell.env("HOME") + "/.config/hypr/assets/wallpapers"
-    property string thumbDir: Quickshell.env("HOME") + "/.config/hypr/assets/thumbnails"
+    property string wallpaperDir: Quickshell.env("HOME") + "/Pictures/Wallpapers"
+    property string thumbDir: Quickshell.env("HOME") + "/.cache/hypr/thumbnails"
     property string homePath: Quickshell.env("HOME")
 
     visible: panelRect.opacity > 0
@@ -113,28 +113,50 @@ PanelWindow {
                                 border.color: thumbArea.containsMouse ? Colors.accent : "transparent"
 
                                 Image {
+                                    id: thumbImg
+
                                     anchors.fill: parent
                                     source: "file://" + thumbDir + "/" + modelData.split("/").pop()
                                     fillMode: Image.PreserveAspectCrop
                                     smooth: true
                                     asynchronous: true
-                                    cache: true
+                                    cache: false
+                                    onStatusChanged: {
+                                        // If thumbnail missing, generate it via wallpaper.sh convert step
+                                        if (status === Image.Error) {
+                                            genThumbProc.command = ["convert", modelData, "-resize", "300x180^", "-gravity", "Center", "-extent", "300x180", thumbDir + "/" + modelData.split("/").pop()];
+                                            genThumbProc.running = true;
+                                        }
+                                    }
                                 }
 
                                 Rectangle {
                                     anchors.fill: parent
                                     color: Colors.surface
-                                    visible: parent.children[0].status !== Image.Ready
+                                    visible: thumbImg.status !== Image.Ready
                                     radius: 8
 
                                     Text {
                                         anchors.centerIn: parent
-                                        text: "\uf03e"
+                                        text: thumbImg.status === Image.Error ? "\uf021" : "\uf03e"
                                         color: Colors.subtle
                                         font.pixelSize: 20
                                         font.family: "JetBrainsMono Nerd Font"
                                     }
 
+                                }
+
+                                Process {
+                                    id: genThumbProc
+
+                                    running: false
+                                    onRunningChanged: {
+                                        if (!running) {
+                                            // Reload image after thumbnail generated
+                                            thumbImg.source = "";
+                                            thumbImg.source = "file://" + thumbDir + "/" + modelData.split("/").pop();
+                                        }
+                                    }
                                 }
 
                                 MouseArea {
