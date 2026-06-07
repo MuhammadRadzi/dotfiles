@@ -16,11 +16,13 @@ PanelWindow {
     property string formRule: ""
     property string formFilter: ""
     property int editIndex: -1 // -1 = add new, >= 0 = editing existing
+    property int deleteConfirmIndex: -1 // -1 = none, >= 0 = waiting confirm
 
     function resetForm() {
         formRule = "";
         formFilter = "";
         editIndex = -1;
+        deleteConfirmIndex = -1;
         ruleInput.text = "";
         filterInput.text = "";
     }
@@ -450,9 +452,10 @@ PanelWindow {
                             }
 
                             // Delete button
+                            // Delete button - first click: confirm, second click: delete
                             Text {
-                                text: "\uf00d"
-                                color: deleteBtnArea.containsMouse ? Colors.red : Colors.subtle
+                                text: deleteConfirmIndex === index ? "\uf00c" : "\uf00d"
+                                color: deleteBtnArea.containsMouse ? (deleteConfirmIndex === index ? Colors.red : Colors.red) : (deleteConfirmIndex === index ? Colors.red : Colors.subtle)
                                 font.pixelSize: 12
                                 font.family: "JetBrainsMono Nerd Font"
 
@@ -462,7 +465,40 @@ PanelWindow {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
-                                    onClicked: rulesEditor.deleteRule(index)
+                                    onClicked: {
+                                        if (deleteConfirmIndex === index) {
+                                            rulesEditor.deleteRule(index);
+                                            deleteConfirmIndex = -1;
+                                        } else {
+                                            deleteConfirmIndex = index;
+                                        }
+                                    }
+                                }
+
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+
+                                }
+
+                            }
+
+                            // Cancel delete confirmation
+                            Text {
+                                visible: deleteConfirmIndex === index
+                                text: "\uf00d"
+                                color: cancelDeleteArea.containsMouse ? Colors.subtle : Colors.overlay
+                                font.pixelSize: 12
+                                font.family: "JetBrainsMono Nerd Font"
+
+                                MouseArea {
+                                    id: cancelDeleteArea
+
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: deleteConfirmIndex = -1
                                 }
 
                                 Behavior on color {
