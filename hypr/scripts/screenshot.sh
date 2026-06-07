@@ -39,4 +39,4 @@ wl-copy < "$FILE"
 # Notification with preview
 notify-send "Screenshot" "Saved to $FILE\nCopied to clipboard" \
     -i "$FILE" \
-    -t 4000 \
+    -t 4000 

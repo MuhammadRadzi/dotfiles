@@ -164,7 +164,7 @@ PanelWindow {
                     }
 
                     Text {
-                        text: "\uf2ed"
+                        text: "\uf014"
                         color: clearAllArea.containsMouse ? Colors.red : Colors.subtle
                         font.pixelSize: 13
                         font.family: "JetBrainsMono Nerd Font"
