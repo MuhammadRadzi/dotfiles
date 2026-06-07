@@ -402,7 +402,7 @@ PanelWindow {
                                 implicitWidth: ruleLabel.implicitWidth + 12
                                 implicitHeight: 22
                                 radius: 6
-                                color: Colors.accent + "33"
+                                color: "#22ffffff"
 
                                 Text {
                                     id: ruleLabel
