@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import "modules"
 import "modules/ruleseditor"
+import "modules/screenshot"
 
 ShellRoot {
     Bar {
@@ -23,12 +24,17 @@ ShellRoot {
     ClipboardManager { id: cm }
     FileBrowser { id: fb }
     RulesEditor { id: rulesEditorPanel }
+    ScreenshotTool { id: screenshotTool }
     OSD {
         id: osd
         bar: bar
     }
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
+    IpcHandler {
+        target: "toggle-screenshot"
+        function handle(): void { screenshotTool.toggle() }
+    }
     IpcHandler {
         target: "toggle-rules"
         function handle() {
