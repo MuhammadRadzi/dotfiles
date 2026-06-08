@@ -68,32 +68,32 @@ PanelWindow {
                             "icon": "\uf023",
                             "label": "Lock",
                             "cmd": "hyprlock",
-                            "color": Colors.accent
+                            "color": "#85B7EB"
                         }, {
                             "icon": "\uf186",
                             "label": "Suspend",
                             "cmd": "systemctl suspend",
-                            "color": Colors.yellow
+                            "color": "#AFA9EC"
                         }, {
-                            "icon": "\uf2ce",
+                            "icon": "\udb81\udf17",
                             "label": "Hibernate",
                             "cmd": "systemctl hibernate",
-                            "color": "#ffa500"
+                            "color": "#5DCAA5"
                         }, {
                             "icon": "\uf021",
                             "label": "Reboot",
                             "cmd": "systemctl reboot",
-                            "color": Colors.green
+                            "color": "#EF9F27"
                         }, {
                             "icon": "\uf011",
                             "label": "Shutdown",
                             "cmd": "systemctl poweroff",
-                            "color": Colors.red
+                            "color": "#F09595"
                         }, {
                             "icon": "\udb80\udf43",
                             "label": "Logout",
                             "cmd": "loginctl terminate-user $USER",
-                            "color": Colors.blue
+                            "color": "#ED93B1"
                         }]
 
                         Rectangle {
