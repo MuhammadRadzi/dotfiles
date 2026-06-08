@@ -4,6 +4,7 @@ import Quickshell.Io
 import "modules"
 import "modules/ruleseditor"
 import "modules/screenshot"
+import "modules/quicknote"
 
 ShellRoot {
     Bar {
@@ -25,12 +26,17 @@ ShellRoot {
     FileBrowser { id: fb }
     RulesEditor { id: rulesEditorPanel }
     ScreenshotTool { id: screenshotTool }
+    QuickNote { id: quickNote }
     OSD {
         id: osd
         bar: bar
     }
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
+    IpcHandler {
+        target: "toggle-quicknote"
+        function handle(): void { quickNote.toggle() }
+    }
     IpcHandler {
         target: "toggle-screenshot"
         function handle(): void { screenshotTool.toggle() }
