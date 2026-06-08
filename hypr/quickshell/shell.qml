@@ -5,6 +5,7 @@ import "modules"
 import "modules/ruleseditor"
 import "modules/screenshot"
 import "modules/quicknote"
+import "modules/wallpaper"
 
 ShellRoot {
     Bar {
