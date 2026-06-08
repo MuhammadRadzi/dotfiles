@@ -9,7 +9,15 @@ PanelWindow {
     id: powerMenu
 
     property bool isOpen: false
+    property string sessionUptime: "..."
+    property string windowCount: "..."
+    property string activeWorkspace: "..."
 
+    onIsOpenChanged: {
+        if (isOpen)
+            infoProc.running = true;
+
+    }
     visible: overlayRect.opacity > 0
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
@@ -56,6 +64,101 @@ PanelWindow {
                 anchors.centerIn: parent
                 width: parent.width - 48
                 spacing: 24
+
+                // Session info strip
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 48
+                    radius: 10
+                    color: "#11ffffff"
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 12
+                        spacing: 0
+
+                        // Uptime
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 6
+
+                            Text {
+                                text: "\uf017"
+                                color: Colors.accent
+                                font.pixelSize: 13
+                                font.family: "JetBrainsMono Nerd Font"
+                            }
+
+                            Text {
+                                text: sessionUptime
+                                color: Colors.subtle
+                                font.pixelSize: 11
+                                font.family: "JetBrainsMono Nerd Font"
+                            }
+
+                        }
+
+                        // Divider
+                        Rectangle {
+                            width: 1
+                            height: 24
+                            color: "#22ffffff"
+                        }
+
+                        // Windows
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 12
+                            spacing: 6
+
+                            Text {
+                                text: "\uf2d0"
+                                color: Colors.accent
+                                font.pixelSize: 13
+                                font.family: "JetBrainsMono Nerd Font"
+                            }
+
+                            Text {
+                                text: windowCount + " windows"
+                                color: Colors.subtle
+                                font.pixelSize: 11
+                                font.family: "JetBrainsMono Nerd Font"
+                            }
+
+                        }
+
+                        // Divider
+                        Rectangle {
+                            width: 1
+                            height: 24
+                            color: "#22ffffff"
+                        }
+
+                        // Workspace
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 12
+                            spacing: 6
+
+                            Text {
+                                text: "\udb81\udc06"
+                                color: Colors.accent
+                                font.pixelSize: 13
+                                font.family: "JetBrainsMono Nerd Font"
+                            }
+
+                            Text {
+                                text: "WS " + activeWorkspace
+                                color: Colors.subtle
+                                font.pixelSize: 11
+                                font.family: "JetBrainsMono Nerd Font"
+                            }
+
+                        }
+
+                    }
+
+                }
 
                 GridLayout {
                     Layout.fillWidth: true
@@ -208,6 +311,35 @@ PanelWindow {
         id: execProc
 
         running: false
+    }
+
+    Process {
+        id: infoProc
+
+        command: ["bash", "-c", "UPTIME=$(uptime -p | sed 's/up //' | sed 's/ hours\\?/h/' | sed 's/ minutes\\?/m/' | sed 's/,//g' | xargs);" + "WINDOWS=$(hyprctl clients -j | python3 -c \"import json,sys; print(len(json.load(sys.stdin)))\");" + "WS=$(hyprctl activeworkspace -j | python3 -c \"import json,sys; print(json.load(sys.stdin)['id'])\");" + "echo \"$UPTIME|$WINDOWS|$WS\""]
+        running: false
+        onRunningChanged: {
+            if (!running) {
+                var out = infoProc.stdout.buf.trim();
+                infoProc.stdout.buf = "";
+                var parts = out.split("|");
+                if (parts.length === 3) {
+                    powerMenu.sessionUptime = parts[0];
+                    powerMenu.windowCount = parts[1];
+                    powerMenu.activeWorkspace = parts[2];
+                }
+            }
+        }
+
+        stdout: SplitParser {
+            property string buf: ""
+
+            splitMarker: ""
+            onRead: (data) => {
+                buf += data;
+            }
+        }
+
     }
 
 }
