@@ -6,15 +6,18 @@ import "modules/ruleseditor"
 import "modules/screenshot"
 import "modules/quicknote"
 import "modules/wallpaper"
+import "modules/todo"
 
 ShellRoot {
     Bar {
         id: bar
+        todoCount: todoWidget.activeCount
         onTogglePower: pm.isOpen = !pm.isOpen
         onToggleWallpaper: ws.isOpen = !ws.isOpen
         onToggleNotif: nc.isOpen = !nc.isOpen
         onToggleCal: cal.toggle()
         onToggleCC: cc.toggle()
+        onToggleTodo: todoWidget.toggle()
     }
 
     MusicPlayer { id: mp }
@@ -28,12 +31,18 @@ ShellRoot {
     RulesEditor { id: rulesEditorPanel }
     ScreenshotTool { id: screenshotTool }
     QuickNote { id: quickNote }
+    TodoWidget { id: todoWidget }
     OSD {
         id: osd
         bar: bar
     }
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
+
+    IpcHandler {
+        target: "toggle-todo"
+        function handle(): void { todoWidget.toggle() }
+    }
     IpcHandler {
         target: "toggle-quicknote"
         function handle(): void { quickNote.toggle() }

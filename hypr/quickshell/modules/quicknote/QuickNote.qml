@@ -46,10 +46,10 @@ PanelWindow {
         id: panelRect
 
         anchors.verticalCenter: parent.verticalCenter
-        x: isOpen ? 16 : -width - 20
+        x: isOpen ? 10 : -width - 20
         width: 320
         height: Math.min(contentCol.implicitHeight + 32, 500)
-        radius: 16
+        radius: 10
         color: "#d916181c"
         border.width: 1
         border.color: "#22ffffff"

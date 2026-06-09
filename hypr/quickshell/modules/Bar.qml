@@ -8,11 +8,14 @@ import Quickshell.Wayland
 PanelWindow {
     id: root
 
+    property int todoCount: 0
+
     signal togglePower()
     signal toggleWallpaper()
     signal toggleNotif()
     signal toggleCal()
     signal toggleCC()
+    signal toggleTodo()
 
     implicitHeight: 56
     color: "transparent"
@@ -131,6 +134,70 @@ PanelWindow {
                 }
 
                 Workspaces {
+                }
+
+                 Rectangle {
+                    width: 1
+                    height: 14
+                    color: Colors.overlay
+                }
+
+                // Todo badge
+                Item {
+                    visible: todoCount > 0
+                    width: todoRow.implicitWidth
+                    height: todoRow.implicitHeight
+
+                    RowLayout {
+                        id: todoRow
+
+                        spacing: 4
+
+                        Text {
+                            text: "\uf0ae"
+                            color: todoArea.containsMouse ? Colors.text : Colors.subtle
+                            font.pixelSize: 14
+                            font.family: "JetBrainsMono Nerd Font"
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
+                        }
+
+                        Rectangle {
+                            width: badgeText.implicitWidth + 6
+                            height: 16
+                            radius: 8
+                            color: Colors.accent
+
+                            Text {
+                                id: badgeText
+
+                                anchors.centerIn: parent
+                                text: todoCount
+                                color: Colors.base
+                                font.pixelSize: 9
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.bold: true
+                            }
+
+                        }
+
+                    }
+
+                    MouseArea {
+                        id: todoArea
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.toggleTodo()
+                    }
+
                 }
 
             }
