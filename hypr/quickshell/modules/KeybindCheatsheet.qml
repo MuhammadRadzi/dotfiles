@@ -106,13 +106,13 @@ PanelWindow {
                                 "category": "APPS"
                             }, {
                                 "key": "Super + T",
-                                "desc": "Terminal (kitty)"
+                                "desc": "Terminal"
                             }, {
                                 "key": "Super + E",
-                                "desc": "File manager"
+                                "desc": "File Manager"
                             }, {
                                 "key": "Super + D",
-                                "desc": "App launcher"
+                                "desc": "App Launcher"
                             }, {
                                 "key": "Super + F",
                                 "desc": "Browser"
@@ -175,7 +175,7 @@ PanelWindow {
                                         implicitWidth: keyText.implicitWidth + 12
                                         implicitHeight: 20
                                         radius: 4
-                                        color: Colors.overlay
+                                        color: "#22ffffff"
 
                                         Text {
                                             id: keyText
@@ -234,6 +234,9 @@ PanelWindow {
                                 "key": "Super + W",
                                 "desc": "Wallpaper selector"
                             }, {
+                                "key": "Super + V",
+                                "desc": "Clipboard"
+                            }, {
                                 "key": "Super + N",
                                 "desc": "Notifications"
                             }, {
@@ -241,7 +244,10 @@ PanelWindow {
                                 "desc": "Power menu"
                             }, {
                                 "key": "Super + F1",
-                                "desc": "This cheatsheet"
+                                "desc": "This Cheatsheet"
+                            }, {
+                                "key": "SUPER + R",
+                                "desc": "Reload Quickshell"
                             }, {
                                 "key": "",
                                 "desc": ""
@@ -252,13 +258,7 @@ PanelWindow {
                                 "desc": "Lock screen"
                             }, {
                                 "key": "Print",
-                                "desc": "Screenshot area"
-                            }, {
-                                "key": "Super + Print",
-                                "desc": "Screenshot full"
-                            }, {
-                                "key": "Super + Shift + S",
-                                "desc": "Screenshot area"
+                                "desc": "Screenshot"
                             }]
 
                             delegate: Item {
@@ -286,7 +286,7 @@ PanelWindow {
                                         implicitWidth: keyText2.implicitWidth + 12
                                         implicitHeight: 20
                                         radius: 4
-                                        color: Colors.overlay
+                                        color: "#22ffffff"
 
                                         Text {
                                             id: keyText2

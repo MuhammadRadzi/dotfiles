@@ -45,11 +45,11 @@ PanelWindow {
 
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.rightMargin: 16
-            anchors.topMargin: 56 + 8
+            anchors.rightMargin: 13
+            anchors.topMargin: 50
             width: 320
             height: ccCol.implicitHeight + 32
-            radius: 16
+            radius: 10
             color: "#d916181c"
             border.width: 1
             border.color: "#22ffffff"

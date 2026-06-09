@@ -7,6 +7,7 @@ import "modules/screenshot"
 import "modules/quicknote"
 import "modules/wallpaper"
 import "modules/todo"
+import "modules/processmanager"
 
 ShellRoot {
     Bar {
@@ -31,14 +32,19 @@ ShellRoot {
     RulesEditor { id: rulesEditorPanel }
     ScreenshotTool { id: screenshotTool }
     QuickNote { id: quickNote }
-    TodoWidget { id: todoWidget }
+    TodoWidget { id: todoWidget }    
+    ProcessManager { id: procMgr }
+    CalendarPopup { id: cal }
+    ControlCenter { id: cc }
     OSD {
         id: osd
         bar: bar
     }
-    CalendarPopup { id: cal }
-    ControlCenter { id: cc }
 
+    IpcHandler {
+        target: "toggle-process"
+        function handle(): void { procMgr.toggle() }
+    }
     IpcHandler {
         target: "toggle-todo"
         function handle(): void { todoWidget.toggle() }

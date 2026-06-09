@@ -137,6 +137,7 @@ PanelWindow {
                 }
 
                  Rectangle {
+                    visible: todoCount > 0
                     width: 1
                     height: 14
                     color: Colors.overlay
