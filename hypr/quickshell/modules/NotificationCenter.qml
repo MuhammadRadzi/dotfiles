@@ -11,11 +11,21 @@ PanelWindow {
     property bool isOpen: false
     property bool initialized: false
     property var notifications: []
+    property string searchText: ""
+    property var filteredNotifications: {
+        if (searchText === "")
+            return notifications;
+
+        var q = searchText.toLowerCase();
+        return notifications.filter(function(n) {
+            return n.summary.toLowerCase().indexOf(q) !== -1 || n.body.toLowerCase().indexOf(q) !== -1 || n.appname.toLowerCase().indexOf(q) !== -1;
+        });
+    }
 
     visible: initialized && (isOpen || panelRect.opacity > 0)
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: isOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     WlrLayershell.anchors.top: true
     WlrLayershell.anchors.bottom: true
     WlrLayershell.anchors.left: true
@@ -26,8 +36,10 @@ PanelWindow {
         if (isOpen) {
             historyProc.running = true;
             pollTimer.running = true;
+            searchInput.forceActiveFocus();
         } else {
             pollTimer.running = false;
+            searchText = "";
         }
     }
 
@@ -87,7 +99,6 @@ PanelWindow {
                         Layout.fillWidth: true
                     }
 
-                    // Clear All
                     Text {
                         text: "Clear all"
                         color: clearArea.containsMouse ? Colors.text : Colors.subtle
@@ -100,9 +111,7 @@ PanelWindow {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                clearProc.running = true;
-                            }
+                            onClicked: clearProc.running = true
                         }
 
                         Behavior on color {
@@ -116,9 +125,112 @@ PanelWindow {
 
                 }
 
-                // Empty State
+                // Search input
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 34
+                    radius: 8
+                    color: searchInput.activeFocus ? "#22ffffff" : "#11ffffff"
+                    border.width: 1
+                    border.color: searchInput.activeFocus ? Colors.accent : "transparent"
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+                        spacing: 8
+
+                        Text {
+                            text: "\uf002"
+                            color: searchInput.activeFocus ? Colors.accent : Colors.overlay
+                            font.pixelSize: 12
+                            font.family: "JetBrainsMono Nerd Font"
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
+                        }
+
+                        TextInput {
+                            id: searchInput
+
+                            Layout.fillWidth: true
+                            color: Colors.text
+                            font.pixelSize: 12
+                            font.family: "JetBrainsMono Nerd Font"
+                            selectionColor: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.4)
+                            selectedTextColor: Colors.text
+                            clip: true
+                            onTextChanged: notifCenter.searchText = text
+                            Keys.onEscapePressed: {
+                                if (text !== "")
+                                    text = "";
+                                else
+                                    notifCenter.isOpen = false;
+                            }
+
+                            Text {
+                                anchors.fill: parent
+                                text: "Search..."
+                                color: Colors.overlay
+                                font.pixelSize: 12
+                                font.family: "JetBrainsMono Nerd Font"
+                                visible: searchInput.text === ""
+                            }
+
+                        }
+
+                        // Clear search button
+                        Text {
+                            visible: searchInput.text !== ""
+                            text: "\uf00d"
+                            color: clearSearchArea.containsMouse ? Colors.text : Colors.overlay
+                            font.pixelSize: 11
+                            font.family: "JetBrainsMono Nerd Font"
+
+                            MouseArea {
+                                id: clearSearchArea
+
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: searchInput.text = ""
+                            }
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
+                    Behavior on border.color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
+                }
+
+                // Empty state
                 Item {
-                    visible: notifications.length === 0
+                    visible: filteredNotifications.length === 0
                     Layout.fillWidth: true
                     implicitHeight: 80
 
@@ -136,7 +248,7 @@ PanelWindow {
 
                         Text {
                             Layout.alignment: Qt.AlignHCenter
-                            text: "No notifications"
+                            text: searchText !== "" ? "No results" : "No notifications"
                             color: Colors.subtle
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
@@ -148,7 +260,7 @@ PanelWindow {
 
                 // List
                 Flickable {
-                    visible: notifications.length > 0
+                    visible: filteredNotifications.length > 0
                     Layout.fillWidth: true
                     implicitHeight: Math.min(notifList.implicitHeight, 500)
                     contentHeight: notifList.implicitHeight
@@ -161,7 +273,7 @@ PanelWindow {
                         spacing: 8
 
                         Repeater {
-                            model: notifications
+                            model: filteredNotifications
 
                             Rectangle {
                                 Layout.fillWidth: true
@@ -239,7 +351,7 @@ PanelWindow {
 
                                 }
 
-                                // Close Button
+                                // Close button
                                 Text {
                                     anchors.right: parent.right
                                     anchors.top: parent.top
@@ -320,7 +432,7 @@ PanelWindow {
 
     }
 
-    // Fetch History
+    // Fetch history
     Process {
         id: historyProc
 
