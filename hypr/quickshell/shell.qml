@@ -6,19 +6,18 @@ import "modules/ruleseditor"
 import "modules/screenshot"
 import "modules/quicknote"
 import "modules/wallpaper"
-import "modules/todo"
 import "modules/processmanager"
 
 ShellRoot {
     Bar {
         id: bar
-        todoCount: todoWidget.activeCount
+        todoCount: notepadWidget.activeCount
         onTogglePower: pm.isOpen = !pm.isOpen
         onToggleWallpaper: ws.isOpen = !ws.isOpen
         onToggleNotif: nc.isOpen = !nc.isOpen
         onToggleCal: cal.toggle()
         onToggleCC: cc.toggle()
-        onToggleTodo: todoWidget.toggle()
+        onToggleTodo: notepadWidget.toggle()
     }
 
     MusicPlayer { id: mp }
@@ -31,8 +30,7 @@ ShellRoot {
     FileBrowser { id: fb }
     RulesEditor { id: rulesEditorPanel }
     ScreenshotTool { id: screenshotTool }
-    QuickNote { id: quickNote }
-    TodoWidget { id: todoWidget }    
+    NotepadWidget { id: notepadWidget }  
     ProcessManager { id: procMgr }
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
@@ -46,12 +44,8 @@ ShellRoot {
         function handle(): void { procMgr.toggle() }
     }
     IpcHandler {
-        target: "toggle-todo"
-        function handle(): void { todoWidget.toggle() }
-    }
-    IpcHandler {
-        target: "toggle-quicknote"
-        function handle(): void { quickNote.toggle() }
+        target: "toggle-notepad"
+        function handle(): void { notepadWidget.toggle() }
     }
     IpcHandler {
         target: "toggle-screenshot"
