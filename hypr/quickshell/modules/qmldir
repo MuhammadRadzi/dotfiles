@@ -14,6 +14,8 @@ CalendarPopup 1.0 CalendarPopup.qml
 WallpaperSelector 1.0 WallpaperSelector.qml
 SystemGraph 1.0 SystemGraph.qml
 NotificationCenter 1.0 NotificationCenter.qml
+NotificationPopups 1.0 NotificationPopups.qml
+NotificationPopupItem 1.0 NotificationPopupItem.qml
 PowerMenu 1.0 PowerMenu.qml
 KeybindCheatsheet 1.0 KeybindCheatsheet.qml
 OSD 1.0 OSD.qml

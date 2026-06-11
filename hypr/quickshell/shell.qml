@@ -1,14 +1,60 @@
 //@ pragma UseQApplication
+import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Services.Notifications
 import "modules"
 import "modules/ruleseditor"
 import "modules/screenshot"
 import "modules/quicknote"
 import "modules/wallpaper"
 import "modules/processmanager"
+import "modules/notifications"
 
 ShellRoot {
+    ListModel { id: popupModel }
+
+    ListModel { id: historyModel }
+
+    NotificationServer {
+        id: notifService
+        keepOnReload: true
+
+        onNotification: (notif) => {
+    console.log("=== NOTIF ===")
+    console.log("id:", notif.id)
+    console.log("summary:", notif.summary)
+    console.log("body:", notif.body)
+    console.log("appName:", notif.appName)
+    console.log("applicationName:", notif.applicationName)
+    console.log("app_name:", notif.app_name)
+    console.log("title:", notif.title)
+    console.log("message:", notif.message)
+    console.log("urgency:", notif.urgency)
+    console.log("icon:", notif.appIcon)
+    console.log("image:", notif.image)
+    console.log(JSON.stringify(notif))
+
+    popupModel.append({
+        uid:      notif.id,
+        summary:  notif.summary  || "",
+        body:     notif.body     || "",
+        appName:  notif.appName  || "",
+        appIcon:  notif.appIcon  || "",
+        urgency:  notif.urgency
+    });
+
+    historyModel.insert(0, {
+        uid:      notif.id,
+        summary:  notif.summary  || "",
+        body:     notif.body     || "",
+        appName:  notif.appName  || "",
+        appIcon:  notif.appIcon  || "",
+        urgency:  notif.urgency
+    });
+}
+    }
+
     Bar {
         id: bar
         todoCount: notepadWidget.activeCount
@@ -23,21 +69,45 @@ ShellRoot {
     MusicPlayer { id: mp }
     PowerMenu { id: pm }
     WallpaperSelector { id: ws }
-    NotificationCenter { id: nc }
+
+    NotificationPopups {
+        id: notifPopups
+        popupModel: popupModel
+        onRemoveRequested: (uid) => {
+            for (var i = 0; i < popupModel.count; i++) {
+                if (popupModel.get(i).uid === uid) {
+                    popupModel.remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    NotificationCenter {
+        id: nc
+        historyModel: historyModel
+        onClearAll: historyModel.clear()
+        onRemoveItem: (uid) => {
+            for (var i = 0; i < historyModel.count; i++) {
+                if (historyModel.get(i).uid === uid) {
+                    historyModel.remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
     KeybindCheatsheet { id: ks }
     AppLauncher { id: al }
     ClipboardManager { id: cm }
     FileBrowser { id: fb }
     RulesEditor { id: rulesEditorPanel }
     ScreenshotTool { id: screenshotTool }
-    NotepadWidget { id: notepadWidget }  
+    NotepadWidget { id: notepadWidget }
     ProcessManager { id: procMgr }
     CalendarPopup { id: cal }
     ControlCenter { id: cc }
-    OSD {
-        id: osd
-        bar: bar
-    }
+    OSD { id: osd; bar: bar }
 
     IpcHandler {
         target: "toggle-process"
@@ -53,9 +123,7 @@ ShellRoot {
     }
     IpcHandler {
         target: "toggle-rules"
-        function handle() {
-            rulesEditorPanel.isOpen = !rulesEditorPanel.isOpen;
-        }
+        function handle() { rulesEditorPanel.isOpen = !rulesEditorPanel.isOpen; }
     }
     IpcHandler {
         target: "toggle-filebrowser"
@@ -87,14 +155,10 @@ ShellRoot {
     }
     IpcHandler {
         target: "show-volume-osd"
-        function handle(val: int, muted: bool): void {
-            osd.showVolume(val, muted)
-        }
+        function handle(val: int, muted: bool): void { osd.showVolume(val, muted) }
     }
     IpcHandler {
         target: "show-brightness-osd"
-        function handle(val: int): void {
-            osd.showBrightness(val)
-        }
+        function handle(val: int): void { osd.showBrightness(val) }
     }
 }
