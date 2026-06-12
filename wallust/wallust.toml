@@ -51,7 +51,6 @@ palette = "saliencedark"
 # zathura = { template = 'zathura', target = '~/.config/zathura/zathurarc' }
 Colors = { template = 'Colors.qml', target = '~/.config/hypr/quickshell/theme/Colors.qml' }
 kitty = { template = 'kitty-colors.conf', target = '~/.config/kitty/kitty-colors.conf' }
-dunst = { template = 'dunstrc-colors', target = '~/.config/hypr/dunst/dunstrc-colors' }
 rofi  = { template = 'rofi-colors.rasi', target = '~/.config/hypr/rofi/colors.rasi' }
 hypr  = { template = 'hypr-colors.conf', target = '~/.config/hypr/hypr-colors.conf' }
 cava = { template = 'cava-config', target = '~/.config/cava/config' }
