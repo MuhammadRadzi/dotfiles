@@ -435,7 +435,6 @@ PanelWindow {
                 // TODO TAB
                 ColumnLayout {
                     visible: activeTab === "todo"
-                    anchors.fill: parent
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.right: parent.right
