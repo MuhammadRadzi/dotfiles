@@ -13,7 +13,6 @@ import "modules/notifications"
 
 ShellRoot {
     ListModel { id: popupModel }
-
     ListModel { id: historyModel }
 
     NotificationServer {
@@ -21,38 +20,24 @@ ShellRoot {
         keepOnReload: true
 
         onNotification: (notif) => {
-    console.log("=== NOTIF ===")
-    console.log("id:", notif.id)
-    console.log("summary:", notif.summary)
-    console.log("body:", notif.body)
-    console.log("appName:", notif.appName)
-    console.log("applicationName:", notif.applicationName)
-    console.log("app_name:", notif.app_name)
-    console.log("title:", notif.title)
-    console.log("message:", notif.message)
-    console.log("urgency:", notif.urgency)
-    console.log("icon:", notif.appIcon)
-    console.log("image:", notif.image)
-    console.log(JSON.stringify(notif))
+            popupModel.append({
+                uid:     notif.id,
+                summary: notif.summary  || "",
+                body:    notif.body     || "",
+                appName: notif.appName  || "",
+                appIcon: notif.appIcon  || "",
+                urgency: notif.urgency
+            });
 
-    popupModel.append({
-        uid:      notif.id,
-        summary:  notif.summary  || "",
-        body:     notif.body     || "",
-        appName:  notif.appName  || "",
-        appIcon:  notif.appIcon  || "",
-        urgency:  notif.urgency
-    });
-
-    historyModel.insert(0, {
-        uid:      notif.id,
-        summary:  notif.summary  || "",
-        body:     notif.body     || "",
-        appName:  notif.appName  || "",
-        appIcon:  notif.appIcon  || "",
-        urgency:  notif.urgency
-    });
-}
+            historyModel.insert(0, {
+                uid:     notif.id,
+                summary: notif.summary  || "",
+                body:    notif.body     || "",
+                appName: notif.appName  || "",
+                appIcon: notif.appIcon  || "",
+                urgency: notif.urgency
+            });
+        }
     }
 
     Bar {

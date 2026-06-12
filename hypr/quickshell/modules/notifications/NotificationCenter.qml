@@ -8,12 +8,12 @@ PanelWindow {
     id: notifCenter
 
     required property ListModel historyModel
-    signal clearAll()
-    signal removeItem(int uid)
-
     property bool isOpen: false
     property bool initialized: false
     property string searchText: ""
+
+    signal clearAll()
+    signal removeItem(int uid)
 
     visible: initialized && (isOpen || panelRect.opacity > 0)
     WlrLayershell.layer: WlrLayer.Overlay
@@ -24,11 +24,12 @@ PanelWindow {
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
     color: "transparent"
-
     onIsOpenChanged: {
         initialized = true;
-        if (isOpen) searchInput.forceActiveFocus();
-        else searchText = "";
+        if (isOpen)
+            searchInput.forceActiveFocus();
+        else
+            searchText = "";
     }
 
     MouseArea {
@@ -55,10 +56,15 @@ PanelWindow {
         clip: true
         opacity: isOpen ? 1 : 0
 
-        MouseArea { anchors.fill: parent; onClicked: {} }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+            }
+        }
 
         ColumnLayout {
             id: notifCol
+
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
@@ -77,7 +83,9 @@ PanelWindow {
                     font.letterSpacing: 1.5
                 }
 
-                Item { Layout.fillWidth: true }
+                Item {
+                    Layout.fillWidth: true
+                }
 
                 Text {
                     text: "Clear all"
@@ -87,14 +95,22 @@ PanelWindow {
 
                     MouseArea {
                         id: clearArea
+
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: notifCenter.clearAll()
                     }
 
-                    Behavior on color { ColorAnimation { duration: 150 } }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
                 }
+
             }
 
             // Search
@@ -117,11 +133,19 @@ PanelWindow {
                         color: searchInput.activeFocus ? Colors.accent : Colors.overlay
                         font.pixelSize: 12
                         font.family: "JetBrainsMono Nerd Font"
-                        Behavior on color { ColorAnimation { duration: 150 } }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
 
                     TextInput {
                         id: searchInput
+
                         Layout.fillWidth: true
                         color: Colors.text
                         font.pixelSize: 12
@@ -130,10 +154,11 @@ PanelWindow {
                         selectedTextColor: Colors.text
                         clip: true
                         onTextChanged: notifCenter.searchText = text
-
                         Keys.onEscapePressed: {
-                            if (text !== "") text = "";
-                            else notifCenter.isOpen = false;
+                            if (text !== "")
+                                text = "";
+                            else
+                                notifCenter.isOpen = false;
                         }
 
                         Text {
@@ -144,6 +169,7 @@ PanelWindow {
                             font.family: "JetBrainsMono Nerd Font"
                             visible: searchInput.text === ""
                         }
+
                     }
 
                     Text {
@@ -155,18 +181,38 @@ PanelWindow {
 
                         MouseArea {
                             id: clearSearchArea
+
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: searchInput.text = ""
                         }
 
-                        Behavior on color { ColorAnimation { duration: 150 } }
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
+
                 }
 
-                Behavior on color { ColorAnimation { duration: 150 } }
-                Behavior on border.color { ColorAnimation { duration: 150 } }
+                Behavior on color {
+                    ColorAnimation {
+                        duration: 150
+                    }
+
+                }
+
+                Behavior on border.color {
+                    ColorAnimation {
+                        duration: 150
+                    }
+
+                }
+
             }
 
             // Empty state
@@ -194,7 +240,9 @@ PanelWindow {
                         font.pixelSize: 12
                         font.family: "JetBrainsMono Nerd Font"
                     }
+
                 }
+
             }
 
             // List
@@ -207,6 +255,7 @@ PanelWindow {
 
                 ColumnLayout {
                     id: notifList
+
                     width: parent.width
                     spacing: 8
 
@@ -218,14 +267,13 @@ PanelWindow {
                             implicitHeight: itemCol.implicitHeight + 20
                             radius: 10
                             color: itemArea.containsMouse ? "#22ffffff" : "#11ffffff"
-
                             // Filter search
                             visible: {
-                                if (searchText === "") return true;
+                                if (searchText === "")
+                                    return true;
+
                                 var q = searchText.toLowerCase();
-                                return (model.summary && model.summary.toLowerCase().indexOf(q) !== -1)
-                                    || (model.body    && model.body.toLowerCase().indexOf(q)    !== -1)
-                                    || (model.appName && model.appName.toLowerCase().indexOf(q) !== -1);
+                                return (model.summary && model.summary.toLowerCase().indexOf(q) !== -1) || (model.body && model.body.toLowerCase().indexOf(q) !== -1) || (model.appName && model.appName.toLowerCase().indexOf(q) !== -1);
                             }
 
                             Rectangle {
@@ -233,16 +281,22 @@ PanelWindow {
                                 anchors.top: parent.top
                                 anchors.bottom: parent.bottom
                                 anchors.margins: 4
-                                width: 3; radius: 2
+                                width: 3
+                                radius: 2
                                 color: {
-                                    if (model.urgency === 2) return Colors.red;
-                                    if (model.urgency === 0) return Colors.subtle;
+                                    if (model.urgency === 2)
+                                        return Colors.red;
+
+                                    if (model.urgency === 0)
+                                        return Colors.subtle;
+
                                     return Colors.accent;
                                 }
                             }
 
                             ColumnLayout {
                                 id: itemCol
+
                                 anchors.fill: parent
                                 anchors.leftMargin: 16
                                 anchors.rightMargin: 36
@@ -252,6 +306,7 @@ PanelWindow {
 
                                 RowLayout {
                                     Layout.fillWidth: true
+
                                     Text {
                                         text: model.appName || "system"
                                         color: Colors.subtle
@@ -259,7 +314,11 @@ PanelWindow {
                                         font.family: "JetBrainsMono Nerd Font"
                                         font.letterSpacing: 1
                                     }
-                                    Item { Layout.fillWidth: true }
+
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
+
                                 }
 
                                 Text {
@@ -283,6 +342,7 @@ PanelWindow {
                                     maximumLineCount: 2
                                     elide: Text.ElideRight
                                 }
+
                             }
 
                             Text {
@@ -296,38 +356,68 @@ PanelWindow {
 
                                 MouseArea {
                                     id: closeItemArea
+
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: notifCenter.removeItem(model.uid)
                                 }
 
-                                Behavior on color { ColorAnimation { duration: 150 } }
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+
+                                }
+
                             }
 
                             MouseArea {
                                 id: itemArea
+
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 z: -1
                             }
 
-                            Behavior on color { ColorAnimation { duration: 150 } }
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
                         }
+
                     }
+
                 }
+
             }
+
         }
 
         Behavior on opacity {
-            NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+            NumberAnimation {
+                duration: 220
+                easing.type: Easing.OutCubic
+            }
+
         }
 
         transform: Translate {
             x: isOpen ? 0 : 24
+
             Behavior on x {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
             }
+
         }
+
     }
+
 }
