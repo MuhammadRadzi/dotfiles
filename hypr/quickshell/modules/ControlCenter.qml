@@ -45,8 +45,8 @@ PanelWindow {
 
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.rightMargin: 13
-            anchors.topMargin: 50
+            anchors.rightMargin: 12
+            anchors.topMargin: 49
             width: 320
             height: ccCol.implicitHeight + 32
             radius: 10

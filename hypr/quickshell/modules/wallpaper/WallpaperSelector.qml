@@ -19,6 +19,8 @@ PanelWindow {
     property var paletteQueue: []
     property int paletteQueueIdx: 0
 
+    function toggle() { isOpen = !isOpen }
+
     visible: panelRect.opacity > 0
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1

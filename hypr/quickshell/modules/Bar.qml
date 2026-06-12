@@ -103,28 +103,9 @@ PanelWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
 
-                Text {
-                    text: "\u23fb"
-                    color: powerArea.containsMouse ? Colors.text : Colors.subtle
-                    font.pixelSize: 14
-                    font.family: "JetBrainsMono Nerd Font"
-
-                    MouseArea {
-                        id: powerArea
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.togglePower()
-                    }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-
-                    }
-
+                BarButton {
+                    icon: "\u23fb"
+                    onClicked: root.togglePower()
                 }
 
                 Rectangle {
@@ -136,7 +117,7 @@ PanelWindow {
                 Workspaces {
                 }
 
-                 Rectangle {
+                Rectangle {
                     visible: todoCount > 0
                     width: 1
                     height: 14
@@ -327,52 +308,14 @@ PanelWindow {
 
                 }
 
-                Text {
-                    text: "\uf03e"
-                    color: wpArea.containsMouse ? Colors.text : Colors.subtle
-                    font.pixelSize: 14
-                    font.family: "JetBrainsMono Nerd Font"
-
-                    MouseArea {
-                        id: wpArea
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.toggleWallpaper()
-                    }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-
-                    }
-
+                BarButton {
+                    icon: "\uf03e"
+                    onClicked: root.toggleWallpaper()
                 }
 
-                Text {
-                    text: "\uf0f3"
-                    color: notifBellArea.containsMouse ? Colors.text : Colors.subtle
-                    font.pixelSize: 14
-                    font.family: "JetBrainsMono Nerd Font"
-
-                    MouseArea {
-                        id: notifBellArea
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.toggleNotif()
-                    }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-
-                    }
-
+                BarButton {
+                    icon: "\uf0f3"
+                    onClicked: root.toggleNotif()
                 }
 
             }

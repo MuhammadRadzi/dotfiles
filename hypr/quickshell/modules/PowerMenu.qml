@@ -9,16 +9,20 @@ PanelWindow {
     id: powerMenu
 
     property bool isOpen: false
+    property bool initialized: false
     property string sessionUptime: "..."
     property string windowCount: "..."
     property string activeWorkspace: "..."
 
+    function toggle() { isOpen = !isOpen }
+
     onIsOpenChanged: {
+        initialized = true
         if (isOpen)
             infoProc.running = true;
 
     }
-    visible: overlayRect.opacity > 0
+    visible: initialized && overlayRect.opacity > 0
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
     WlrLayershell.anchors.top: true

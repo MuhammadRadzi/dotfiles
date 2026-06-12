@@ -113,8 +113,8 @@ PanelWindow {
 
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.rightMargin: 10
-            anchors.topMargin: 39 + 8
+            anchors.rightMargin: 12
+            anchors.topMargin: 49
             width: 360
             height: Math.min(panelCol.implicitHeight + 32, 600)
             radius: 10

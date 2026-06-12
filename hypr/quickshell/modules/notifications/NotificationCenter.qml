@@ -15,6 +15,8 @@ PanelWindow {
     signal clearAll()
     signal removeItem(int uid)
 
+    function toggle() { isOpen = !isOpen }
+
     visible: initialized && (isOpen || panelRect.opacity > 0)
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
@@ -45,7 +47,7 @@ PanelWindow {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.rightMargin: 12
-        anchors.topMargin: 64
+        anchors.topMargin: 49
         width: 360
         implicitHeight: notifCol.implicitHeight + 32
         height: Math.min(implicitHeight, 600)

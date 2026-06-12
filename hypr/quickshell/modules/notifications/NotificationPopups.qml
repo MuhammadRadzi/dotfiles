@@ -175,11 +175,17 @@ PanelWindow {
                                 color: "#22ffffff"
 
                                 Rectangle {
+                                    id: countdownFill
+
                                     height: parent.height
                                     radius: parent.radius
                                     color: Colors.accent
 
-                                    NumberAnimation on width {
+                                    NumberAnimation {
+                                        id: countdownAnim // ← beri id agar bisa .pause()/.resume()
+
+                                        target: countdownFill
+                                        property: "width"
                                         from: 48
                                         to: 0
                                         duration: 5000
@@ -249,11 +255,15 @@ PanelWindow {
                         anchors.fill: parent
                         z: -1
                         hoverEnabled: true
-                        onEntered: dismissTimer.stop()
+                        onEntered: {
+                            dismissTimer.stop();
+                            countdownAnim.pause();
+                        }
                         onExited: {
-                            if (!dismissAnim.running)
+                            if (!dismissAnim.running) {
                                 dismissTimer.start();
-
+                                countdownAnim.resume();
+                            }
                         }
                         onClicked: dismissAnim.start()
                     }

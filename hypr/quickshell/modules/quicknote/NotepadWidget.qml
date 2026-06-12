@@ -6,88 +6,93 @@ import Quickshell.Io
 import Quickshell.Wayland
 
 PanelWindow {
+    // ── Timers & Processes ───────────────────────────────────
+
     id: notepadWidget
 
     // ── State ────────────────────────────────────────────────
     property bool isOpen: false
     property bool initialized: false
-
     property string activeTab: "note"
-
     property string notePath: Quickshell.env("HOME") + "/.local/share/hypr/quicknote.txt"
     property string todoPath: Quickshell.env("HOME") + "/.local/share/hypr/todos.json"
-    property string tabPath:  Quickshell.env("HOME") + "/.local/share/hypr/notepad_tab.txt"
-
+    property string tabPath: Quickshell.env("HOME") + "/.local/share/hypr/notepad_tab.txt"
     property var todos: []
-    property int activeCount: todos.filter(function(t) { return !t.done; }).length
+    property int activeCount: todos.filter(function(t) {
+        return !t.done;
+    }).length
     property string currentFilter: "all"
-    property var filteredTodos: {
-        if (currentFilter === "active") return todos.filter(function(t) { return !t.done; });
-        if (currentFilter === "done")   return todos.filter(function(t) { return t.done;  });
-        return todos;
+    property var filteredTodos: []
+
+    function updateFilter() {
+        if (currentFilter === "active")
+            filteredTodos = todos.filter(function(t) {
+            return !t.done;
+        });
+        else if (currentFilter === "done")
+            filteredTodos = todos.filter(function(t) {
+            return t.done;
+        });
+        else
+            filteredTodos = todos.slice();
     }
 
-    function toggle() { isOpen = !isOpen; }
+    function toggle() {
+        isOpen = !isOpen;
+    }
 
     function addTodo(text) {
-        if (text.trim() === "") return;
+        if (text.trim() === "")
+            return ;
+
         var updated = todos.slice();
-        updated.unshift({ id: Date.now(), text: text.trim(), done: false });
+        updated.unshift({
+            "id": Date.now(),
+            "text": text.trim(),
+            "done": false
+        });
         todos = updated;
         saveTodo();
     }
 
     function toggleDone(id) {
         todos = todos.map(function(t) {
-            return t.id === id ? { id: t.id, text: t.text, done: !t.done } : t;
+            return t.id === id ? {
+                "id": t.id,
+                "text": t.text,
+                "done": !t.done
+            } : t;
         });
         saveTodo();
     }
 
     function removeTodo(id) {
-        todos = todos.filter(function(t) { return t.id !== id; });
+        todos = todos.filter(function(t) {
+            return t.id !== id;
+        });
         saveTodo();
     }
 
     function saveTodo() {
         var encoded = Qt.btoa(unescape(encodeURIComponent(JSON.stringify(todos))));
-        todoSaveProc.command = ["python3", "-c",
-            "import base64, os, sys\n" +
-            "path = sys.argv[1]\n" +
-            "content = base64.b64decode(sys.argv[2]).decode('utf-8')\n" +
-            "os.makedirs(os.path.dirname(path), exist_ok=True)\n" +
-            "open(path, 'w').write(content)",
-            todoPath, encoded
-        ];
+        todoSaveProc.command = ["python3", "-c", "import base64, os, sys\n" + "path = sys.argv[1]\n" + "content = base64.b64decode(sys.argv[2]).decode('utf-8')\n" + "os.makedirs(os.path.dirname(path), exist_ok=True)\n" + "open(path, 'w').write(content)", todoPath, encoded];
         todoSaveProc.running = true;
     }
 
     function saveNote() {
         var encoded = Qt.btoa(unescape(encodeURIComponent(noteArea.text)));
-        noteSaveProc.command = ["python3", "-c",
-            "import base64, os, sys\n" +
-            "path = sys.argv[1]\n" +
-            "content = base64.b64decode(sys.argv[2]).decode('utf-8')\n" +
-            "os.makedirs(os.path.dirname(path), exist_ok=True)\n" +
-            "open(path, 'w').write(content)",
-            notePath, encoded
-        ];
+        noteSaveProc.command = ["python3", "-c", "import base64, os, sys\n" + "path = sys.argv[1]\n" + "content = base64.b64decode(sys.argv[2]).decode('utf-8')\n" + "os.makedirs(os.path.dirname(path), exist_ok=True)\n" + "open(path, 'w').write(content)", notePath, encoded];
         noteSaveProc.running = true;
     }
 
     function saveTab() {
         var encoded = Qt.btoa(unescape(encodeURIComponent(activeTab)));
-        tabSaveProc.command = ["python3", "-c",
-            "import base64, os, sys\n" +
-            "path = sys.argv[1]\n" +
-            "content = base64.b64decode(sys.argv[2]).decode('utf-8')\n" +
-            "os.makedirs(os.path.dirname(path), exist_ok=True)\n" +
-            "open(path, 'w').write(content)",
-            tabPath, encoded
-        ];
+        tabSaveProc.command = ["python3", "-c", "import base64, os, sys\n" + "path = sys.argv[1]\n" + "content = base64.b64decode(sys.argv[2]).decode('utf-8')\n" + "os.makedirs(os.path.dirname(path), exist_ok=True)\n" + "open(path, 'w').write(content)", tabPath, encoded];
         tabSaveProc.running = true;
     }
 
+    onTodosChanged: updateFilter()
+    onCurrentFilterChanged: updateFilter()
     visible: initialized && (isOpen || panelRect.x > -panelRect.width - 20)
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
@@ -97,7 +102,6 @@ PanelWindow {
     WlrLayershell.anchors.right: true
     WlrLayershell.keyboardFocus: isOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     color: "transparent"
-
     onIsOpenChanged: {
         initialized = true;
         if (isOpen) {
@@ -106,11 +110,12 @@ PanelWindow {
             todoLoadProc.running = true;
         }
     }
-
     onActiveTabChanged: {
         saveTab();
-        if (activeTab === "note") noteArea.forceActiveFocus();
-        else todoInput.forceActiveFocus();
+        if (activeTab === "note")
+            noteArea.forceActiveFocus();
+        else
+            todoInput.forceActiveFocus();
     }
 
     MouseArea {
@@ -132,7 +137,11 @@ PanelWindow {
         border.width: 1
         border.color: "#22ffffff"
 
-        MouseArea { anchors.fill: parent; onClicked: {} }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+            }
+        }
 
         ColumnLayout {
             anchors.fill: parent
@@ -154,6 +163,7 @@ PanelWindow {
 
                     RowLayout {
                         id: noteTabRow
+
                         anchors.centerIn: parent
                         spacing: 6
 
@@ -162,16 +172,32 @@ PanelWindow {
                             color: activeTab === "note" ? Colors.accent : Colors.overlay
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
-                            Behavior on color { ColorAnimation { duration: 150 } }
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
                         }
+
                         Text {
                             text: "Note"
                             color: activeTab === "note" ? Colors.text : Colors.overlay
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             font.weight: activeTab === "note" ? Font.DemiBold : Font.Normal
-                            Behavior on color { ColorAnimation { duration: 150 } }
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
                         }
+
                     }
 
                     MouseArea {
@@ -180,8 +206,20 @@ PanelWindow {
                         onClicked: activeTab = "note"
                     }
 
-                    Behavior on color { ColorAnimation { duration: 150 } }
-                    Behavior on border.color { ColorAnimation { duration: 150 } }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
+                    Behavior on border.color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
                 }
 
                 // Tab: Todo
@@ -195,6 +233,7 @@ PanelWindow {
 
                     RowLayout {
                         id: todoTabRow
+
                         anchors.centerIn: parent
                         spacing: 6
 
@@ -203,15 +242,30 @@ PanelWindow {
                             color: activeTab === "todo" ? Colors.accent : Colors.overlay
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
-                            Behavior on color { ColorAnimation { duration: 150 } }
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
                         }
+
                         Text {
                             text: "Todo"
                             color: activeTab === "todo" ? Colors.text : Colors.overlay
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             font.weight: activeTab === "todo" ? Font.DemiBold : Font.Normal
-                            Behavior on color { ColorAnimation { duration: 150 } }
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
                         }
 
                         Rectangle {
@@ -223,6 +277,7 @@ PanelWindow {
 
                             Text {
                                 id: badgeText
+
                                 anchors.centerIn: parent
                                 text: activeCount
                                 color: Colors.base
@@ -230,7 +285,9 @@ PanelWindow {
                                 font.family: "JetBrainsMono Nerd Font"
                                 font.weight: Font.Bold
                             }
+
                         }
+
                     }
 
                     MouseArea {
@@ -239,11 +296,25 @@ PanelWindow {
                         onClicked: activeTab = "todo"
                     }
 
-                    Behavior on color { ColorAnimation { duration: 150 } }
-                    Behavior on border.color { ColorAnimation { duration: 150 } }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
+                    Behavior on border.color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
                 }
 
-                Item { Layout.fillWidth: true }
+                Item {
+                    Layout.fillWidth: true
+                }
 
                 // Clear button (Note tab only)
                 Rectangle {
@@ -259,11 +330,19 @@ PanelWindow {
                         color: clearNoteArea.containsMouse ? Colors.red : Colors.overlay
                         font.pixelSize: 13
                         font.family: "JetBrainsMono Nerd Font"
-                        Behavior on color { ColorAnimation { duration: 150 } }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
 
                     MouseArea {
                         id: clearNoteArea
+
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
@@ -273,8 +352,15 @@ PanelWindow {
                         }
                     }
 
-                    Behavior on color { ColorAnimation { duration: 150 } }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+
+                    }
+
                 }
+
             }
 
             // ── Divider ───────────────────────────────────────
@@ -303,6 +389,7 @@ PanelWindow {
 
                         Flickable {
                             id: noteFlickable
+
                             anchors.fill: parent
                             anchors.margins: 10
                             contentHeight: noteArea.implicitHeight
@@ -310,6 +397,7 @@ PanelWindow {
 
                             TextEdit {
                                 id: noteArea
+
                                 width: noteFlickable.width
                                 wrapMode: TextEdit.Wrap
                                 color: Colors.text
@@ -327,8 +415,11 @@ PanelWindow {
                                     font.family: "JetBrainsMono Nerd Font"
                                     visible: noteArea.text === ""
                                 }
+
                             }
+
                         }
+
                     }
 
                     Text {
@@ -338,11 +429,13 @@ PanelWindow {
                         font.pixelSize: 10
                         font.family: "JetBrainsMono Nerd Font"
                     }
+
                 }
 
                 // TODO TAB
                 ColumnLayout {
                     visible: activeTab === "todo"
+                    anchors.fill: parent
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -368,11 +461,19 @@ PanelWindow {
                                 color: todoInput.activeFocus ? Colors.accent : Colors.overlay
                                 font.pixelSize: 11
                                 font.family: "JetBrainsMono Nerd Font"
-                                Behavior on color { ColorAnimation { duration: 150 } }
+
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+
+                                }
+
                             }
 
                             TextInput {
                                 id: todoInput
+
                                 Layout.fillWidth: true
                                 color: Colors.text
                                 font.pixelSize: 12
@@ -380,6 +481,16 @@ PanelWindow {
                                 selectionColor: Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.4)
                                 selectedTextColor: Colors.text
                                 clip: true
+                                Keys.onReturnPressed: {
+                                    notepadWidget.addTodo(text);
+                                    text = "";
+                                }
+                                Keys.onEscapePressed: {
+                                    if (text !== "")
+                                        text = "";
+                                    else
+                                        notepadWidget.isOpen = false;
+                                }
 
                                 Text {
                                     anchors.fill: parent
@@ -390,20 +501,24 @@ PanelWindow {
                                     visible: todoInput.text === ""
                                 }
 
-                                Keys.onReturnPressed: {
-                                    notepadWidget.addTodo(text);
-                                    text = "";
-                                }
-
-                                Keys.onEscapePressed: {
-                                    if (text !== "") text = "";
-                                    else notepadWidget.isOpen = false;
-                                }
                             }
+
                         }
 
-                        Behavior on color { ColorAnimation { duration: 150 } }
-                        Behavior on border.color { ColorAnimation { duration: 150 } }
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
+                        Behavior on border.color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
 
                     // Filter tabs
@@ -412,11 +527,16 @@ PanelWindow {
                         spacing: 4
 
                         Repeater {
-                            model: [
-                                { label: "All",    value: "all"    },
-                                { label: "Active", value: "active" },
-                                { label: "Done",   value: "done"   }
-                            ]
+                            model: [{
+                                "label": "All",
+                                "value": "all"
+                            }, {
+                                "label": "Active",
+                                "value": "active"
+                            }, {
+                                "label": "Done",
+                                "value": "done"
+                            }]
 
                             Rectangle {
                                 Layout.fillWidth: true
@@ -432,7 +552,14 @@ PanelWindow {
                                     color: currentFilter === modelData.value ? Colors.text : Colors.overlay
                                     font.pixelSize: 11
                                     font.family: "JetBrainsMono Nerd Font"
-                                    Behavior on color { ColorAnimation { duration: 150 } }
+
+                                    Behavior on color {
+                                        ColorAnimation {
+                                            duration: 150
+                                        }
+
+                                    }
+
                                 }
 
                                 MouseArea {
@@ -441,10 +568,24 @@ PanelWindow {
                                     onClicked: currentFilter = modelData.value
                                 }
 
-                                Behavior on color { ColorAnimation { duration: 150 } }
-                                Behavior on border.color { ColorAnimation { duration: 150 } }
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+
+                                }
+
+                                Behavior on border.color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+
+                                }
+
                             }
+
                         }
+
                     }
 
                     // Divider
@@ -467,18 +608,20 @@ PanelWindow {
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                         }
+
                     }
 
                     // Todo list
                     Flickable {
                         visible: filteredTodos.length > 0
                         Layout.fillWidth: true
-                        implicitHeight: Math.min(todoList.implicitHeight, 340)
+                        Layout.fillHeight: true
                         contentHeight: todoList.implicitHeight
                         clip: true
 
                         ColumnLayout {
                             id: todoList
+
                             width: parent.width
                             spacing: 6
 
@@ -498,7 +641,9 @@ PanelWindow {
                                         spacing: 10
 
                                         Rectangle {
-                                            width: 18; height: 18; radius: 4
+                                            width: 18
+                                            height: 18
+                                            radius: 4
                                             color: modelData.done ? Colors.accent : "transparent"
                                             border.width: 1.5
                                             border.color: modelData.done ? Colors.accent : Colors.overlay
@@ -518,8 +663,20 @@ PanelWindow {
                                                 onClicked: notepadWidget.toggleDone(modelData.id)
                                             }
 
-                                            Behavior on color { ColorAnimation { duration: 150 } }
-                                            Behavior on border.color { ColorAnimation { duration: 150 } }
+                                            Behavior on color {
+                                                ColorAnimation {
+                                                    duration: 150
+                                                }
+
+                                            }
+
+                                            Behavior on border.color {
+                                                ColorAnimation {
+                                                    duration: 150
+                                                }
+
+                                            }
+
                                         }
 
                                         Text {
@@ -530,7 +687,14 @@ PanelWindow {
                                             font.family: "JetBrainsMono Nerd Font"
                                             font.strikeout: modelData.done
                                             elide: Text.ElideRight
-                                            Behavior on color { ColorAnimation { duration: 150 } }
+
+                                            Behavior on color {
+                                                ColorAnimation {
+                                                    duration: 150
+                                                }
+
+                                            }
+
                                         }
 
                                         Text {
@@ -541,32 +705,52 @@ PanelWindow {
 
                                             MouseArea {
                                                 id: delHover
+
                                                 anchors.fill: parent
                                                 hoverEnabled: true
                                                 cursorShape: Qt.PointingHandCursor
                                                 onClicked: notepadWidget.removeTodo(modelData.id)
                                             }
 
-                                            Behavior on color { ColorAnimation { duration: 150 } }
+                                            Behavior on color {
+                                                ColorAnimation {
+                                                    duration: 150
+                                                }
+
+                                            }
+
                                         }
+
                                     }
 
                                     MouseArea {
                                         id: itemHover
+
                                         anchors.fill: parent
                                         hoverEnabled: true
                                         z: -1
                                     }
 
-                                    Behavior on color { ColorAnimation { duration: 150 } }
+                                    Behavior on color {
+                                        ColorAnimation {
+                                            duration: 150
+                                        }
+
+                                    }
+
                                 }
+
                             }
+
                         }
+
                     }
 
                     // Clear completed
                     Rectangle {
-                        visible: todos.filter(function(t) { return t.done; }).length > 0
+                        visible: todos.filter(function(t) {
+                            return t.done;
+                        }).length > 0
                         Layout.fillWidth: true
                         height: 30
                         radius: 8
@@ -582,30 +766,46 @@ PanelWindow {
 
                         MouseArea {
                             id: clearDoneHover
+
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
-                                todos = todos.filter(function(t) { return !t.done; });
+                                todos = todos.filter(function(t) {
+                                    return !t.done;
+                                });
                                 saveTodo();
                             }
                         }
 
-                        Behavior on color { ColorAnimation { duration: 150 } }
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
                     }
+
                 }
+
             }
+
         }
 
         Behavior on x {
-            NumberAnimation { duration: 280; easing.type: Easing.OutCubic }
-        }
-    }
+            NumberAnimation {
+                duration: 280
+                easing.type: Easing.OutCubic
+            }
 
-    // ── Timers & Processes ───────────────────────────────────
+        }
+
+    }
 
     Timer {
         id: saveDebounce
+
         interval: 800
         repeat: false
         onTriggered: saveNote()
@@ -613,68 +813,109 @@ PanelWindow {
 
     Process {
         id: noteLoadProc
+
         command: ["sh", "-c", "cat '" + notePath + "' 2>/dev/null || echo ''"]
         running: false
-        stdout: SplitParser {
-            property string buf: ""
-            splitMarker: ""
-            onRead: (data) => { buf += data; }
-        }
         onRunningChanged: {
             if (!running) {
                 var content = noteLoadProc.stdout.buf;
                 noteLoadProc.stdout.buf = "";
-                if (noteArea.text !== content) noteArea.text = content;
+                if (noteArea.text !== content)
+                    noteArea.text = content;
+
             }
         }
+
+        stdout: SplitParser {
+            property string buf: ""
+
+            splitMarker: ""
+            onRead: (data) => {
+                buf += data;
+            }
+        }
+
     }
 
-    Process { id: noteSaveProc; running: false }
+    Process {
+        id: noteSaveProc
+
+        running: false
+    }
 
     Process {
         id: todoLoadProc
+
         command: ["sh", "-c", "cat '" + todoPath + "' 2>/dev/null || echo '[]'"]
         running: false
-        stdout: SplitParser {
-            property string buf: ""
-            splitMarker: ""
-            onRead: (data) => { buf += data; }
-        }
         onRunningChanged: {
             if (!running) {
                 var content = todoLoadProc.stdout.buf.trim();
                 todoLoadProc.stdout.buf = "";
-                try { todos = JSON.parse(content); } catch(e) { todos = []; }
+                try {
+                    todos = JSON.parse(content);
+                } catch (e) {
+                    todos = [];
+                }
             }
         }
+
+        stdout: SplitParser {
+            property string buf: ""
+
+            splitMarker: ""
+            onRead: (data) => {
+                buf += data;
+            }
+        }
+
     }
 
-    Process { id: todoSaveProc; running: false }
+    Process {
+        id: todoSaveProc
+
+        running: false
+    }
 
     Process {
         id: tabLoadProc
+
         command: ["sh", "-c", "cat '" + tabPath + "' 2>/dev/null || echo 'note'"]
         running: false
-        stdout: SplitParser {
-            property string buf: ""
-            splitMarker: ""
-            onRead: (data) => { buf += data; }
-        }
         onRunningChanged: {
             if (!running) {
                 var t = tabLoadProc.stdout.buf.trim();
                 tabLoadProc.stdout.buf = "";
-                if (t === "note" || t === "todo") activeTab = t;
-                if (activeTab === "note") noteArea.forceActiveFocus();
-                else todoInput.forceActiveFocus();
+                if (t === "note" || t === "todo")
+                    activeTab = t;
+
+                if (activeTab === "note")
+                    noteArea.forceActiveFocus();
+                else
+                    todoInput.forceActiveFocus();
             }
         }
+
+        stdout: SplitParser {
+            property string buf: ""
+
+            splitMarker: ""
+            onRead: (data) => {
+                buf += data;
+            }
+        }
+
     }
 
-    Process { id: tabSaveProc; running: false }
+    Process {
+        id: tabSaveProc
+
+        running: false
+    }
 
     Shortcut {
         sequence: "Escape"
         onActivated: notepadWidget.isOpen = false
     }
+
 }

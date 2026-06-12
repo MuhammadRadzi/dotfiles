@@ -9,6 +9,8 @@ PanelWindow {
 
     property bool isOpen: false
 
+    function toggle() { isOpen = !isOpen }
+
     visible: overlayRect.opacity > 0
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: -1
@@ -17,6 +19,7 @@ PanelWindow {
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
     color: "transparent"
+    
 
     Rectangle {
         id: overlayRect
