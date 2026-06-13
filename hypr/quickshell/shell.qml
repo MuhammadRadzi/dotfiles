@@ -33,7 +33,7 @@ ShellRoot {
 
         onNotification: (notif) => {
             var entry = makeNotifEntry(notif);
-            popupModel.append(entry);
+            if (!cc.dndActive) popupModel.append(entry);
             historyModel.insert(0, entry);
         }
     }

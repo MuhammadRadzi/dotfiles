@@ -11,6 +11,7 @@ PanelWindow {
 
     property bool isOpen: false
     property bool initialized: false
+    property bool dndActive: dndState.active
 
     signal openWifiPanel()
     signal openBtPanel()
