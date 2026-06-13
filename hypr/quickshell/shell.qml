@@ -80,6 +80,34 @@ ShellRoot {
         }
     }
 
+    ControlCenter {
+        id: cc
+        onOpenWifiPanel: {
+            cc.isOpen = false
+            wifiPanel.isOpen = true
+        }
+        onOpenBtPanel: {
+            cc.isOpen = false
+            btPanel.isOpen = true
+        }
+    }
+
+    WifiPanel {
+        id: wifiPanel
+        onBackPressed: {
+            wifiPanel.isOpen = false
+            cc.isOpen = true
+        }
+    }
+
+    BluetoothPanel {
+        id: btPanel
+        onBackPressed: {
+            btPanel.isOpen = false
+            cc.isOpen = true
+        }
+    }
+    
     KeybindCheatsheet { id: ks }
     AppLauncher       { id: al }
     ClipboardManager  { id: cm }
@@ -89,7 +117,6 @@ ShellRoot {
     NotepadWidget     { id: notepadWidget }
     ProcessManager    { id: procMgr }
     CalendarPopup     { id: cal }
-    ControlCenter     { id: cc }
     OSD               { id: osd; bar: bar }
 
     IpcHandler { target: "toggle-process";    function handle(): void { procMgr.toggle() } }

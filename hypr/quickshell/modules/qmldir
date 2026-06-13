@@ -5,11 +5,7 @@ Battery 1.0 Battery.qml
 Volume 1.0 Volume.qml
 Network 1.0 Network.qml
 Weather 1.0 Weather.qml
-VolumeSlider 1.0 VolumeSlider.qml
-BrightnessSlider 1.0 BrightnessSlider.qml
-NetworkList 1.0 NetworkList.qml
-BatteryDetail 1.0 BatteryDetail.qml
-ControlCenter 1.0 ControlCenter.qml
+ControlCenter 1.0 controlcenter/ControlCenter.qml
 CalendarPopup 1.0 CalendarPopup.qml
 WallpaperSelector 1.0 WallpaperSelector.qml
 SystemGraph 1.0 SystemGraph.qml
@@ -24,3 +20,5 @@ AppLauncher 1.0 app-launcher/AppLauncher.qml
 ClipboardManager 1.0 clipboard/ClipboardManager.qml
 FileBrowser 1.0 file-browser/FileBrowser.qml
 BarButton 1.0 BarButton.qml
+WifiPanel 1.0 controlcenter/WifiPanel.qml
+BluetoothPanel 1.0 controlcenter/BluetoothPanel.qml
