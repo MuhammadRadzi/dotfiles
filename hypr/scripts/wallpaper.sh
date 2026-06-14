@@ -28,8 +28,7 @@ convert "$WALLPAPER" -resize 300x180^ -gravity Center -extent 300x180 \
 
 wallust run "$WALLPAPER" -q || true
 
-pkill -SIGUSR1 cava || true
-systemd-run --user --no-block bash -c 'sleep 0.3; cava'
+pkill -SIGUSR1 cava || cava &
 
 sed 's/rgb(#/rgb(/g' ~/.config/hypr/hypr-colors.conf > ~/.config/hypr/hypr-colors-clean.conf
 

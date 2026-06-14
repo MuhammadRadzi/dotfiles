@@ -53,8 +53,10 @@ Colors = { template = 'Colors.qml', target = '~/.config/hypr/quickshell/theme/Co
 kitty = { template = 'kitty-colors.conf', target = '~/.config/kitty/kitty-colors.conf' }
 rofi  = { template = 'rofi-colors.rasi', target = '~/.config/hypr/rofi/colors.rasi' }
 hypr  = { template = 'hypr-colors.conf', target = '~/.config/hypr/hypr-colors.conf' }
-cava = { template = 'cava-config', target = '~/.config/cava/config' }
+cava        = { template = 'cava-config', target = '~/.config/cava/config' }
+cava-colors = { template = 'cava-colors', target = '~/.config/cava/colors' }
 
 [hooks]
 # Run commands when wallust is invoked. Useful to avoid scripting.
 #wallpaper = """swww img "$(find ~/Media/Pictures/Wallpapers -iregex '.*.\\(jpg\\|jpeg\\|png\\|gif\\)' -type f | shuf -n 1)" """
+reload = "pkill -USR1 cava"
