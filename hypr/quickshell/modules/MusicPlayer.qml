@@ -1,7 +1,6 @@
 import "../theme"
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Window
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -31,8 +30,8 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusiveZone: 0
     WlrLayershell.anchors.bottom: true
+    WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
-    implicitWidth: 240
     implicitHeight: card.height + 20
     color: "transparent"
     visible: card.opacity > 0
@@ -54,7 +53,7 @@ PanelWindow {
         onTriggered: root.autoShow = false
     }
 
-    // Poll posisi cursor tiap 100ms
+    // Poll cursor position
     Process {
         id: cursorProc
 
@@ -65,7 +64,9 @@ PanelWindow {
                 var parts = data.trim().split(", ");
                 var x = parseInt(parts[0]);
                 var y = parseInt(parts[1]);
-                root.cursorInZone = (x >= Screen.width - 850 && y >= Screen.height - 10);
+                // zone: bottom center ~360px wide
+                var cx = Screen.width / 2;
+                root.cursorInZone = (Math.abs(x - cx) < 180 && y >= Screen.height - 10);
             }
         }
 
@@ -82,15 +83,15 @@ PanelWindow {
         }
     }
 
+    // Card — centered horizontally
     Rectangle {
         id: card
 
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.right: parent.right
         anchors.bottomMargin: 10
-        anchors.rightMargin: 10
-        width: 200
-        height: cardCol.implicitHeight + 32
+        width: 380
+        height: cardRow.implicitHeight + 24
         radius: 10
         color: "#dd16181c"
         border.width: 1
@@ -114,22 +115,23 @@ PanelWindow {
             }
         }
 
-        ColumnLayout {
-            id: cardCol
+        RowLayout {
+            id: cardRow
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
             anchors.top: parent.top
-            anchors.topMargin: 16
-            width: parent.width - 32
-            spacing: 12
+            anchors.margins: 12
+            spacing: 14
 
+            // ── Artwork ───────────────────────────────────────────
             Rectangle {
-                Layout.alignment: Qt.AlignHCenter
-                width: 152
-                height: 152
-                radius: 12
-                color: Colors.surface
+                width: 80
+                height: 80
+                radius: 10
+                color: "#33ffffff"
                 clip: true
+                Layout.alignment: Qt.AlignVCenter
 
                 Image {
                     id: artImg
@@ -147,133 +149,157 @@ PanelWindow {
                     visible: artImg.status !== Image.Ready
                     text: "\uf001"
                     color: Colors.subtle
-                    font.pixelSize: 40
+                    font.pixelSize: 28
                     font.family: "JetBrainsMono Nerd Font"
                 }
 
             }
 
-            Text {
+            // ── Info + controls ───────────────────────────────────
+            ColumnLayout {
                 Layout.fillWidth: true
-                text: root.track
-                color: Colors.text
-                font.pixelSize: 13
-                font.bold: true
-                font.family: "JetBrainsMono Nerd Font"
-                horizontalAlignment: Text.AlignHCenter
-                elide: Text.ElideRight
-            }
+                Layout.alignment: Qt.AlignVCenter
+                spacing: 6
 
-            Text {
-                Layout.fillWidth: true
-                text: root.artist
-                color: Colors.subtle
-                font.pixelSize: 11
-                font.family: "JetBrainsMono Nerd Font"
-                horizontalAlignment: Text.AlignHCenter
-                elide: Text.ElideRight
-            }
-
-            RowLayout {
-                Layout.alignment: Qt.AlignHCenter
-                spacing: 20
-
+                // Track + artist
                 Text {
-                    text: "\udb81\udcae"
-                    color: prevArea.containsMouse ? Colors.text : Colors.subtle
-                    font.pixelSize: 16
-                    font.family: "JetBrainsMono Nerd Font"
-
-                    MouseArea {
-                        id: prevArea
-
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: prevProc.running = true
-                    }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-
-                    }
-
-                }
-
-                Text {
-                    text: root.status === "Playing" ? "\udb80\udfe4" : "\udb81\udc0a"
+                    Layout.fillWidth: true
+                    text: root.track
                     color: Colors.text
-                    font.pixelSize: 22
+                    font.pixelSize: 13
+                    font.weight: Font.Medium
                     font.family: "JetBrainsMono Nerd Font"
-
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: playProc.running = true
-                    }
-
+                    elide: Text.ElideRight
                 }
 
                 Text {
-                    text: "\udb81\udcad"
-                    color: nextArea.containsMouse ? Colors.text : Colors.subtle
-                    font.pixelSize: 16
+                    Layout.fillWidth: true
+                    text: root.artist
+                    color: Colors.subtle
+                    font.pixelSize: 11
                     font.family: "JetBrainsMono Nerd Font"
+                    elide: Text.ElideRight
+                }
 
-                    MouseArea {
-                        id: nextArea
+                // Progress bar
+                Item {
+                    Layout.fillWidth: true
+                    implicitHeight: 12
 
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: nextProc.running = true
-                    }
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: 3
+                        radius: 2
+                        color: "#22ffffff"
 
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
+                        Rectangle {
+                            width: root.duration > 0 ? parent.width * (root.position / root.duration) : 0
+                            height: parent.height
+                            radius: 2
+                            color: Colors.accent
+
+                            Behavior on width {
+                                NumberAnimation {
+                                    duration: 800
+                                    easing.type: Easing.Linear
+                                }
+
+                            }
+
                         }
 
                     }
 
                 }
 
-            }
+                // Controls + time
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 0
 
-            Rectangle {
-                Layout.fillWidth: true
-                height: 3
-                radius: 2
-                color: "#22ffffff"
+                    // Prev
+                    Text {
+                        text: "\udb81\udcae"
+                        color: prevArea.containsMouse ? Colors.text : Colors.subtle
+                        font.pixelSize: 16
+                        font.family: "JetBrainsMono Nerd Font"
 
-                Rectangle {
-                    width: root.duration > 0 ? parent.width * (root.position / root.duration) : 0
-                    height: parent.height
-                    radius: 2
-                    color: Colors.accent
+                        MouseArea {
+                            id: prevArea
 
-                    Behavior on width {
-                        NumberAnimation {
-                            duration: 800
-                            easing.type: Easing.Linear
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            
+                            onClicked: prevProc.running = true
+                        }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
                         }
 
                     }
 
+                    // Play/Pause
+                    Text {
+                        leftPadding: 14
+                        rightPadding: 14
+                        text: root.status === "Playing" ? "\udb80\udfe4" : "\udb81\udc0a"
+                        color: Colors.text
+                        font.pixelSize: 22
+                        font.family: "JetBrainsMono Nerd Font"
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: playProc.running = true
+                        }
+
+                    }
+
+                    // Next
+                    Text {
+                        text: "\udb81\udcad"
+                        color: nextArea.containsMouse ? Colors.text : Colors.subtle
+                        font.pixelSize: 16
+                        font.family: "JetBrainsMono Nerd Font"
+
+                        MouseArea {
+                            id: nextArea
+
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            
+                            onClicked: nextProc.running = true
+                        }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+
+                        }
+
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    // Time
+                    Text {
+                        text: formatTime(root.position) + " / " + formatTime(root.duration)
+                        color: Colors.subtle
+                        font.pixelSize: 10
+                        font.family: "JetBrainsMono Nerd Font"
+                    }
+
                 }
 
-            }
-
-            Text {
-                Layout.alignment: Qt.AlignHCenter
-                text: formatTime(root.position) + " / " + formatTime(root.duration)
-                color: Colors.subtle
-                font.pixelSize: 11
-                font.family: "JetBrainsMono Nerd Font"
-            }
-
-            Item {
-                height: 4
             }
 
         }
@@ -287,9 +313,9 @@ PanelWindow {
         }
 
         transform: Translate {
-            x: root.isVisible ? 0 : card.width + 20
+            y: root.isVisible ? 0 : 20
 
-            Behavior on x {
+            Behavior on y {
                 NumberAnimation {
                     duration: 220
                     easing.type: Easing.OutCubic
@@ -301,6 +327,7 @@ PanelWindow {
 
     }
 
+    // ── Processes ─────────────────────────────────────────────────
     Process {
         id: metaProc
 
