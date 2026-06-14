@@ -59,7 +59,7 @@ PopupWindow {
             Text {
                 text: {
                     if (type === "volume")
-                        return muted ? "\udb81\udf5f" : value >= 50 ? "\uf028" : "\uf027";
+                        return muted ? "\ueee8" : value >= 50 ? "\uf028" : "\uf027";
                     else
                         return value > 50 ? "\uf185" : "\uf186";
                 }
