@@ -1,5 +1,3 @@
-// modules/BarButton.qml — NEW FILE
-
 import "../theme"
 import QtQuick
 

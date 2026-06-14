@@ -262,46 +262,35 @@ PanelWindow {
                 Rectangle {
                     id: rightPill
 
-                    implicitWidth: rightRow.implicitWidth + 18
-                    implicitHeight: rightRow.implicitHeight - 5
+                    implicitWidth: rightRow.implicitWidth + 0
+                    implicitHeight: rightRow.implicitHeight - 0
                     radius: 8
-                    color: ccMouseArea.containsMouse ? "#22ffffff" : "transparent"
+                    color: "transparent"
 
                     RowLayout {
                         id: rightRow
 
                         anchors.centerIn: parent
-                        spacing: 10
+                        spacing: 0
 
                         SystemGraph {
+                            Layout.rightMargin: 10
                         }
 
                         Weather {
+                            Layout.rightMargin: 10
                         }
 
                         Network {
+                            Layout.rightMargin: 10
                         }
 
                         Volume {
+                            Layout.rightMargin: 10
                         }
 
                         Battery {
-                        }
-
-                    }
-
-                    MouseArea {
-                        id: ccMouseArea
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.toggleCC()
-                    }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
+                            Layout.rightMargin: 4
                         }
 
                     }
@@ -309,8 +298,8 @@ PanelWindow {
                 }
 
                 BarButton {
-                    icon: "\uf03e"
-                    onClicked: root.toggleWallpaper()
+                    icon: "\udb85\udd42"
+                    onClicked: root.toggleCC()
                 }
 
                 BarButton {
