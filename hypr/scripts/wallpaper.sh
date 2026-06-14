@@ -27,6 +27,38 @@ convert "$WALLPAPER" -resize 300x180^ -gravity Center -extent 300x180 \
     ~/.cache/hypr/thumbnails/$(basename "$WALLPAPER")
 
 wallust run "$WALLPAPER" -q || true
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+
+sed -i '/wallust run/a cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml' ~/.config/hypr/scripts/wallpaper.sh
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
+cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
 
 pkill -SIGUSR1 cava || cava &
 
