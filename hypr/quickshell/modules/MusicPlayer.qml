@@ -73,11 +73,11 @@ PanelWindow {
     }
 
     Timer {
-        interval: 100
-        running: true
+        interval: 250
+        running: root.hasPlayer
         repeat: true
         onTriggered: {
-            if (root.hasPlayer)
+            if (!cursorProc.running)
                 cursorProc.running = true;
 
         }
@@ -108,7 +108,7 @@ PanelWindow {
             }
             onExited: {
                 root.cardHovered = false;
-                if (!root.cursorInZone && !root.autoShow) {
+                if (!root.cursorInZone) {
                     autoHideTimer.interval = 1500;
                     autoHideTimer.restart();
                 }
@@ -231,7 +231,6 @@ PanelWindow {
 
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            
                             onClicked: prevProc.running = true
                         }
 
@@ -273,7 +272,6 @@ PanelWindow {
 
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            
                             onClicked: nextProc.running = true
                         }
 
