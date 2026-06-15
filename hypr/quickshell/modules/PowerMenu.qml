@@ -174,7 +174,7 @@ PanelWindow {
                         model: [{
                             "icon": "\uf023",
                             "label": "Lock",
-                            "cmd": "hyprlock",
+                            "cmd": "quickshell -p ~/.config/hypr/quickshell/lock",
                             "color": "#85B7EB"
                         }, {
                             "icon": "\uf186",

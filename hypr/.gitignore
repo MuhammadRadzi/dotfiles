@@ -1,3 +1,4 @@
 .last_wallpaper
 .env.local
 _deprecated
+*.bak

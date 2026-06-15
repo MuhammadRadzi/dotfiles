@@ -325,7 +325,7 @@ ShellRoot {
                                 Rectangle {
                                     anchors.fill: parent
                                     radius: height / 2
-                                    color: Qt.rgba(Colors.surface.r, Colors.surface.g, Colors.surface.b, 0.4)
+                                    color: Qt.rgba(0, 0, 0, 0.4)
 
                                     Text {
                                         anchors.centerIn: parent
@@ -456,7 +456,7 @@ ShellRoot {
                             Rectangle {
                                 anchors.fill: parent
                                 radius: height / 2
-                                color: Qt.rgba(Colors.surface.r, Colors.surface.g, Colors.surface.b, 0.25)
+                                color: Qt.rgba(0, 0, 0, 0.25)
                                 border.width: 1
                                 border.color: {
                                     if (lockUI.failed)         return "#FB4934"
@@ -602,15 +602,16 @@ ShellRoot {
 
                         Repeater {
                             model: [
-                                { icon: "󰒲", label: "Suspend",  proc: suspendProc  },
-                                { icon: "󰜉", label: "Reboot",   proc: rebootProc   },
-                                { icon: "󰐥", label: "Power off", proc: poweroffProc }
+                                { icon: "\udb81\udcb2", label: "Suspend",  proc: suspendProc  },
+                                { icon: "\udb81\udc53", label: "Reboot",   proc: rebootProc   },
+                                { icon: "\udb81\udc25", label: "Power off", proc: poweroffProc }
                             ]
                             delegate: Rectangle {
                                 width: 130; height: 36; radius: 8
+                                Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutBack } }
                                 color: menuMa.containsMouse
-                                    ? Qt.rgba(Colors.surface.r, Colors.surface.g, Colors.surface.b, 0.6)
-                                    : Qt.rgba(Colors.surface.r, Colors.surface.g, Colors.surface.b, 0.35)
+                                    ? Qt.rgba(0, 0, 0, 0.6)
+                                    : Qt.rgba(0, 0, 0, 0.35)
                                 border.color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.1)
                                 border.width: 1
                                 Behavior on color { ColorAnimation { duration: 150 } }
@@ -631,13 +632,15 @@ ShellRoot {
                                         color: Colors.text
                                     }
                                 }
-
                                 MouseArea {
                                     id: menuMa
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
-                                    onClicked: modelData.proc.running = true
+                                    pressAndHoldInterval: 800
+                                    onPressAndHold: modelData.proc.running = true
+                                    onPressed: parent.scale = 0.95
+                                    onReleased: parent.scale = 1.0
                                 }
                             }
                         }
@@ -648,10 +651,10 @@ ShellRoot {
                         width: 36; height: 36; radius: 8
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: screen.powerOpen
-                            ? Qt.rgba(Colors.surface.r, Colors.surface.g, Colors.surface.b, 0.7)
+                            ? Qt.rgba(0, 0, 0, 0.7)
                             : powerMa.containsMouse
-                                ? Qt.rgba(Colors.surface.r, Colors.surface.g, Colors.surface.b, 0.5)
-                                : Qt.rgba(Colors.surface.r, Colors.surface.g, Colors.surface.b, 0.25)
+                                ? Qt.rgba(0, 0, 0, 0.5)
+                                : Qt.rgba(0, 0, 0, 0.25)
                         border.color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.1)
                         border.width: 1
                         Behavior on color { ColorAnimation { duration: 150 } }
@@ -679,6 +682,165 @@ ShellRoot {
                         }
                     }
                 }
+
+                // -----------------------------------------------
+                // MUSIC PLAYER — bottom center
+                // -----------------------------------------------
+                Item {
+                    anchors.bottom: parent.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottomMargin: 28
+                    width: 360
+                    height: mpCard.height
+                    opacity: screen.ready && screen.mpHasPlayer ? 1.0 : 0.0
+                    scale: screen.ready && screen.mpHasPlayer ? 1.0 : 0.95
+                    Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
+                    Behavior on scale   { NumberAnimation { duration: 300; easing.type: Easing.OutBack } }
+
+                    Rectangle {
+                        id: mpCard
+                        width: parent.width
+                        height: mpRow.implicitHeight + 24
+                        radius: 12
+                        color: Qt.rgba(0, 0, 0, 0.45)
+                        border.color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.08)
+                        border.width: 1
+
+                        Row {
+                            id: mpRow
+                            anchors { left: parent.left; right: parent.right; top: parent.top; margins: 12 }
+                            spacing: 14
+
+                            // Artwork
+                            Rectangle {
+                                width: 72; height: 72; radius: 8
+                                color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.08)
+                                clip: true
+
+                                Image {
+                                    id: mpArt
+                                    anchors.fill: parent
+                                    source: screen.mpArtUrl
+                                    fillMode: Image.PreserveAspectCrop
+                                    asynchronous: true
+                                    cache: true
+                                }
+                                Text {
+                                    anchors.centerIn: parent
+                                    visible: mpArt.status !== Image.Ready
+                                    text: "uf001"
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 26
+                                    color: Colors.subtle
+                                }
+                            }
+
+                            // Info + controls
+                            Column {
+                                width: parent.width - 72 - 14
+                                spacing: 6
+
+                                Text {
+                                    width: parent.width
+                                    text: screen.mpTrack
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 13
+                                    font.weight: Font.Medium
+                                    color: Colors.text
+                                    elide: Text.ElideRight
+                                }
+                                Text {
+                                    width: parent.width
+                                    text: screen.mpArtist
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 11
+                                    color: Colors.subtle
+                                    elide: Text.ElideRight
+                                }
+
+                                // Progress bar
+                                Item {
+                                    width: parent.width; height: 10
+                                    Rectangle {
+                                        anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter }
+                                        height: 3; radius: 2
+                                        color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.15)
+                                        Rectangle {
+                                            width: screen.mpDuration > 0 ? parent.width * (screen.mpPosition / screen.mpDuration) : 0
+                                            height: parent.height; radius: 2
+                                            color: Colors.accent
+                                            Behavior on width { NumberAnimation { duration: 800; easing.type: Easing.Linear } }
+                                        }
+                                    }
+                                }
+
+                                // Controls + time
+                                RowLayout {
+                                    width: parent.width
+                                    spacing: 4
+                                    Text {
+                                        text: "\udb81\udcae"
+                                        font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 16
+                                        color: mpPrevMa.containsMouse ? Colors.text : Colors.subtle
+                                        Behavior on color { ColorAnimation { duration: 150 } }
+                                        MouseArea { id: mpPrevMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: mpPrevProc.running = true }
+                                    }
+                                    Text {
+                                        text: screen.mpStatus === "Playing" ? "\udb80\udfe4" : "\udb81\udc0a"
+                                        font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 22
+                                        color: Colors.text
+                                        Layout.leftMargin: 8; Layout.rightMargin: 8
+                                        MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: mpPlayProc.running = true }
+                                    }
+                                    Text {
+                                        text: "\udb81\udcad"
+                                        font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 16
+                                        color: mpNextMa.containsMouse ? Colors.text : Colors.subtle
+                                        Behavior on color { ColorAnimation { duration: 150 } }
+                                        MouseArea { id: mpNextMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: mpNextProc.running = true }
+                                    }
+                                    Item { Layout.fillWidth: true }
+                                    Text {
+                                        text: screen.mpFormatTime(screen.mpPosition) + " / " + screen.mpFormatTime(screen.mpDuration)
+                                        font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 10
+                                        color: Colors.subtle
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Processes — music
+                Process {
+                    id: mpMetaProc
+                    command: ["sh", "-c", "playerctl metadata --format '{{title}}|{{artist}}|{{status}}|{{mpris:artUrl}}|{{mpris:length}}' 2>/dev/null || echo '||||0'"]
+                    Component.onCompleted: running = true
+                    stdout: SplitParser {
+                        onRead: (data) => {
+                            if (!data.trim()) return
+                            var p = data.trim().split("|")
+                            screen.mpTrack    = p[0] || ""
+                            screen.mpArtist   = p[1] || ""
+                            screen.mpStatus   = p[2] || "Stopped"
+                            screen.mpArtUrl   = p[3] || ""
+                            screen.mpDuration = Math.floor((parseInt(p[4]) || 0) / 1e6)
+                        }
+                    }
+                }
+                Process {
+                    id: mpPosProc
+                    running: false
+                    command: ["sh", "-c", "playerctl position 2>/dev/null || echo 0"]
+                    stdout: SplitParser {
+                        onRead: (data) => { screen.mpPosition = Math.floor(parseFloat(data.trim()) || 0) }
+                    }
+                }
+                Timer { interval: 2000; running: true; repeat: true; onTriggered: mpMetaProc.running = true }
+                Timer { interval: 1000; running: true; repeat: true; onTriggered: { if (screen.mpStatus === "Playing") mpPosProc.running = true } }
+                Process { id: mpPrevProc; command: ["playerctl", "previous"]; running: false; onRunningChanged: { if (!running) mpMetaProc.running = true } }
+                Process { id: mpPlayProc; command: ["playerctl", "play-pause"]; running: false; onRunningChanged: { if (!running) mpMetaProc.running = true } }
+                Process { id: mpNextProc; command: ["playerctl", "next"]; running: false; onRunningChanged: { if (!running) mpMetaProc.running = true } }
 
                 // INTRO — simple fade in
                 // -----------------------------------------------
