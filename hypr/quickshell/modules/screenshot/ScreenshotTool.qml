@@ -83,8 +83,8 @@ PanelWindow {
             root.recordingStarted();
             notifyStartProc.running = true;
         } else {
-            captureProc.command = ["bash", scriptPath, "geometry", geometryString];
-            captureProc.running = true;
+            captureDelayTimer.geometryStr = geometryString
+            captureDelayTimer.start()
         }
     }
 
@@ -820,6 +820,17 @@ PanelWindow {
         onTriggered: {
             captureProc.command = ["bash", scriptPath, mode, ""];
             captureProc.running = true;
+        }
+    }
+
+    Timer {
+        id: captureDelayTimer
+        property string geometryStr: ""
+        interval: 400
+        repeat: false
+        onTriggered: {
+            captureProc.command = ["bash", scriptPath, "geometry", geometryStr]
+            captureProc.running = true
         }
     }
 
