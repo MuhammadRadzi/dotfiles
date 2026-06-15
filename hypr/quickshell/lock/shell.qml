@@ -728,7 +728,7 @@ ShellRoot {
                                 Text {
                                     anchors.centerIn: parent
                                     visible: mpArt.status !== Image.Ready
-                                    text: "uf001"
+                                    text: "\uf001"
                                     font.family: "JetBrainsMono Nerd Font"
                                     font.pixelSize: 26
                                     color: Colors.subtle
