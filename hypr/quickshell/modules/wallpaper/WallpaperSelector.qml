@@ -15,11 +15,14 @@ PanelWindow {
     property string homePath: Quickshell.env("HOME")
     property string paletteDir: Quickshell.env("HOME") + "/.cache/hypr/palettes"
     property string paletteScript: Quickshell.env("HOME") + "/.config/hypr/quickshell/modules/wallpaper/gen_palette.py"
-    property var palettes: ({})
+    property var palettes: ({
+    })
     property var paletteQueue: []
     property int paletteQueueIdx: 0
 
-    function toggle() { isOpen = !isOpen }
+    function toggle() {
+        isOpen = !isOpen;
+    }
 
     visible: panelRect.opacity > 0
     WlrLayershell.layer: WlrLayer.Overlay
@@ -29,9 +32,10 @@ PanelWindow {
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
     color: "transparent"
-
     onIsOpenChanged: {
-        if (isOpen) scanProc.running = true;
+        if (isOpen)
+            scanProc.running = true;
+
     }
 
     Rectangle {
@@ -59,7 +63,8 @@ PanelWindow {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {}
+                onClicked: {
+                }
             }
 
             ColumnLayout {
@@ -79,7 +84,9 @@ PanelWindow {
                         font.letterSpacing: 1.5
                     }
 
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
 
                     Text {
                         text: wallpapers.length + " files"
@@ -87,6 +94,7 @@ PanelWindow {
                         font.pixelSize: 10
                         font.family: "JetBrainsMono Nerd Font"
                     }
+
                 }
 
                 // Grid
@@ -127,7 +135,6 @@ PanelWindow {
                                     smooth: true
                                     asynchronous: true
                                     cache: false
-
                                     onStatusChanged: {
                                         if (status === Image.Error) {
                                             genThumbProc.command = ["convert", modelData, "-resize", "300x180^", "-gravity", "Center", "-extent", "300x180", thumbDir + "/" + modelData.split("/").pop()];
@@ -136,7 +143,7 @@ PanelWindow {
                                     }
                                 }
 
-                                // Placeholder saat loading
+                                // Placeholder when loading
                                 Rectangle {
                                     anchors.fill: parent
                                     color: Colors.surface
@@ -150,6 +157,7 @@ PanelWindow {
                                         font.pixelSize: 20
                                         font.family: "JetBrainsMono Nerd Font"
                                     }
+
                                 }
 
                                 // Palette swatch strip — shown on hover
@@ -181,12 +189,16 @@ PanelWindow {
                                                 radius: 2
                                                 color: modelData
                                             }
+
                                         }
+
                                     }
+
                                 }
 
                                 Process {
                                     id: genThumbProc
+
                                     running: false
                                     onRunningChanged: {
                                         if (!running) {
@@ -198,6 +210,7 @@ PanelWindow {
 
                                 MouseArea {
                                     id: thumbArea
+
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
@@ -209,29 +222,46 @@ PanelWindow {
                                 }
 
                                 Behavior on border.color {
-                                    ColorAnimation { duration: 150 }
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+
                                 }
+
                             }
+
                         }
+
                     }
+
                 }
+
             }
 
             Behavior on opacity {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
             }
 
             Behavior on scale {
-                NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+                NumberAnimation {
+                    duration: 220
+                    easing.type: Easing.OutCubic
+                }
+
             }
+
         }
+
     }
 
     Process {
         id: scanProc
 
         command: ["sh", "-c", "find " + wallpaperDir + " -type f \\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \\) | sort"]
-
         onRunningChanged: {
             if (!running) {
                 wallpapers = scanProc.stdout.list.slice();
@@ -249,31 +279,29 @@ PanelWindow {
 
         stdout: SplitParser {
             property var list: []
+
             onRead: (data) => {
-                if (data.trim()) list.push(data.trim());
+                if (data.trim())
+                    list.push(data.trim());
+
             }
         }
+
     }
 
     Process {
         id: setWallProc
+
         running: false
     }
 
     Process {
         id: paletteProc
+
         running: false
-
-        stdout: SplitParser {
-            property var lines: []
-            splitMarker: "\n"
-            onRead: (data) => {
-                if (data.trim()) lines.push(data.trim());
-            }
-        }
-
         onRunningChanged: {
-            if (running) return;
+            if (running)
+                return ;
 
             // Store result for just-finished wallpaper
             var idx = paletteQueueIdx - 1;
@@ -281,12 +309,12 @@ PanelWindow {
                 var colors = paletteProc.stdout.lines.slice();
                 paletteProc.stdout.lines = [];
                 if (colors.length > 0) {
-                    var updated = Object.assign({}, palettes);
+                    var updated = Object.assign({
+                    }, palettes);
                     updated[paletteQueue[idx]] = colors;
                     palettes = updated;
                 }
             }
-
             // Process next in queue
             if (paletteQueueIdx < paletteQueue.length) {
                 var wallPath = paletteQueue[paletteQueueIdx];
@@ -295,5 +323,18 @@ PanelWindow {
                 paletteProc.running = true;
             }
         }
+
+        stdout: SplitParser {
+            property var lines: []
+
+            splitMarker: "\n"
+            onRead: (data) => {
+                if (data.trim())
+                    lines.push(data.trim());
+
+            }
+        }
+
     }
+
 }
