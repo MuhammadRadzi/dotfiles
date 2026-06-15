@@ -1,4 +1,3 @@
-//@ pragma UseQApplication
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -12,10 +11,14 @@ import "modules/processmanager"
 import "modules/notifications"
 
 ShellRoot {
+    id: root
+
+    property bool isRecording: false
+    property int recordSeconds: 0
+
     ListModel { id: popupModel }
     ListModel { id: historyModel }
 
-    // Build notification entry object once, reuse for both models
     function makeNotifEntry(notif) {
         return {
             uid:     notif.id,
@@ -30,7 +33,6 @@ ShellRoot {
     NotificationServer {
         id: notifService
         keepOnReload: true
-
         onNotification: (notif) => {
             var entry = makeNotifEntry(notif);
             if (!cc.dndActive) popupModel.append(entry);
@@ -38,15 +40,26 @@ ShellRoot {
         }
     }
 
+    Timer {
+        id: recordTimer
+        interval: 1000
+        repeat: true
+        running: root.isRecording
+        onTriggered: root.recordSeconds++
+    }
+
     Bar {
         id: bar
         todoCount: notepadWidget.activeCount
+        isRecording: root.isRecording
+        recordSeconds: root.recordSeconds
         onTogglePower:     pm.toggle()
         onToggleWallpaper: ws.toggle()
         onToggleNotif:     nc.toggle()
         onToggleCal:       cal.toggle()
         onToggleCC:        cc.toggle()
         onToggleTodo:      notepadWidget.toggle()
+        onStopRecording:   screenshotTool.stopRecording()
     }
 
     MusicPlayer { id: mp }
@@ -107,13 +120,24 @@ ShellRoot {
             cc.isOpen = true
         }
     }
-    
+
     KeybindCheatsheet { id: ks }
     AppLauncher       { id: al }
     ClipboardManager  { id: cm }
     FileBrowser       { id: fb }
     RulesEditor       { id: rulesEditorPanel }
-    ScreenshotTool    { id: screenshotTool }
+
+    ScreenshotTool {
+        id: screenshotTool
+        onRecordingStarted: {
+            root.isRecording = true
+            root.recordSeconds = 0
+        }
+        onRecordingStopped: {
+            root.isRecording = false
+        }
+    }
+
     NotepadWidget     { id: notepadWidget }
     ProcessManager    { id: procMgr }
     CalendarPopup     { id: cal }

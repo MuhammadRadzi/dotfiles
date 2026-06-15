@@ -13,6 +13,13 @@ PanelWindow {
     property bool initialized: false
     property bool isSelectingRegion: false
     property string scriptPath: Quickshell.env("HOME") + "/.config/hypr/quickshell/modules/screenshot/take_screenshot.sh"
+    property bool isRecording: false
+    property string activeTab: "screenshot"  // "screenshot" | "record"
+    property string recordOutputPath: Quickshell.env("HOME") + "/Videos/Recordings"
+
+    // --- Signal ---
+    signal recordingStarted()
+    signal recordingStopped()
 
     // --- Region selection geometry ---
     property real startX: 0
@@ -65,10 +72,18 @@ PanelWindow {
     }
 
     function captureRegion() {
-        isSelectingRegion = false;
-        captureProc.command = ["bash", scriptPath, "geometry", geometryString];
-        captureProc.running = true;
+    isSelectingRegion = false
+    if (pendingRecord) {
+        pendingRecord = false
+        recordProc.command = ["wf-recorder", "-g", geometryString, "-f", pendingRecordFile]
+        recordProc.running = true
+        root.isRecording = true
+        root.recordingStarted()
+    } else {
+        captureProc.command = ["bash", scriptPath, "geometry", geometryString]
+        captureProc.running = true
     }
+}
 
     // --- Window setup ---
     visible: initialized && (isOpen || isSelectingRegion || overlayBg.opacity > 0)
@@ -125,70 +140,169 @@ PanelWindow {
             }
 
             ColumnLayout {
-                id: contentCol
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 16
-                spacing: 12
+    id: contentCol
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.margins: 16
+    spacing: 12
 
-                // Mode buttons
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 8
+    // Tab switcher
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: 4
 
-                    Repeater {
-                        model: [
-                            { label: "Region",     icon: "\uf065", mode: "region" },
-                            { label: "Fullscreen", icon: "\uf0c8", mode: "full"   },
-                            { label: "Window",     icon: "\uf2d0", mode: "window" }
-                        ]
+        Repeater {
+            model: [
+                { label: "Screenshot", tab: "screenshot" },
+                { label: "Record",     tab: "record"     }
+            ]
+            delegate: Rectangle {
+                Layout.fillWidth: true
+                height: 30
+                radius: 8
+                color: root.activeTab === modelData.tab
+                    ? Qt.rgba(Colors.accent.r, Colors.accent.g, Colors.accent.b, 0.2)
+                    : "transparent"
+                border.color: root.activeTab === modelData.tab
+                    ? Colors.accent
+                    : "transparent"
+                border.width: 1
+                Behavior on color { ColorAnimation { duration: 150 } }
 
-                        Rectangle {
-                            Layout.fillWidth: true
-                            height: 72
-                            radius: 10
-                            color: modeArea.containsMouse ? "#33ffffff" : "#1affffff"
-                            border.width: 1
-                            border.color: modeArea.containsMouse ? Colors.accent : "transparent"
+                Text {
+                    anchors.centerIn: parent
+                    text: modelData.label
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 12
+                    color: root.activeTab === modelData.tab ? Colors.accent : Colors.subtle
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                }
 
-                            ColumnLayout {
-                                anchors.centerIn: parent
-                                spacing: 8
-
-                                Text {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: modelData.icon
-                                    color: modeArea.containsMouse ? Colors.accent : Colors.text
-                                    font.pixelSize: 22
-                                    font.family: "JetBrainsMono Nerd Font"
-                                    Behavior on color { ColorAnimation { duration: 150 } }
-                                }
-
-                                Text {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: modelData.label
-                                    color: modeArea.containsMouse ? Colors.text : Colors.subtle
-                                    font.pixelSize: 11
-                                    font.family: "JetBrainsMono Nerd Font"
-                                    Behavior on color { ColorAnimation { duration: 150 } }
-                                }
-                            }
-
-                            MouseArea {
-                                id: modeArea
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: root.capture(modelData.mode)
-                            }
-
-                            Behavior on color { ColorAnimation { duration: 150 } }
-                            Behavior on border.color { ColorAnimation { duration: 150 } }
-                        }
-                    }
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.activeTab = modelData.tab
                 }
             }
+        }
+    }
+
+    // Screenshot modes
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: 8
+        visible: root.activeTab === "screenshot"
+
+        Repeater {
+            model: [
+                { label: "Region",     icon: "\uf065", mode: "region" },
+                { label: "Fullscreen", icon: "\uf0c8", mode: "full"   },
+                { label: "Window",     icon: "\uf2d0", mode: "window" }
+            ]
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 72
+                radius: 10
+                color: modeArea.containsMouse ? "#33ffffff" : "#1affffff"
+                border.width: 1
+                border.color: modeArea.containsMouse ? Colors.accent : "transparent"
+
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    spacing: 8
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: modelData.icon
+                        color: modeArea.containsMouse ? Colors.accent : Colors.text
+                        font.pixelSize: 22
+                        font.family: "JetBrainsMono Nerd Font"
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: modelData.label
+                        color: modeArea.containsMouse ? Colors.text : Colors.subtle
+                        font.pixelSize: 11
+                        font.family: "JetBrainsMono Nerd Font"
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+                }
+
+                MouseArea {
+                    id: modeArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.capture(modelData.mode)
+                }
+
+                Behavior on color { ColorAnimation { duration: 150 } }
+                Behavior on border.color { ColorAnimation { duration: 150 } }
+            }
+        }
+    }
+
+    // Record modes
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: 8
+        visible: root.activeTab === "record"
+
+        Repeater {
+            model: [
+                { label: "Region",     icon: "\uf065", mode: "record-region" },
+                { label: "Fullscreen", icon: "\uf0c8", mode: "record-full"   }
+            ]
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 72
+                radius: 10
+                color: recArea.containsMouse ? "#33FB4934" : "#1affffff"
+                border.width: 1
+                border.color: recArea.containsMouse ? "#FB4934" : "transparent"
+
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    spacing: 8
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: modelData.icon
+                        color: recArea.containsMouse ? "#FB4934" : Colors.text
+                        font.pixelSize: 22
+                        font.family: "JetBrainsMono Nerd Font"
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: modelData.label
+                        color: recArea.containsMouse ? Colors.text : Colors.subtle
+                        font.pixelSize: 11
+                        font.family: "JetBrainsMono Nerd Font"
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+                }
+
+                MouseArea {
+                    id: recArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.startRecording(modelData.mode)
+                }
+
+                Behavior on color { ColorAnimation { duration: 150 } }
+                Behavior on border.color { ColorAnimation { duration: 150 } }
+            }
+        }
+    }
+}
 
             Behavior on scale { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
         }
@@ -491,6 +605,61 @@ PanelWindow {
             captureProc.running = true;
         }
     }
+
+    Process {
+    id: recordProc
+    running: false
+    command: []
+    onRunningChanged: {
+        if (!running && root.isRecording) {
+            root.isRecording = false
+            root.recordingStopped()
+        }
+    }
+}
+
+function startRecording(mode) {
+    let ts = Qt.formatDateTime(new Date(), "yyyy-MM-dd_HH-mm-ss")
+    let outFile = root.recordOutputPath + "/rec_" + ts + ".mp4"
+    ensureDirProc.running = true
+
+    if (mode === "record-region") {
+        openRegionSelect()
+        pendingRecordFile = outFile
+        pendingRecord = true
+    } else {
+        recordProc.command = ["wf-recorder", "-f", outFile]
+        recordProc.running = true
+        root.isRecording = true
+        root.isOpen = false
+        root.recordingStarted()
+    }
+}
+
+function stopRecording() {
+    stopRecordProc.running = true
+}
+
+property bool pendingRecord: false
+property string pendingRecordFile: ""
+
+Process {
+    id: ensureDirProc
+    running: false
+    command: ["bash", "-c", "mkdir -p " + root.recordOutputPath]
+}
+
+Process {
+    id: stopRecordProc
+    running: false
+    command: ["pkill", "-INT", "wf-recorder"]
+    onRunningChanged: {
+        if (!running) {
+            root.isRecording = false
+            root.recordingStopped()
+        }
+    }
+}
 
     // ─────────────────────────────────────────────
     // KEYBOARD

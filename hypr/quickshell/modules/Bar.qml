@@ -9,6 +9,8 @@ PanelWindow {
     id: root
 
     property int todoCount: 0
+    property bool isRecording: false
+    property int recordSeconds: 0
 
     signal togglePower()
     signal toggleWallpaper()
@@ -16,6 +18,7 @@ PanelWindow {
     signal toggleCal()
     signal toggleCC()
     signal toggleTodo()
+    signal stopRecording()
 
     implicitHeight: 56
     color: "transparent"
@@ -43,51 +46,27 @@ PanelWindow {
             startX: 0
             startY: 0
 
-            PathLine {
-                x: barPath.w
-                y: 0
-            }
-
-            PathLine {
-                x: barPath.w
-                y: barPath.h
-            }
-
+            PathLine { x: barPath.w; y: 0 }
+            PathLine { x: barPath.w; y: barPath.h }
             PathArc {
-                x: barPath.w - barPath.r
-                y: barPath.h - barPath.r
-                radiusX: barPath.r
-                radiusY: barPath.r
+                x: barPath.w - barPath.r; y: barPath.h - barPath.r
+                radiusX: barPath.r; radiusY: barPath.r
                 direction: PathArc.Counterclockwise
             }
-
-            PathLine {
-                x: barPath.r
-                y: barPath.h - barPath.r
-            }
-
+            PathLine { x: barPath.r; y: barPath.h - barPath.r }
             PathArc {
-                x: 0
-                y: barPath.h
-                radiusX: barPath.r
-                radiusY: barPath.r
+                x: 0; y: barPath.h
+                radiusX: barPath.r; radiusY: barPath.r
                 direction: PathArc.Counterclockwise
             }
-
-            PathLine {
-                x: 0
-                y: 0
-            }
-
+            PathLine { x: 0; y: 0 }
         }
-
     }
 
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: 16
         anchors.rightMargin: 16
-        // anchors.topMargin: 4
         anchors.bottomMargin: 18
 
         // =========================
@@ -98,7 +77,6 @@ PanelWindow {
 
             RowLayout {
                 id: leftRow
-
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
@@ -109,22 +87,18 @@ PanelWindow {
                 }
 
                 Rectangle {
-                    width: 1
-                    height: 14
+                    width: 1; height: 14
                     color: Colors.overlay
                 }
 
-                Workspaces {
-                }
+                Workspaces {}
 
                 Rectangle {
                     visible: todoCount > 0
-                    width: 1
-                    height: 14
+                    width: 1; height: 14
                     color: Colors.overlay
                 }
 
-                // Todo badge
                 Item {
                     visible: todoCount > 0
                     width: todoRow.implicitWidth
@@ -132,7 +106,6 @@ PanelWindow {
 
                     RowLayout {
                         id: todoRow
-
                         spacing: 4
 
                         Text {
@@ -140,25 +113,16 @@ PanelWindow {
                             color: todoArea.containsMouse ? Colors.text : Colors.subtle
                             font.pixelSize: 14
                             font.family: "JetBrainsMono Nerd Font"
-
-                            Behavior on color {
-                                ColorAnimation {
-                                    duration: 150
-                                }
-
-                            }
-
+                            Behavior on color { ColorAnimation { duration: 150 } }
                         }
 
                         Rectangle {
                             width: badgeText.implicitWidth + 6
-                            height: 16
-                            radius: 8
+                            height: 16; radius: 8
                             color: Colors.accent
 
                             Text {
                                 id: badgeText
-
                                 anchors.centerIn: parent
                                 text: todoCount
                                 color: Colors.base
@@ -166,24 +130,18 @@ PanelWindow {
                                 font.family: "JetBrainsMono Nerd Font"
                                 font.bold: true
                             }
-
                         }
-
                     }
 
                     MouseArea {
                         id: todoArea
-
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: root.toggleTodo()
                     }
-
                 }
-
             }
-
         }
 
         // =========================
@@ -194,7 +152,6 @@ PanelWindow {
 
             RowLayout {
                 id: centerRow
-
                 anchors.centerIn: parent
                 spacing: 10
 
@@ -206,7 +163,6 @@ PanelWindow {
 
                     Text {
                         id: clockText
-
                         anchors.centerIn: parent
                         text: Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
                         color: Colors.text
@@ -214,34 +170,22 @@ PanelWindow {
                         font.family: "JetBrainsMono Nerd Font"
 
                         Timer {
-                            interval: 1000
-                            running: true
-                            repeat: true
+                            interval: 1000; running: true; repeat: true
                             onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
                         }
-
                     }
 
                     MouseArea {
                         id: clockArea
-
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: root.toggleCal()
                     }
 
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-
-                    }
-
+                    Behavior on color { ColorAnimation { duration: 150 } }
                 }
-
             }
-
         }
 
         // =========================
@@ -255,46 +199,26 @@ PanelWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
 
-                SysTray {
-                    barWindow: root
-                }
+                SysTray { barWindow: root }
 
                 Rectangle {
                     id: rightPill
-
-                    implicitWidth: rightRow.implicitWidth + 0
-                    implicitHeight: rightRow.implicitHeight - 0
+                    implicitWidth: rightRow.implicitWidth
+                    implicitHeight: rightRow.implicitHeight
                     radius: 8
                     color: "transparent"
 
                     RowLayout {
                         id: rightRow
-
                         anchors.centerIn: parent
                         spacing: 0
 
-                        SystemGraph {
-                            Layout.rightMargin: 10
-                        }
-
-                        Weather {
-                            Layout.rightMargin: 10
-                        }
-
-                        Network {
-                            Layout.rightMargin: 10
-                        }
-
-                        Volume {
-                            Layout.rightMargin: 10
-                        }
-
-                        Battery {
-                            Layout.rightMargin: 4
-                        }
-
+                        SystemGraph { Layout.rightMargin: 10 }
+                        Weather    { Layout.rightMargin: 10 }
+                        Network    { Layout.rightMargin: 10 }
+                        Volume     { Layout.rightMargin: 10 }
+                        Battery    { Layout.rightMargin: 4  }
                     }
-
                 }
 
                 BarButton {
@@ -307,10 +231,58 @@ PanelWindow {
                     onClicked: root.toggleNotif()
                 }
 
+                // Recording indicator pill
+                Rectangle {
+                    id: recordPill
+                    visible: root.isRecording
+                    width: recordPillRow.implicitWidth + 16
+                    height: 26
+                    radius: 13
+                    color: "#33FB4934"
+                    border.color: "#FB4934"
+                    border.width: 1
+
+                    property real blinkOpacity: 1.0
+                    opacity: blinkOpacity
+
+                    SequentialAnimation on blinkOpacity {
+                        running: root.isRecording
+                        loops: Animation.Infinite
+                        NumberAnimation { to: 0.35; duration: 600; easing.type: Easing.InOutSine }
+                        NumberAnimation { to: 1.0;  duration: 600; easing.type: Easing.InOutSine }
+                    }
+
+                    Row {
+                        id: recordPillRow
+                        anchors.centerIn: parent
+                        spacing: 6
+
+                        Rectangle {
+                            width: 7; height: 7; radius: 4
+                            color: "#FB4934"
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Text {
+                            text: {
+                                let m = Math.floor(root.recordSeconds / 60)
+                                let s = root.recordSeconds % 60
+                                return m + ":" + (s < 10 ? "0" + s : s)
+                            }
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 11
+                            color: "#FB4934"
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.stopRecording()
+                    }
+                }
             }
-
         }
-
     }
-
 }
