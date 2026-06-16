@@ -483,7 +483,10 @@ ShellRoot {
 
                                 // Dots / placeholder
                                 Item {
-                                    anchors.centerIn: parent
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 16
+                                    anchors.rightMargin: 16
+                                    clip: true
 
                                     // Placeholder
                                     Text {
@@ -535,8 +538,6 @@ ShellRoot {
                                 }
                             }
                         }
-
-
                     }
                 }
 

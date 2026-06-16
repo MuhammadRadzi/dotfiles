@@ -1,5 +1,4 @@
 [color]
-background = '{{color0}}'
 foreground = '{{foreground}}'
 gradient = 1
 gradient_count = 3

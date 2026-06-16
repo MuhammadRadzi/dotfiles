@@ -48,11 +48,10 @@ palette = "saliencedark"
 # template: A RELATIVE path that points to `~/.config/wallust/template` (depends on platform)
 # target: ABSOLUTE path in which to place a file with generated templated values.
 # ¡ If either one is a directory, then both SHOULD be one. !
-# zathura = { template = 'zathura', target = '~/.config/zathura/zathurarc' }
-Colors = { template = 'Colors.qml', target = '~/.config/hypr/quickshell/theme/Colors.qml' }
-kitty = { template = 'kitty-colors.conf', target = '~/.config/kitty/kitty-colors.conf' }
-rofi  = { template = 'rofi-colors.rasi', target = '~/.config/hypr/rofi/colors.rasi' }
-hypr  = { template = 'hypr-colors.conf', target = '~/.config/hypr/hypr-colors.conf' }
+# zathura   = { template = 'zathura', target = '~/.config/zathura/zathurarc' }
+Colors      = { template = 'Colors.qml', target = '~/.config/hypr/quickshell/theme/Colors.qml' }
+kitty       = { template = 'kitty-colors.conf', target = '~/.config/kitty/kitty-colors.conf' }
+hypr        = { template = 'hypr-colors.conf', target = '~/.config/hypr/hypr-colors.conf' }
 cava        = { template = 'cava-config', target = '~/.config/cava/config' }
 cava-colors = { template = 'cava-colors', target = '~/.config/cava/colors' }
 
