@@ -134,7 +134,7 @@ PanelWindow {
             // ── Volume ────────────────────────────────────────────
             SliderRow {
                 Layout.fillWidth: true
-                iconText: volState.muted ? "\ueb24" : volState.vol >= 50 ? "\uf028" : "\uf027"
+                iconText: volState.muted ? "\ueee8" : volState.vol >= 50 ? "\uf028" : "\uf027"
                 iconColor: volState.muted ? Colors.subtle : Colors.text
                 valueText: volState.vol + "%"
                 sliderValue: volState.vol / 100

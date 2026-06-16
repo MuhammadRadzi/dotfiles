@@ -13,7 +13,7 @@ Item {
         id: label
 
         anchors.centerIn: parent
-        text: muted ? "\ueb24 mute" : (vol >= 50 ? "\uf028  " : "\uf027 ") + vol + "%"
+        text: muted ? "\ueee8 mute" : (vol >= 50 ? "\uf028  " : "\uf027 ") + vol + "%"
         color: muted ? Colors.subtle : Colors.text
         font.pixelSize: 13
         font.family: "JetBrainsMono Nerd Font"

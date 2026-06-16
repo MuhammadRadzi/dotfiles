@@ -3,11 +3,11 @@
 # Check all required dependencies for this Hyprland config
 DEPS=(
     hyprland
+    hypridle
     quickshell
     kitty
     fish
     starship
-    dunst
     awww
     wallust
     cliphist
@@ -15,17 +15,24 @@ DEPS=(
     wl-paste
     grim
     slurp
+    wf-recorder
     brightnessctl
     playerctl
     cava
-    convert        # ImageMagick
     curl
     python3
-    hyprlock
-    hypridle
+    jq
+    bluetoothctl
+    nmcli
+)
+
+# Python modules (checked separately)
+PY_MODULES=(
+    PIL
 )
 
 MISSING=()
+MISSING_PY=()
 
 for dep in "${DEPS[@]}"; do
     if ! command -v "$dep" &>/dev/null; then
@@ -33,13 +40,31 @@ for dep in "${DEPS[@]}"; do
     fi
 done
 
-if [ ${#MISSING[@]} -eq 0 ]; then
+for mod in "${PY_MODULES[@]}"; do
+    if ! python3 -c "import $mod" &>/dev/null; then
+        MISSING_PY+=("$mod")
+    fi
+done
+
+if [ ${#MISSING[@]} -eq 0 ] && [ ${#MISSING_PY[@]} -eq 0 ]; then
     echo "All dependencies are installed."
 else
-    echo "Missing dependencies:"
-    for m in "${MISSING[@]}"; do
-        echo "  - $m"
-    done
-    echo ""
-    echo "Install missing packages with: yay -S ${MISSING[*]}"
+    if [ ${#MISSING[@]} -gt 0 ]; then
+        echo "Missing system dependencies:"
+        for m in "${MISSING[@]}"; do
+            echo "  - $m"
+        done
+        echo ""
+        echo "Install with: yay -S ${MISSING[*]}"
+        echo ""
+    fi
+
+    if [ ${#MISSING_PY[@]} -gt 0 ]; then
+        echo "Missing Python modules:"
+        for m in "${MISSING_PY[@]}"; do
+            echo "  - $m"
+        done
+        echo ""
+        echo "Install with: sudo pacman -S python-pillow"
+    fi
 fi

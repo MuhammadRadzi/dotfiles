@@ -557,7 +557,7 @@ PanelWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottomMargin: 40
             width: toolRow.implicitWidth + 10
-            height: 48
+            height: 45
             radius: 24
             color: "#d916181c"
             border.width: 1
