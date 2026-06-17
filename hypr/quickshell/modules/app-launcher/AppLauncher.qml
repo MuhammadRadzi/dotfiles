@@ -44,7 +44,7 @@ PanelWindow {
         var app = filteredApps[selectedIndex];
         // Strip field codes like %F %u %U etc
         var cmd = app.exec.replace(/%[a-zA-Z]/g, "").trim();
-        execProc.command = ["sh", "-c", cmd];
+        execProc.command = ["sh", "-c", "setsid -f " + cmd + " >/dev/null 2>&1 < /dev/null"];
         execProc.running = true;
         isOpen = false;
     }
@@ -444,6 +444,15 @@ PanelWindow {
         id: execProc
 
         running: false
+
+        stdout: SplitParser {
+            splitMarker: ""
+        }
+
+        stderr: SplitParser {
+            splitMarker: ""
+        }
+
     }
 
 }

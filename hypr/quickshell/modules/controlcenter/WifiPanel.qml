@@ -414,7 +414,7 @@ PanelWindow {
                                         Text {
                                             anchors.centerIn: parent
                                             text: "\uf127"
-                                            color: Colors.red
+                                            color: "#FB4934"
                                             font.pixelSize: 12
                                             font.family: "JetBrainsMono Nerd Font"
                                         }

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # Reload Hyprland config
-hyprctl reload
+# hyprctl reload
 
-# Reload Quickshell
-pkill quickshell
-sleep 0.5
-quickshell -p ~/.config/hypr/quickshell & disown
+# Reload Quickshell internally (no kill/restart, keeps layer-shell surfaces alive)
+quickshell ipc -p ~/.config/hypr/quickshell call reload-shell handle true

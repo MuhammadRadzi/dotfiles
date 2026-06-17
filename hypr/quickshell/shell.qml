@@ -162,4 +162,8 @@ ShellRoot {
         target: "show-brightness-osd"
         function handle(val: int): void { osd.showBrightness(val) }
     }
+    IpcHandler {
+        target: "reload-shell"
+        function handle(hard: bool): void { Quickshell.reload(hard) }
+    }
 }

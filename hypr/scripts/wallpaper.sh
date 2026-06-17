@@ -31,4 +31,5 @@ pkill -SIGUSR1 cava || cava &
 
 hyprctl reload
 
-systemd-run --user --no-block bash -c 'sleep 0.5; pkill quickshell; sleep 0.5; quickshell -p ~/.config/hypr/quickshell'
+# Reload Quickshell internally (no kill/restart, keeps layer-shell surfaces alive)
+quickshell ipc -p ~/.config/hypr/quickshell call reload-shell handle true
