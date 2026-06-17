@@ -4,19 +4,21 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 
-PopupWindow {
+PanelWindow {
     id: osd
 
     property var bar: null
     property string type: ""
     property int value: 0
     property bool muted: false
+    property bool shown: false
 
     function showVolume(val, isMuted) {
         type = "volume";
         value = val;
         muted = isMuted;
         visible = true;
+        shown = true;
         hideTimer.restart();
     }
 
@@ -24,13 +26,15 @@ PopupWindow {
         type = "brightness";
         value = val;
         visible = true;
+        shown = true;
         hideTimer.restart();
     }
 
-    anchor.window: bar
-    anchor.rect.x: bar ? (bar.width - 280) / 2 : 0
-    anchor.rect.y: bar ? bar.implicitHeight + 8 : 64
-    visible: false
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.exclusiveZone: -1
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+    anchors.top: true
+    margins.top: 49
     implicitWidth: 280
     implicitHeight: 52
     color: "transparent"
@@ -40,15 +44,36 @@ PopupWindow {
 
         interval: 2000
         repeat: false
-        onTriggered: osd.visible = false
+        onTriggered: osd.shown = false
     }
 
     Rectangle {
+        id: card
+
         anchors.fill: parent
         radius: 10
         color: "#d916181c"
         border.width: 1
         border.color: "#22ffffff"
+        opacity: osd.shown ? 1 : 0
+        scale: osd.shown ? 1 : 0.85
+        y: osd.shown ? 0 : -12
+        transformOrigin: Item.Top
+
+        Behavior on opacity {
+            NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+        }
+        Behavior on scale {
+            NumberAnimation { duration: 220; easing.type: Easing.OutBack }
+        }
+        Behavior on y {
+            NumberAnimation { duration: 220; easing.type: Easing.OutCubic }
+        }
+
+        onOpacityChanged: {
+            if (opacity === 0 && !osd.shown)
+                osd.visible = false;
+        }
 
         RowLayout {
             anchors.fill: parent
