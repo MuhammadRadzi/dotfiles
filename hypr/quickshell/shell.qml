@@ -131,7 +131,7 @@ ShellRoot {
         id: screenshotTool
         onRecordingStarted: {
             root.isRecording = true
-            root.recordSeconds = 0
+            root.recordSeconds = screenshotTool.recordSeconds
         }
         onRecordingStopped: {
             root.isRecording = false
@@ -155,15 +155,15 @@ ShellRoot {
     IpcHandler { target: "toggle-power";      function handle(): void { pm.toggle() } }
     IpcHandler { target: "toggle-cheatsheet"; function handle(): void { ks.toggle() } }
     IpcHandler {
+        target: "reload-shell"
+        function handle(hard: bool): void { Quickshell.reload(hard) }
+    }
+    IpcHandler {
         target: "show-volume-osd"
         function handle(val: int, muted: bool): void { osd.showVolume(val, muted) }
     }
     IpcHandler {
         target: "show-brightness-osd"
         function handle(val: int): void { osd.showBrightness(val) }
-    }
-    IpcHandler {
-        target: "reload-shell"
-        function handle(hard: bool): void { Quickshell.reload(hard) }
     }
 }

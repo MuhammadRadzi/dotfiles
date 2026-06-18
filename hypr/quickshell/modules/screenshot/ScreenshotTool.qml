@@ -39,10 +39,66 @@ PanelWindow {
     // --- Record pending state ---
     property bool pendingRecord: false
     property string pendingRecordFile: ""
+    property string recordStateFile: Quickshell.env("HOME") + "/.cache/hypr/.recording_state"
+    property int recordSeconds: 0
+    property int recordPid: 0
 
     // --- Signal ---
     signal recordingStarted()
     signal recordingStopped()
+
+    Component.onCompleted: recoverProc.running = true
+
+    Process {
+        id: recoverProc
+        running: false
+        command: ["bash", "-c", "cat '" + root.recordStateFile + "' 2>/dev/null"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var lines = text.trim().split("\n").filter(l => l.length > 0);
+                if (lines.length < 2) {
+                    return;
+                }
+                var startedAt = parseInt(lines[0], 10);
+                var pid = parseInt(lines[1], 10);
+                if (isNaN(startedAt) || isNaN(pid)) {
+                    cleanupStateProc.running = true;
+                    return;
+                }
+                checkPidProc.targetPid = pid;
+                checkPidProc.startedAt = startedAt;
+                checkPidProc.command = ["bash", "-c", "kill -0 " + pid + " 2>/dev/null && echo ALIVE"];
+                checkPidProc.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: checkPidProc
+        property int targetPid: 0
+        property int startedAt: 0
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                if (text.trim() === "ALIVE") {
+                    root.recordPid = checkPidProc.targetPid;
+                    root.isRecording = true;
+                    root.recordSeconds = Math.max(0, Math.floor(Date.now() / 1000) - checkPidProc.startedAt);
+                    root.recordingStarted();
+                    watchPidTimer.start();
+                } else {
+                    // Stale state file; the process is gone
+                    cleanupStateProc.running = true;
+                }
+            }
+        }
+    }
+
+    Process {
+        id: cleanupStateProc
+        running: false
+        command: ["rm", "-f", root.recordStateFile]
+    }
 
     function toggle() {
         isOpen = !isOpen;
@@ -77,11 +133,9 @@ PanelWindow {
         isSelectingRegion = false;
         if (pendingRecord) {
             pendingRecord = false;
-            recordProc.command = ["wf-recorder", "-g", geometryString, "-f", pendingRecordFile];
-            recordProc.running = true;
-            root.isRecording = true;
-            root.recordingStarted();
-            notifyStartProc.running = true;
+            startRecordProc.outFile = pendingRecordFile;
+            startRecordProc.command = ["bash", "-c", "setsid wf-recorder -g '" + geometryString + "' -f '" + pendingRecordFile + "' >/dev/null 2>&1 < /dev/null & echo $!"];
+            startRecordProc.running = true;
         } else {
             captureDelayTimer.geometryStr = geometryString
             captureDelayTimer.start()
@@ -97,17 +151,18 @@ PanelWindow {
             pendingRecordFile = outFile;
             pendingRecord = true;
         } else {
-            recordProc.command = ["wf-recorder", "-f", outFile];
-            recordProc.running = true;
-            root.isRecording = true;
+            startRecordProc.outFile = outFile;
+            startRecordProc.command = ["bash", "-c", "setsid wf-recorder -f '" + outFile + "' >/dev/null 2>&1 < /dev/null & echo $!"];
+            startRecordProc.running = true;
             root.isOpen = false;
-            root.recordingStarted();
-            notifyStartProc.running = true;
         }
     }
 
     function stopRecording() {
-        stopRecordProc.running = true;
+        if (root.recordPid > 0) {
+            stopRecordProc.command = ["bash", "-c", "kill -INT " + root.recordPid];
+            stopRecordProc.running = true;
+        }
     }
 
     // --- Window setup ---
@@ -557,7 +612,7 @@ PanelWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottomMargin: 40
             width: toolRow.implicitWidth + 10
-            height: 45
+            height: 48
             radius: 24
             color: "#d916181c"
             border.width: 1
@@ -835,15 +890,68 @@ PanelWindow {
     }
 
     Process {
-        id: recordProc
+        id: startRecordProc
+
+        property string outFile: ""
+        running: false
+        command: []
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var pid = parseInt(text.trim(), 10);
+                if (isNaN(pid) || pid <= 0) {
+                    return;
+                }
+                root.recordPid = pid;
+                root.isRecording = true;
+                root.recordSeconds = 0;
+                root.recordingStarted();
+                notifyStartProc.running = true;
+                writeStateProc.command = ["bash", "-c", "mkdir -p '" + Quickshell.env("HOME") + "/.cache/hypr' && printf '%s\\n%s\\n' \"$(date +%s)\" \"" + pid + "\" > '" + root.recordStateFile + "'"];
+                writeStateProc.running = true;
+                watchPidTimer.start();
+            }
+        }
+    }
+
+    Process {
+        id: writeStateProc
 
         running: false
         command: []
-        onRunningChanged: {
-            if (!running && root.isRecording) {
-                root.isRecording = false;
-                root.recordingStopped();
-                notifyStopProc.running = true;
+    }
+
+    // Polls whether the detached wf-recorder PID is still alive, since it is
+    // no longer a direct Quickshell child and won't emit onRunningChanged.
+    Timer {
+        id: watchPidTimer
+
+        interval: 1000
+        repeat: true
+        running: false
+        onTriggered: {
+            if (root.recordPid <= 0) {
+                stop();
+                return;
+            }
+            watchPidProc.running = true;
+        }
+    }
+
+    Process {
+        id: watchPidProc
+
+        running: false
+        command: ["bash", "-c", "kill -0 " + root.recordPid + " 2>/dev/null && echo ALIVE"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                if (text.trim() !== "ALIVE") {
+                    watchPidTimer.stop();
+                    root.recordPid = 0;
+                    root.isRecording = false;
+                    root.recordingStopped();
+                    notifyStopProc.running = true;
+                    cleanupStateProc.running = true;
+                }
             }
         }
     }
@@ -859,14 +967,7 @@ PanelWindow {
         id: stopRecordProc
 
         running: false
-        command: ["pkill", "-INT", "wf-recorder"]
-        onRunningChanged: {
-            if (!running) {
-                root.isRecording = false;
-                root.recordingStopped();
-                notifyStopProc.running = true;
-            }
-        }
+        command: []
     }
 
     Process {
