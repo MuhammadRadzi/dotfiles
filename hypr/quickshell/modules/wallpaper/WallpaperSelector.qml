@@ -33,7 +33,7 @@ PanelWindow {
     WlrLayershell.anchors.right: true
     color: "transparent"
     onIsOpenChanged: {
-        if (isOpen)
+        if (isOpen && wallpapers.length === 0)
             scanProc.running = true;
 
     }
@@ -129,6 +129,8 @@ PanelWindow {
                                 Image {
                                     id: thumbImg
 
+                                    property int retryCount: 0
+
                                     anchors.fill: parent
                                     source: "file://" + thumbDir + "/" + modelData.split("/").pop()
                                     fillMode: Image.PreserveAspectCrop
@@ -136,7 +138,8 @@ PanelWindow {
                                     asynchronous: true
                                     cache: false
                                     onStatusChanged: {
-                                        if (status === Image.Error) {
+                                        if (status === Image.Error && !genThumbProc.running && retryCount < 1) {
+                                            retryCount += 1;
                                             genThumbProc.command = ["convert", modelData, "-resize", "300x180^", "-gravity", "Center", "-extent", "300x180", thumbDir + "/" + modelData.split("/").pop()];
                                             genThumbProc.running = true;
                                         }
@@ -205,6 +208,11 @@ PanelWindow {
                                             thumbImg.source = "";
                                             thumbImg.source = "file://" + thumbDir + "/" + modelData.split("/").pop();
                                         }
+                                    }
+                                    Component.onDestruction: {
+                                        if (running)
+                                            running = false;
+
                                     }
                                 }
 

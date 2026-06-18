@@ -46,7 +46,7 @@ PanelWindow {
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: 50
+            anchors.topMargin: 49
             width: 320
             height: calCol.implicitHeight + 32
             radius: 10
