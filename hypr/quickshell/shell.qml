@@ -3,11 +3,9 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
 import "modules"
-import "modules/ruleseditor"
 import "modules/screenshot"
 import "modules/quicknote"
 import "modules/wallpaper"
-import "modules/processmanager"
 import "modules/notifications"
 
 ShellRoot {
@@ -125,7 +123,6 @@ ShellRoot {
     AppLauncher       { id: al }
     ClipboardManager  { id: cm }
     FileBrowser       { id: fb }
-    RulesEditor       { id: rulesEditorPanel }
 
     ScreenshotTool {
         id: screenshotTool
@@ -139,14 +136,11 @@ ShellRoot {
     }
 
     NotepadWidget     { id: notepadWidget }
-    ProcessManager    { id: procMgr }
     CalendarPopup     { id: cal }
     OSD               { id: osd; bar: bar }
 
-    IpcHandler { target: "toggle-process";    function handle(): void { procMgr.toggle() } }
     IpcHandler { target: "toggle-notepad";    function handle(): void { notepadWidget.toggle() } }
     IpcHandler { target: "toggle-screenshot"; function handle(): void { screenshotTool.toggle() } }
-    IpcHandler { target: "toggle-rules";      function handle(): void { rulesEditorPanel.toggle() } }
     IpcHandler { target: "toggle-filebrowser";function handle(): void { fb.toggle() } }
     IpcHandler { target: "toggle-clipboard";  function handle(): void { cm.toggle() } }
     IpcHandler { target: "toggle-launcher";   function handle(): void { al.toggle() } }
