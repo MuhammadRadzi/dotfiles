@@ -5,7 +5,7 @@ import Quickshell.Services.Notifications
 import "modules"
 import "modules/screenshot"
 import "modules/quicknote"
-import "modules/wallpaper"
+import "modules/centerpanel"
 import "modules/notifications"
 import "modules/workspaceoverview"
 
@@ -63,7 +63,6 @@ ShellRoot {
 
     MusicPlayer { id: mp }
     PowerMenu { id: pm }
-    WallpaperSelector { id: ws }
 
     NotificationPopups {
         id: notifPopups
@@ -121,9 +120,8 @@ ShellRoot {
     }
 
     KeybindCheatsheet { id: ks }
-    AppLauncher       { id: al }
     ClipboardManager  { id: cm }
-    FileBrowser       { id: fb }
+    CenterPanelHost { id: centerHost }
 
     ScreenshotTool {
         id: screenshotTool
@@ -141,13 +139,13 @@ ShellRoot {
     OSD               { id: osd; bar: bar }
     WorkspaceOverview { id: wsOverview }
 
+    IpcHandler { target: "toggle-filebrowser"; function handle(): void { centerHost.toggleFileBrowser() } }
+    IpcHandler { target: "toggle-launcher";    function handle(): void { centerHost.toggleLauncher() } }
+    IpcHandler { target: "toggle-wallpaper";   function handle(): void { centerHost.toggleWallpaper() } }
     IpcHandler { target: "toggle-workspaceoverview"; function handle(): void { wsOverview.toggle() } }
     IpcHandler { target: "toggle-notepad";           function handle(): void { notepadWidget.toggle() } }
     IpcHandler { target: "toggle-screenshot";        function handle(): void { screenshotTool.toggle() } }
-    IpcHandler { target: "toggle-filebrowser";       function handle(): void { fb.toggle() } }
     IpcHandler { target: "toggle-clipboard";         function handle(): void { cm.toggle() } }
-    IpcHandler { target: "toggle-launcher";          function handle(): void { al.toggle() } }
-    IpcHandler { target: "toggle-wallpaper";         function handle(): void { ws.toggle() } }
     IpcHandler { target: "toggle-notif";             function handle(): void { nc.toggle() } }
     IpcHandler { target: "toggle-power";             function handle(): void { pm.toggle() } }
     IpcHandler { target: "toggle-cheatsheet";        function handle(): void { ks.toggle() } }
