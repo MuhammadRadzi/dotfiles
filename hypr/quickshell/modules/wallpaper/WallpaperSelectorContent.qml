@@ -22,8 +22,8 @@ Item {
 
     signal requestClose()
 
-    implicitWidth: 600
-    implicitHeight: Math.min(wallpaperGrid.implicitHeight + 80, 500)
+    implicitWidth: 800
+    implicitHeight: Math.min(wallpaperGrid.implicitHeight + 80, 700)
     visible: opacity > 0
     opacity: active ? 1 : 0
 

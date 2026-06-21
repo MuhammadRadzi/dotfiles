@@ -90,7 +90,6 @@ Item {
             font.pixelSize: 10
             font.family: "JetBrainsMono Nerd Font"
             font.letterSpacing: 1.5
-            topPadding: 4
         }
 
         Rectangle {

@@ -19,7 +19,7 @@ Item {
 
     signal requestClose()
 
-    implicitWidth: 600
+    implicitWidth: 1000
     implicitHeight: Math.min(panelCol.implicitHeight + 32, 680)
     visible: opacity > 0
     opacity: active ? 1 : 0
