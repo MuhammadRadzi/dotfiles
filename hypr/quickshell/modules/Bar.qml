@@ -30,15 +30,19 @@ PanelWindow {
         right: true
     }
 
+    // =========================
+    // PILL BACKGROUND (3 separate shapes)
+    // =========================
     Shape {
         anchors.fill: parent
         preferredRendererType: Shape.CurveRenderer
 
+        // ---- LEFT PILL ----
         ShapePath {
-            id: barPath
+            id: leftPath
 
             property real r: 18
-            property real w: root.width
+            property real w: leftContent.width + 32
             property real h: root.height
 
             strokeWidth: -1
@@ -46,42 +50,120 @@ PanelWindow {
             startX: 0
             startY: 0
 
-            PathLine {
-                x: barPath.w
-                y: 0
-            }
-
-            PathLine {
-                x: barPath.w
-                y: barPath.h
-            }
-
+            PathLine { x: leftPath.w + leftPath.r; y: 0 }
             PathArc {
-                x: barPath.w - barPath.r
-                y: barPath.h - barPath.r
-                radiusX: barPath.r
-                radiusY: barPath.r
+                x: leftPath.w
+                y: leftPath.r
+                radiusX: leftPath.r
+                radiusY: leftPath.r
                 direction: PathArc.Counterclockwise
             }
-
-            PathLine {
-                x: barPath.r
-                y: barPath.h - barPath.r
+            PathLine { x: leftPath.w; y: leftPath.h - 2 * leftPath.r }
+            PathArc {
+                x: leftPath.w - leftPath.r
+                y: leftPath.h - leftPath.r
+                radiusX: leftPath.r
+                radiusY: leftPath.r
+                direction: PathArc.Clockwise
             }
-
+            PathLine { x: leftPath.r; y: leftPath.h - leftPath.r }
             PathArc {
                 x: 0
-                y: barPath.h
-                radiusX: barPath.r
-                radiusY: barPath.r
+                y: leftPath.h
+                radiusX: leftPath.r
+                radiusY: leftPath.r
                 direction: PathArc.Counterclockwise
             }
+            PathLine { x: 0; y: 0 }
+        }
 
-            PathLine {
-                x: 0
-                y: 0
+        // ---- CENTER PILL ----
+        ShapePath {
+            id: centerPath
+
+            property real r: 18
+            property real w: centerContent.width + 32
+            property real h: root.height
+            property real startXPos: (root.width - w) / 2
+
+            strokeWidth: -1
+            fillColor: "#d916181c"
+            startX: centerPath.startXPos - centerPath.r
+            startY: 0
+
+            PathLine { x: centerPath.startXPos + centerPath.w + centerPath.r; y: 0 }
+            PathArc {
+                x: centerPath.startXPos + centerPath.w
+                y: centerPath.r
+                radiusX: centerPath.r
+                radiusY: centerPath.r
+                direction: PathArc.Counterclockwise
             }
+            PathLine { x: centerPath.startXPos + centerPath.w; y: centerPath.h - 2 * centerPath.r }
+            PathArc {
+                x: centerPath.startXPos + centerPath.w - centerPath.r
+                y: centerPath.h - centerPath.r
+                radiusX: centerPath.r
+                radiusY: centerPath.r
+                direction: PathArc.Clockwise
+            }
+            PathLine { x: centerPath.startXPos + centerPath.r; y: centerPath.h - centerPath.r }
+            PathArc {
+                x: centerPath.startXPos
+                y: centerPath.h - 2 * centerPath.r
+                radiusX: centerPath.r
+                radiusY: centerPath.r
+                direction: PathArc.Clockwise
+            }
+            PathLine { x: centerPath.startXPos; y: centerPath.r }
+            PathArc {
+                x: centerPath.startXPos - centerPath.r
+                y: 0
+                radiusX: centerPath.r
+                radiusY: centerPath.r
+                direction: PathArc.Counterclockwise
+            }
+        }
 
+        // ---- RIGHT PILL ----
+        ShapePath {
+            id: rightPath
+
+            property real r: 18
+            property real w: rightContent.width + 32
+            property real h: root.height
+            property real startXPos: root.width - w
+
+            strokeWidth: -1
+            fillColor: "#d916181c"
+            startX: rightPath.startXPos - rightPath.r
+            startY: 0
+
+            PathLine { x: root.width; y: 0 }
+            PathLine { x: root.width; y: rightPath.h }
+            PathArc {
+                x: root.width - rightPath.r
+                y: rightPath.h - rightPath.r
+                radiusX: rightPath.r
+                radiusY: rightPath.r
+                direction: PathArc.Counterclockwise
+            }
+            PathLine { x: rightPath.startXPos + rightPath.r; y: rightPath.h - rightPath.r }
+            PathArc {
+                x: rightPath.startXPos
+                y: rightPath.h - 2 * rightPath.r
+                radiusX: rightPath.r
+                radiusY: rightPath.r
+                direction: PathArc.Clockwise
+            }
+            PathLine { x: rightPath.startXPos; y: rightPath.r }
+            PathArc {
+                x: rightPath.startXPos - rightPath.r
+                y: 0
+                radiusX: rightPath.r
+                radiusY: rightPath.r
+                direction: PathArc.Counterclockwise
+            }
         }
 
     }
@@ -99,7 +181,7 @@ PanelWindow {
             Layout.fillWidth: true
 
             RowLayout {
-                id: leftRow
+                id: leftContent
 
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
@@ -119,68 +201,96 @@ PanelWindow {
                 Workspaces {
                 }
 
-                Rectangle {
-                    visible: todoCount > 0
-                    width: 1
-                    height: 14
-                    color: Colors.overlay
-                }
-
                 Item {
-                    visible: todoCount > 0
-                    width: todoRow.implicitWidth
-                    height: todoRow.implicitHeight
+                    id: todoContainer
+
+                    property bool showTodo: todoCount > 0
+
+                    visible: opacity > 0
+                    implicitWidth: showTodo ? todoContentRow.implicitWidth : 0
+                    implicitHeight: todoContentRow.implicitHeight
+                    Layout.preferredWidth: implicitWidth
+                    Layout.preferredHeight: implicitHeight
+                    opacity: showTodo ? 1.0 : 0.0
+                    clip: true
+
+                    Behavior on implicitWidth {
+                        NumberAnimation {
+                            duration: 250
+                            easing.type: Easing.OutCubic
+                        }
+                    }
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 200
+                            easing.type: Easing.OutCubic
+                        }
+                    }
 
                     RowLayout {
-                        id: todoRow
+                        id: todoContentRow
 
-                        spacing: 4
-
-                        Text {
-                            text: "\uf0ae"
-                            color: todoArea.containsMouse ? Colors.text : Colors.subtle
-                            font.pixelSize: 14
-                            font.family: "JetBrainsMono Nerd Font"
-
-                            Behavior on color {
-                                ColorAnimation {
-                                    duration: 150
-                                }
-
-                            }
-
-                        }
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 8
 
                         Rectangle {
-                            width: badgeText.implicitWidth + 6
-                            height: 16
-                            radius: 8
-                            color: Colors.accent
-
-                            Text {
-                                id: badgeText
-
-                                anchors.centerIn: parent
-                                text: todoCount
-                                color: Colors.base
-                                font.pixelSize: 9
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.bold: true
-                            }
-
+                            width: 1
+                            height: 14
+                            color: Colors.overlay
                         }
 
+                        Item {
+                            width: todoRow.implicitWidth
+                            height: todoRow.implicitHeight
+
+                            RowLayout {
+                                id: todoRow
+
+                                spacing: 4
+
+                                Text {
+                                    text: "\uf0ae"
+                                    color: todoArea.containsMouse ? Colors.text : Colors.subtle
+                                    font.pixelSize: 14
+                                    font.family: "JetBrainsMono Nerd Font"
+
+                                    Behavior on color {
+                                        ColorAnimation {
+                                            duration: 150
+                                        }
+                                    }
+                                }
+
+                                Rectangle {
+                                    width: badgeText.implicitWidth + 6
+                                    height: 16
+                                    radius: 8
+                                    color: Colors.accent
+
+                                    Text {
+                                        id: badgeText
+
+                                        anchors.centerIn: parent
+                                        text: todoCount
+                                        color: Colors.base
+                                        font.pixelSize: 9
+                                        font.family: "JetBrainsMono Nerd Font"
+                                        font.bold: true
+                                    }
+                                }
+                            }
+
+                            MouseArea {
+                                id: todoArea
+
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: root.toggleTodo()
+                            }
+                        }
                     }
-
-                    MouseArea {
-                        id: todoArea
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.toggleTodo()
-                    }
-
                 }
 
             }
@@ -194,49 +304,31 @@ PanelWindow {
             Layout.fillWidth: true
 
             RowLayout {
-                id: centerRow
+                id: centerContent
 
                 anchors.centerIn: parent
                 spacing: 10
 
-                Rectangle {
-                    implicitWidth: clockText.implicitWidth + 16
-                    implicitHeight: clockText.implicitHeight + 8
-                    radius: 8
-                    color: clockArea.containsMouse ? "#22ffffff" : "transparent"
+                Text {
+                    id: clockText
 
-                    Text {
-                        id: clockText
-
-                        anchors.centerIn: parent
-                        text: Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
-                        color: Colors.text
-                        font.pixelSize: 13
-                        font.family: "JetBrainsMono Nerd Font"
-
-                        Timer {
-                            interval: 1000
-                            running: true
-                            repeat: true
-                            onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
-                        }
-
-                    }
-
+                    text: Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
+                    color: Colors.text
+                    font.pixelSize: 13
+                    font.family: "JetBrainsMono Nerd Font"
+                    
                     MouseArea {
-                        id: clockArea
-
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: root.toggleCal()
                     }
 
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-
+                    Timer {
+                        interval: 1000
+                        running: true
+                        repeat: true
+                        onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd, dd MMM  HH:mm")
                     }
 
                 }
@@ -252,6 +344,8 @@ PanelWindow {
             Layout.fillWidth: true
 
             RowLayout {
+                id: rightContent
+
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 8
