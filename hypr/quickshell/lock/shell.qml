@@ -691,8 +691,9 @@ ShellRoot {
                     anchors.bottom: parent.bottom
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottomMargin: 28
+                    
                     width: 360
-                    height: mpCard.height
+                    height: mpCard.height 
                     opacity: screen.ready && screen.mpHasPlayer ? 1.0 : 0.0
                     scale: screen.ready && screen.mpHasPlayer ? 1.0 : 0.95
                     Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
@@ -702,19 +703,21 @@ ShellRoot {
                         id: mpCard
                         width: parent.width
                         height: mpRow.implicitHeight + 24
-                        radius: 12
+                    
+                        
+                        radius: 10
                         color: Qt.rgba(0, 0, 0, 0.45)
                         border.color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.08)
                         border.width: 1
 
                         Row {
                             id: mpRow
-                            anchors { left: parent.left; right: parent.right; top: parent.top; margins: 12 }
+                            anchors { left: parent.left; right: parent.right; top: parent.top; margins: 15 }
                             spacing: 14
 
                             // Artwork
                             Rectangle {
-                                width: 72; height: 72; radius: 8
+                                width: 80; height: 80; radius: 10
                                 color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.08)
                                 clip: true
 

@@ -88,7 +88,7 @@ PanelWindow {
                     else
                         return value > 50 ? "\uf185" : "\uf186";
                 }
-                color: type === "volume" ? (muted ? Colors.subtle : Colors.accent) : Colors.accent
+                color: Colors.accent
                 font.pixelSize: 16
                 font.family: "JetBrainsMono Nerd Font"
             }
@@ -108,7 +108,7 @@ PanelWindow {
                             return Colors.accent;
 
                         if (muted)
-                            return Colors.subtle;
+                            return Colors.accent;
 
                         return Colors.accent;
                     }

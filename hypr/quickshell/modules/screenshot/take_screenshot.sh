@@ -39,8 +39,7 @@ if [ ! -f "$FILE" ] || [ ! -s "$FILE" ]; then
     exit 1
 fi
 
-# Copy to clipboard
-wl-copy < "$FILE"
-
-# Notification
-notify-send "Screenshot" "Saved & copied to clipboard" -i "$FILE" -t 3000
+# Print path so the caller (ScreenshotTool.qml) can open it in the
+# annotation overlay. Clipboard copy + notification now happen after
+# the user finishes annotating (Save/Copy in AnnotateOverlay).
+echo "$FILE"

@@ -5,6 +5,7 @@ import Quickshell.Io
 import Quickshell.Services.Notifications
 import "modules"
 import "modules/screenshot"
+import "modules/annotate"
 import "modules/quicknote"
 import "modules/centerpanel"
 import "modules/notifications"
@@ -133,8 +134,12 @@ ShellRoot {
         onRecordingStopped: {
             root.isRecording = false
         }
+        onAnnotateRequested: (path) => {
+            annotateOverlay.open(path)
+        }
     }
 
+    AnnotateOverlay   { id: annotateOverlay }
     NotepadWidget     { id: notepadWidget }
     CalendarPopup     { id: cal }
     OSD               { id: osd; bar: bar }

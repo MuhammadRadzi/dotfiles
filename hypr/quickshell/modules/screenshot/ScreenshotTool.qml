@@ -46,6 +46,7 @@ PanelWindow {
     // --- Signal ---
     signal recordingStarted()
     signal recordingStopped()
+    signal annotateRequested(string path)
 
     Component.onCompleted: recoverProc.running = true
 
@@ -849,9 +850,13 @@ PanelWindow {
 
         running: false
         onRunningChanged: {
-            if (!running)
+            if (!running) {
+                var path = captureProc.stdout.buf.trim();
                 captureProc.stdout.buf = "";
-
+                if (path.length > 0) {
+                    root.annotateRequested(path);
+                }
+            }
         }
 
         stdout: SplitParser {
