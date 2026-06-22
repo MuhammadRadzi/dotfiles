@@ -7,7 +7,6 @@ Network 1.0 Network.qml
 Weather 1.0 Weather.qml
 ControlCenter 1.0 controlcenter/ControlCenter.qml
 CalendarPopup 1.0 CalendarPopup.qml
-WallpaperSelector 1.0 WallpaperSelector.qml
 SystemGraph 1.0 SystemGraph.qml
 NotificationCenter 1.0 NotificationCenter.qml
 NotificationPopups 1.0 NotificationPopups.qml
@@ -15,9 +14,7 @@ PowerMenu 1.0 PowerMenu.qml
 KeybindCheatsheet 1.0 KeybindCheatsheet.qml
 OSD 1.0 OSD.qml
 MusicPlayer 1.0 MusicPlayer.qml
-AppLauncher 1.0 app-launcher/AppLauncher.qml
 ClipboardManager 1.0 clipboard/ClipboardManager.qml
-FileBrowser 1.0 file-browser/FileBrowser.qml
 BarButton 1.0 BarButton.qml
 WifiPanel 1.0 controlcenter/WifiPanel.qml
 BluetoothPanel 1.0 controlcenter/BluetoothPanel.qml

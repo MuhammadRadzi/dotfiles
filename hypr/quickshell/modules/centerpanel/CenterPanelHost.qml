@@ -1,5 +1,5 @@
-import "../app-launcher"
-import "../file-browser"
+import "../applauncher"
+import "../filebrowser"
 import "../wallpaper"
 import QtQuick
 import Quickshell

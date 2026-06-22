@@ -290,7 +290,7 @@ PanelWindow {
                     ColumnLayout {
                         id: radioOffCol
 
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        Layout.alignment: Qt.AlignHCenter
                         spacing: 8
 
                         Item {
@@ -298,7 +298,7 @@ PanelWindow {
                         }
 
                         Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            Layout.alignment: Qt.AlignHCenter
                             text: "\udb82\udd2f"
                             color: Colors.subtle
                             font.pixelSize: 32
@@ -306,7 +306,7 @@ PanelWindow {
                         }
 
                         Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            Layout.alignment: Qt.AlignHCenter
                             text: "Wi-Fi is turned off"
                             color: Colors.subtle
                             font.pixelSize: 12
@@ -668,7 +668,7 @@ PanelWindow {
                         ColumnLayout {
                             id: emptyCol
 
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            Layout.alignment: Qt.AlignHCenter
                             spacing: 8
 
                             Item {
@@ -676,7 +676,7 @@ PanelWindow {
                             }
 
                             Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
+                                Layout.alignment: Qt.AlignHCenter
                                 text: "\udb82\udd2b"
                                 color: Colors.subtle
                                 font.pixelSize: 28
@@ -684,7 +684,7 @@ PanelWindow {
                             }
 
                             Text {
-                                anchors.horizontalCenter: parent.horizontalCenter
+                                Layout.alignment: Qt.AlignHCenter
                                 text: "No networks found"
                                 color: Colors.subtle
                                 font.pixelSize: 12

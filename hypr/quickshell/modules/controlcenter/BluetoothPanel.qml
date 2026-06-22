@@ -298,7 +298,7 @@ PanelWindow {
                     ColumnLayout {
                         id: btOffCol
 
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        Layout.alignment: Qt.AlignHCenter
                         spacing: 8
 
                         Item {
@@ -306,7 +306,7 @@ PanelWindow {
                         }
 
                         Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            Layout.alignment: Qt.AlignHCenter
                             text: "\udb80\udcb2"
                             color: Colors.subtle
                             font.pixelSize: 32
@@ -314,7 +314,7 @@ PanelWindow {
                         }
 
                         Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
+                            Layout.alignment: Qt.AlignHCenter
                             text: "Bluetooth is turned off"
                             color: Colors.subtle
                             font.pixelSize: 12
