@@ -166,7 +166,7 @@ PanelWindow {
                         Text {
                             anchors.fill: parent
                             text: "Search..."
-                            color: Colors.overlay
+                            color: Colors.subtle
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             visible: searchInput.text === ""
@@ -230,7 +230,7 @@ PanelWindow {
                     Text {
                         Layout.alignment: Qt.AlignHCenter
                         text: "\uf0f3"
-                        color: Colors.overlay
+                        color: Colors.subtle
                         font.pixelSize: 32
                         font.family: "JetBrainsMono Nerd Font"
                     }

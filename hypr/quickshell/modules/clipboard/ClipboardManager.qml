@@ -258,7 +258,7 @@ PanelWindow {
                         Text {
                             Layout.alignment: Qt.AlignHCenter
                             text: "\uf0ea"
-                            color: Colors.overlay
+                            color: Colors.subtle
                             font.pixelSize: 28
                             font.family: "JetBrainsMono Nerd Font"
                         }

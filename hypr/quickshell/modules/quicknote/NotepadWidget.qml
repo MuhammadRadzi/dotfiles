@@ -159,14 +159,14 @@ PanelWindow {
 
                         Text {
                             text: "\uf249"
-                            color: activeTab === "note" ? Colors.accent : Colors.overlay
+                            color: Colors.accent
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             Behavior on color { ColorAnimation { duration: 150 } }
                         }
                         Text {
                             text: "Note"
-                            color: activeTab === "note" ? Colors.text : Colors.overlay
+                            color: Colors.accent
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             font.weight: activeTab === "note" ? Font.DemiBold : Font.Normal
@@ -200,14 +200,14 @@ PanelWindow {
 
                         Text {
                             text: "\uf0ae"
-                            color: activeTab === "todo" ? Colors.accent : Colors.overlay
+                            color: Colors.accent
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             Behavior on color { ColorAnimation { duration: 150 } }
                         }
                         Text {
                             text: "Todo"
-                            color: activeTab === "todo" ? Colors.text : Colors.overlay
+                            color: Colors.accent
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             font.weight: activeTab === "todo" ? Font.DemiBold : Font.Normal
@@ -256,7 +256,7 @@ PanelWindow {
                     Text {
                         anchors.centerIn: parent
                         text: "\uf12d"
-                        color: clearNoteArea.containsMouse ? Colors.red : Colors.overlay
+                        color: Colors.subtle
                         font.pixelSize: 13
                         font.family: "JetBrainsMono Nerd Font"
                         Behavior on color { ColorAnimation { duration: 150 } }
@@ -334,7 +334,7 @@ PanelWindow {
                     Text {
                         Layout.alignment: Qt.AlignRight
                         text: noteArea.text.length + " chars"
-                        color: Colors.overlay
+                        color: Colors.subtle
                         font.pixelSize: 10
                         font.family: "JetBrainsMono Nerd Font"
                     }
@@ -384,7 +384,7 @@ PanelWindow {
                                 Text {
                                     anchors.fill: parent
                                     text: "Add a task..."
-                                    color: Colors.overlay
+                                    color: Colors.subtle
                                     font.pixelSize: 12
                                     font.family: "JetBrainsMono Nerd Font"
                                     visible: todoInput.text === ""
@@ -429,7 +429,7 @@ PanelWindow {
                                 Text {
                                     anchors.centerIn: parent
                                     text: modelData.label
-                                    color: currentFilter === modelData.value ? Colors.text : Colors.overlay
+                                    color: Colors.subtle 
                                     font.pixelSize: 11
                                     font.family: "JetBrainsMono Nerd Font"
                                     Behavior on color { ColorAnimation { duration: 150 } }
@@ -463,7 +463,7 @@ PanelWindow {
                         Text {
                             anchors.centerIn: parent
                             text: currentFilter === "done" ? "Nothing done yet" : "No tasks"
-                            color: Colors.overlay
+                            color: Colors.subtle
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                         }
@@ -501,7 +501,7 @@ PanelWindow {
                                             width: 18; height: 18; radius: 4
                                             color: modelData.done ? Colors.accent : "transparent"
                                             border.width: 1.5
-                                            border.color: modelData.done ? Colors.accent : Colors.overlay
+                                            border.color: Colors.accent
 
                                             Text {
                                                 anchors.centerIn: parent
@@ -525,7 +525,7 @@ PanelWindow {
                                         Text {
                                             Layout.fillWidth: true
                                             text: modelData.text
-                                            color: modelData.done ? Colors.overlay : Colors.text
+                                            color: Colors.accent
                                             font.pixelSize: 12
                                             font.family: "JetBrainsMono Nerd Font"
                                             font.strikeout: modelData.done
@@ -575,7 +575,7 @@ PanelWindow {
                         Text {
                             anchors.centerIn: parent
                             text: "Clear completed"
-                            color: Colors.overlay
+                            color: Colors.accent
                             font.pixelSize: 11
                             font.family: "JetBrainsMono Nerd Font"
                         }

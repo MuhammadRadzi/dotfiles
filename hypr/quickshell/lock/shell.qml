@@ -612,7 +612,7 @@ ShellRoot {
                                 Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutBack } }
                                 color: menuMa.containsMouse
                                     ? Qt.rgba(0, 0, 0, 0.6)
-                                    : Qt.rgba(0, 0, 0, 0.35)
+                                    : Qt.rgba(0, 0, 0, 0.7)
                                 border.color: Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.1)
                                 border.width: 1
                                 Behavior on color { ColorAnimation { duration: 150 } }
