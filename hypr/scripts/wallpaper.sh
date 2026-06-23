@@ -27,7 +27,10 @@ convert "$WALLPAPER" -resize 300x180^ -gravity Center -extent 300x180 \
 matugen image "$WALLPAPER" --source-color-index 0 || true
 cp ~/.config/hypr/quickshell/theme/Colors.qml ~/.config/hypr/quickshell/lock/Colors.qml
 
-kitty @ --to unix:/tmp/kitty set-colors -a -c ~/.config/kitty/kitty-colors.conf 2>/dev/null || true
+for sock in /tmp/kitty-*; do
+    [ -S "$sock" ] && kitty @ --to "unix:$sock" set-colors -a -c ~/.config/kitty/kitty-colors.conf 2>/dev/null
+done
+true
 
 pkill -SIGUSR1 cava || cava &
 

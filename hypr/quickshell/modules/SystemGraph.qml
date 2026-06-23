@@ -52,7 +52,7 @@ Rectangle {
                     ctx.reset();
                     let step = width / (root.gpuHistory.length - 1);
                     ctx.beginPath();
-                    ctx.strokeStyle = Colors.text
+                    ctx.strokeStyle = Colors.accent
                     ctx.lineWidth = 2;
                     ctx.lineCap = "round";
                     for (let i = 0; i < root.gpuHistory.length; i++) {
@@ -91,7 +91,7 @@ Rectangle {
                     ctx.reset();
                     let step = width / (root.ramHistory.length - 1);
                     ctx.beginPath();
-                    ctx.strokeStyle = Colors.text
+                    ctx.strokeStyle = Colors.accent
                     ctx.lineWidth = 2;
                     ctx.lineCap = "round";
                     for (let i = 0; i < root.ramHistory.length; i++) {

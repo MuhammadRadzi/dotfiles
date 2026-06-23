@@ -118,9 +118,9 @@ PanelWindow {
             width: 360
             height: Math.min(panelCol.implicitHeight + 32, 600)
             radius: 10
-            color: "#d916181c"
+            color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
             border.width: 1
-            border.color: "#22ffffff"
+            border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
             clip: true
             opacity: isOpen ? 1 : 0
 

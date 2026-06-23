@@ -50,9 +50,9 @@ PanelWindow {
             width: 320
             height: calCol.implicitHeight + 32
             radius: 10
-            color: "#d916181c"
+            color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
             border.width: 1
-            border.color: "#22ffffff"
+            border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
             clip: true
             opacity: isOpen ? 1 : 0
 
@@ -222,7 +222,7 @@ PanelWindow {
                                 Text {
                                     anchors.centerIn: parent
                                     text: isValid ? day : ""
-                                    color: isToday ? "#0d0d0d" : Colors.text
+                                    color: isToday ? Colors.base : Colors.text
                                     font.pixelSize: 12
                                     font.family: "JetBrainsMono Nerd Font"
                                     font.bold: isToday

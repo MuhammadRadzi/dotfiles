@@ -400,9 +400,9 @@ PanelWindow {
                             Layout.fillWidth: true
                             height: 72
                             radius: 10
-                            color: recArea.containsMouse ? "#33FB4934" : "#1affffff"
+                            color: recArea.containsMouse ? Qt.rgba(Colors.red.r, Colors.red.g, Colors.red.b, 0.2) : "#1affffff"
                             border.width: 1
-                            border.color: recArea.containsMouse ? "#FB4934" : "transparent"
+                            border.color: recArea.containsMouse ? Colors.red : "transparent"
 
                             ColumnLayout {
                                 anchors.centerIn: parent
@@ -411,7 +411,7 @@ PanelWindow {
                                 Text {
                                     Layout.alignment: Qt.AlignHCenter
                                     text: modelData.icon
-                                    color: recArea.containsMouse ? "#FB4934" : Colors.text
+                                    color: recArea.containsMouse ? Colors.red : Colors.text
                                     font.pixelSize: 22
                                     font.family: "JetBrainsMono Nerd Font"
 
@@ -615,9 +615,9 @@ PanelWindow {
             width: toolRow.implicitWidth + 10
             height: 48
             radius: 24
-            color: "#d916181c"
+            color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
             border.width: 1
-            border.color: "#22ffffff"
+            border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
 
             Row {
                 id: toolRow

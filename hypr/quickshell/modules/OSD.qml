@@ -52,9 +52,9 @@ PanelWindow {
 
         anchors.fill: parent
         radius: 10
-        color: "#d916181c"
+        color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
         border.width: 1
-        border.color: "#22ffffff"
+        border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
         opacity: osd.shown ? 1 : 0
         scale: osd.shown ? 1 : 0.85
         y: osd.shown ? 0 : -12
@@ -103,15 +103,7 @@ PanelWindow {
                     width: parent.width * (value / 100)
                     height: parent.height
                     radius: 2
-                    color: {
-                        if (type === "brightness")
-                            return Colors.accent;
-
-                        if (muted)
-                            return Colors.accent;
-
-                        return Colors.accent;
-                    }
+                    color: Colors.accent;
 
                     Behavior on width {
                         NumberAnimation {

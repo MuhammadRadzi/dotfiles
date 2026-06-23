@@ -1,6 +1,7 @@
 import "../applauncher"
 import "../filebrowser"
 import "../wallpaper"
+import "../../theme"
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
@@ -71,9 +72,9 @@ PanelWindow {
             width: hostWindow.modeItem ? hostWindow.modeItem.implicitWidth : 0
             height: hostWindow.modeItem ? hostWindow.modeItem.implicitHeight : 0
             radius: hostWindow.modeItem ? hostWindow.modeItem.panelRadius : 10
-            color: "#d916181c"
+            color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
             border.width: 1
-            border.color: "#22ffffff"
+            border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
             clip: true
             opacity: hostWindow.isOpen ? 1 : 0
             scale: hostWindow.isOpen ? 1 : 0.95

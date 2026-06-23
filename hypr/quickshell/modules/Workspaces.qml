@@ -1,3 +1,4 @@
+import "../theme"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -20,7 +21,7 @@ RowLayout {
 
             radius: 999
 
-            color: active ? "#f2f2f2" : "#44ffffff"
+            color: active ? Colors.accent : "#44ffffff"
 
             Behavior on implicitWidth {
                 NumberAnimation {

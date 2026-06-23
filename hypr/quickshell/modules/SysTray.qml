@@ -25,7 +25,7 @@ Item {
             text: root.expanded ? "󰅁" : "󰅀"
             font.family: "JetBrainsMono Nerd Font"
             font.pixelSize: 14
-            color: mouseArea.containsMouse ? "#ffffff" : "#888888"
+            color: mouseArea.containsMouse ? Colors.text : Colors.subtle
 
             MouseArea {
                 id: mouseArea

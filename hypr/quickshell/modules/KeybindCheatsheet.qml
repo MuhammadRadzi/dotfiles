@@ -42,9 +42,9 @@ PanelWindow {
             width: 800
             height: contentCol.implicitHeight + 48
             radius: 16
-            color: "#d916181c"
+            color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
             border.width: 1
-            border.color: "#22ffffff"
+            border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
             scale: isOpen ? 1 : 0.95
 
             MouseArea {

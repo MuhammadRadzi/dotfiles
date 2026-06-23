@@ -94,9 +94,9 @@ PanelWindow {
         width: 380
         height: cardRow.implicitHeight + 24
         radius: 10
-        color: "#dd16181c"
+        color: Qt.alpha(Colors.base, 0.85)
         border.width: 1
-        border.color: "#22ffffff"
+        border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
         clip: true
         opacity: root.isVisible ? 1 : 0
 

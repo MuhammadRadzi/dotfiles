@@ -210,7 +210,7 @@ PanelWindow {
             width: Math.max(140, textInput.implicitWidth + 16)
             height: 32
             radius: 6
-            color: "#d916181c"
+            color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
             border.width: 1
             border.color: root.drawColor
             z: 30
@@ -281,9 +281,9 @@ PanelWindow {
         width: toolbarRow.implicitWidth + 24
         height: 56
         radius: 10
-        color: "#d916181c"
+        color: Qt.rgba(Colors.base.r, Colors.base.g, Colors.base.b, 0.85)
         border.width: 1
-        border.color: "#22ffffff"
+        border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.13)
 
         RowLayout {
             id: toolbarRow
