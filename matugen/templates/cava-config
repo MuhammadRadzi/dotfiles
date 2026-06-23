@@ -21,9 +21,9 @@ noise_reduction = 77
 5 = 1.5
 
 [color]
-foreground = '{{foreground}}'
+foreground = '{{colors.on_surface.default.hex}}'
 gradient = 1
 gradient_count = 3
-gradient_color_1 = '{{color4}}'
-gradient_color_2 = '{{color6}}'
-gradient_color_3 = '{{color1}}'
+gradient_color_1 = '{{colors.primary.default.hex}}'
+gradient_color_2 = '{{colors.secondary.default.hex}}'
+gradient_color_3 = '{{colors.error.default.hex}}'

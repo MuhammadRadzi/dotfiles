@@ -1,7 +1,0 @@
-[color]
-foreground = '{{foreground}}'
-gradient = 1
-gradient_count = 3
-gradient_color_1 = '{{color4}}'
-gradient_color_2 = '{{color6}}'
-gradient_color_3 = '{{color1}}'
