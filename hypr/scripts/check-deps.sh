@@ -9,7 +9,7 @@ DEPS=(
     fish
     starship
     awww
-    wallust
+    matugen
     cliphist
     wl-copy
     wl-paste
