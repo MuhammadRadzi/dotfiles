@@ -1,11 +1,4 @@
-# matugen config
-# Pengganti ~/.config/wallust/wallust.toml
-# Simpan file ini di: ~/.config/matugen/config.toml
-# Simpan template Colors.qml di: ~/.config/matugen/templates/Colors.qml
-
 [config]
-# 'default' = matugen otomatis pilih dark/light berdasarkan luminance wallpaper
-# (ini yang dipakai kalau invoke tanpa flag -m saat run)
 
 [config.custom_colors]
 warning = { color = "#FFD700", blend = false }
@@ -27,10 +20,5 @@ output_path = '~/.config/cava/config'
 input_path = '~/.config/matugen/templates/hypr-colors.conf'
 output_path = '~/.config/hypr/hypr-colors.conf'
 
-# NOTE: template kitty/hypr/cava dari wallust BELUM dipindah ke sini.
-# Itu nanti disusulin setelah Colors.qml ini sudah dites dan stabil,
-# biar perubahan tetap kecil dan mudah di-rollback kalau ada yang salah.
-
 [config.hooks]
-# Setara dengan [hooks] reload di wallust.toml
 post = "pkill -USR1 cava"

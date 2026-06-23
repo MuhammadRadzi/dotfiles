@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-# Extracts 8 dominant colors from a wallpaper and caches as hex lines
+# Extracts MD3 palette preview from a wallpaper via matugen, caches as hex lines.
 import sys
 import os
-from PIL import Image
+import json
+import subprocess
 
 if len(sys.argv) < 3:
     sys.exit(1)
@@ -15,26 +16,55 @@ os.makedirs(cache_dir, exist_ok=True)
 filename = os.path.basename(img_path)
 cache_file = os.path.join(cache_dir, filename + ".palette")
 
-# Skip if already cached
 if os.path.exists(cache_file):
     with open(cache_file) as f:
         print(f.read().strip())
     sys.exit(0)
 
+ROLES = [
+    "surface",
+    "surface_container",
+    "primary",
+    "secondary",
+    "tertiary",
+    "error",
+    "success",
+    "warning",
+]
+
 try:
-    img = Image.open(img_path).convert("RGB")
-    img.thumbnail((200, 200))
-    quantized = img.quantize(colors=8, method=Image.Quantize.FASTOCTREE)
-    palette_data = quantized.getpalette()[:8*3]
+    result = subprocess.run(
+        [
+            "matugen", "image", img_path,
+            "--source-color-index", "0",
+            "--json", "hex",
+            "--config", os.path.expanduser("~/.config/matugen/preview-only.toml"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    if result.returncode != 0:
+        sys.exit(1)
+
+    data = json.loads(result.stdout)
+    colors_data = data.get("colors", {})
+
     colors = []
-    for i in range(8):
-        r = palette_data[i*3]
-        g = palette_data[i*3 + 1]
-        b = palette_data[i*3 + 2]
-        colors.append("#{:02x}{:02x}{:02x}".format(r, g, b))
-    result = "\n".join(colors)
+    for role in ROLES:
+        entry = colors_data.get(role)
+        if entry is None:
+            continue
+        scheme = entry.get("dark") or entry.get("light") or entry.get("default")
+        if scheme and "color" in scheme:
+            colors.append(scheme["color"])
+
+    if not colors:
+        sys.exit(1)
+
+    out = "\n".join(colors)
     with open(cache_file, "w") as f:
-        f.write(result + "\n")
-    print(result)
+        f.write(out + "\n")
+    print(out)
 except Exception:
     sys.exit(1)

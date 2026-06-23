@@ -188,7 +188,7 @@ PanelWindow {
                 spacing: 8
 
                 BarButton {
-                    icon: "\u23fb"
+                    icon: "\udb82\udcc7"
                     onClicked: root.togglePower()
                 }
 
