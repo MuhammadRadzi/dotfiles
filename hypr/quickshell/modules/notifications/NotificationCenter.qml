@@ -52,9 +52,9 @@ PanelWindow {
         implicitHeight: notifCol.implicitHeight + 32
         height: Math.min(implicitHeight, 600)
         radius: 10
-        color: "#d916181c"
+        color: Qt.alpha(Colors.base, 0.85)
         border.width: 1
-        border.color: "#22ffffff"
+        border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.1)
         clip: true
         opacity: isOpen ? 1 : 0
 
@@ -290,7 +290,7 @@ PanelWindow {
                                         return Colors.red;
 
                                     if (model.urgency === 0)
-                                        return Colors.subtle;
+                                        return Colors.overlay;
 
                                     return Colors.accent;
                                 }

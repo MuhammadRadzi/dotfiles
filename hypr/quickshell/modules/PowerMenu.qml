@@ -35,7 +35,7 @@ PanelWindow {
         id: overlayRect
 
         anchors.fill: parent
-        color: "#88000000"
+        color: Qt.alpha(Colors.base, 0.53)
         opacity: isOpen ? 1 : 0
 
         MouseArea {
@@ -51,9 +51,9 @@ PanelWindow {
             width: 360
             height: contentCol.implicitHeight + 48
             radius: 20
-            color: "#d916181c"
+            color: Qt.alpha(Colors.base, 0.85)
             border.width: 1
-            border.color: "#22ffffff"
+            border.color: Qt.alpha(Colors.overlay, 0.13)
             scale: isOpen ? 1 : 0.95
 
             MouseArea {
@@ -106,7 +106,7 @@ PanelWindow {
                         Rectangle {
                             width: 1
                             height: 24
-                            color: "#22ffffff"
+                            color: Qt.alpha(Colors.overlay, 0.13)
                         }
 
                         // Windows
@@ -135,7 +135,7 @@ PanelWindow {
                         Rectangle {
                             width: 1
                             height: 24
-                            color: "#22ffffff"
+                            color: Qt.alpha(Colors.overlay, 0.13)
                         }
 
                         // Workspace

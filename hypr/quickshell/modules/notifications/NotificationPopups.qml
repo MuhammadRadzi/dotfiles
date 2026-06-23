@@ -110,7 +110,7 @@ PanelWindow {
                     radius: 10
                     color: "#ee16181c"
                     border.width: 1
-                    border.color: "#33ffffff"
+                    border.color: Qt.rgba(Colors.overlay.r, Colors.overlay.g, Colors.overlay.b, 0.1)
 
                     // Urgency bar
                     Rectangle {

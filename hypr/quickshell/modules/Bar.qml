@@ -46,7 +46,7 @@ PanelWindow {
             property real h: root.height
 
             strokeWidth: -1
-            fillColor: "#d916181c"
+            fillColor: Qt.alpha(Colors.base, 0.85)
             startX: 0
             startY: 0
 
@@ -87,7 +87,7 @@ PanelWindow {
             property real startXPos: (root.width - w) / 2
 
             strokeWidth: -1
-            fillColor: "#d916181c"
+            fillColor: Qt.alpha(Colors.base, 0.85)
             startX: centerPath.startXPos - centerPath.r
             startY: 0
 
@@ -135,7 +135,7 @@ PanelWindow {
             property real startXPos: root.width - w
 
             strokeWidth: -1
-            fillColor: "#d916181c"
+            fillColor: Qt.alpha(Colors.base, 0.85)
             startX: rightPath.startXPos - rightPath.r
             startY: 0
 
@@ -412,8 +412,8 @@ PanelWindow {
                     width: recordPillRow.implicitWidth + 16
                     height: 26
                     radius: 13
-                    color: "#33FB4934"
-                    border.color: "#FB4934"
+                    color: Qt.alpha(Colors.red, 0.2)
+                    border.color: Colors.red
                     border.width: 1
                     opacity: blinkOpacity
 
@@ -427,7 +427,7 @@ PanelWindow {
                             width: 7
                             height: 7
                             radius: 4
-                            color: "#FB4934"
+                            color: Colors.red
                             anchors.verticalCenter: parent.verticalCenter
                         }
 
@@ -439,7 +439,7 @@ PanelWindow {
                             }
                             font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 11
-                            color: "#FB4934"
+                            color: Colors.red
                             anchors.verticalCenter: parent.verticalCenter
                         }
 

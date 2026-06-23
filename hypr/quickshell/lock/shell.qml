@@ -379,7 +379,7 @@ ShellRoot {
                                     color: "transparent"
                                     border.width: 2
                                     border.color: lockUI.failed
-                                        ? "#FB4934"
+                                        ? Colors.red
                                         : lockUI.authenticating
                                             ? Colors.yellow
                                             : Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.25)
@@ -459,7 +459,7 @@ ShellRoot {
                                 color: Qt.rgba(0, 0, 0, 0.25)
                                 border.width: 1
                                 border.color: {
-                                    if (lockUI.failed)         return "#FB4934"
+                                    if (lockUI.failed)         return Colors.red
                                     if (lockUI.authenticating) return Colors.yellow
                                     if (inputField.text.length > 0)
                                         return Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.5)
@@ -497,7 +497,7 @@ ShellRoot {
                                         font.pixelSize: 13
                                         font.letterSpacing: 1
                                         color: lockUI.failed
-                                            ? "#FB4934"
+                                            ? Colors.red
                                             : Qt.rgba(Colors.text.r, Colors.text.g, Colors.text.b, 0.3)
                                         Behavior on color { ColorAnimation { duration: 200 } }
                                     }
@@ -667,7 +667,7 @@ ShellRoot {
                             text: "󰐥"
                             font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 16
-                            color: screen.powerOpen ? "#FB4934" : Colors.subtle
+                            color: screen.powerOpen ? Colors.red : Colors.subtle
                             Behavior on color { ColorAnimation { duration: 150 } }
                         }
 

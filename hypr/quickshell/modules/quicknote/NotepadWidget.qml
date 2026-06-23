@@ -128,7 +128,7 @@ PanelWindow {
         width: 320
         height: 540
         radius: 10
-        color: "#d916181c"
+        color: Qt.alpha(Colors.base, 0.85)
         border.width: 1
         border.color: "#22ffffff"
 
@@ -159,14 +159,14 @@ PanelWindow {
 
                         Text {
                             text: "\uf249"
-                            color: Colors.accent
+                            color: activeTab === "note" ? Colors.accent : Colors.subtle
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             Behavior on color { ColorAnimation { duration: 150 } }
                         }
                         Text {
                             text: "Note"
-                            color: Colors.accent
+                            color: activeTab === "note" ? Colors.accent : Colors.subtle
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             font.weight: activeTab === "note" ? Font.DemiBold : Font.Normal
@@ -200,14 +200,14 @@ PanelWindow {
 
                         Text {
                             text: "\uf0ae"
-                            color: Colors.accent
+                            color: activeTab === "todo" ? Colors.accent : Colors.subtle
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             Behavior on color { ColorAnimation { duration: 150 } }
                         }
                         Text {
                             text: "Todo"
-                            color: Colors.accent
+                            color: activeTab === "todo" ? Colors.accent : Colors.subtle
                             font.pixelSize: 12
                             font.family: "JetBrainsMono Nerd Font"
                             font.weight: activeTab === "todo" ? Font.DemiBold : Font.Normal
@@ -525,7 +525,7 @@ PanelWindow {
                                         Text {
                                             Layout.fillWidth: true
                                             text: modelData.text
-                                            color: Colors.accent
+                                            color: Colors.text
                                             font.pixelSize: 12
                                             font.family: "JetBrainsMono Nerd Font"
                                             font.strikeout: modelData.done
