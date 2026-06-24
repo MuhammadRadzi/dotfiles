@@ -103,6 +103,10 @@ ShellRoot {
             cc.isOpen = false
             btPanel.isOpen = true
         }
+        onOpenMixerPanel: {
+            cc.isOpen = false
+            mixerPanel.isOpen = true
+        }
     }
 
     WifiPanel {
@@ -120,6 +124,14 @@ ShellRoot {
             cc.isOpen = true
         }
     }
+
+    AppMixerPanel {
+        id: mixerPanel
+        onBackPressed: {
+            mixerPanel.isOpen = false
+            cc.isOpen = true
+        }
+    } 
 
     KeybindCheatsheet { id: ks }
     ClipboardManager  { id: cm }

@@ -18,3 +18,4 @@ ClipboardManager 1.0 clipboard/ClipboardManager.qml
 BarButton 1.0 BarButton.qml
 WifiPanel 1.0 controlcenter/WifiPanel.qml
 BluetoothPanel 1.0 controlcenter/BluetoothPanel.qml
+AppMixerPanel 1.0 controlcenter/AppMixerPanel.qml

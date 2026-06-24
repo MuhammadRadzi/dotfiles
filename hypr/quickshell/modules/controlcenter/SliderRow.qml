@@ -8,9 +8,11 @@ Item {
     property string valueText: ""
     property real sliderValue: 0
     property color accentColor: Colors.accent
+    property bool showArrow: false
 
     signal iconClicked()
     signal sliderScrubbed(real ratio)
+    signal arrowClicked()
 
     implicitWidth: parent ? parent.width : 0
     implicitHeight: 36
@@ -111,6 +113,33 @@ Item {
             font.family: "JetBrainsMono Nerd Font"
             Layout.minimumWidth: 38
             horizontalAlignment: Text.AlignRight
+        }
+
+        Text {
+            visible: showArrow
+            text: "\uf054"
+            color: arrowArea.containsMouse ? Colors.text : Colors.subtle
+            font.pixelSize: 11
+            font.family: "JetBrainsMono Nerd Font"
+            Layout.leftMargin: 2
+
+            MouseArea {
+                id: arrowArea
+
+                anchors.fill: parent
+                anchors.margins: -6
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: arrowClicked()
+            }
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: 120
+                }
+
+            }
+
         }
 
     }

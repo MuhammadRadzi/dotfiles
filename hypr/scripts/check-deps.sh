@@ -18,6 +18,8 @@ DEPS=(
     wf-recorder
     brightnessctl
     playerctl
+    wpctl
+    pactl
     cava
     curl
     python3
@@ -34,9 +36,17 @@ PY_MODULES=(
 MISSING=()
 MISSING_PY=()
 
+# Some binaries don't share a name with their package
+declare -A PKG_MAP=(
+    [wpctl]="wireplumber"
+    [pactl]="libpulse"
+    [nmcli]="networkmanager"
+    [bluetoothctl]="bluez-utils"
+)
+
 for dep in "${DEPS[@]}"; do
     if ! command -v "$dep" &>/dev/null; then
-        MISSING+=("$dep")
+        MISSING+=("${PKG_MAP[$dep]:-$dep}")
     fi
 done
 

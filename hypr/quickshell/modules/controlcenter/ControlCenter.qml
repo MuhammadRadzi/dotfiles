@@ -15,6 +15,7 @@ PanelWindow {
 
     signal openWifiPanel()
     signal openBtPanel()
+    signal openMixerPanel()
 
     function toggle() {
         isOpen = !isOpen;
@@ -139,10 +140,14 @@ PanelWindow {
                 valueText: volState.vol + "%"
                 sliderValue: volState.vol / 100
                 accentColor: volState.muted ? Colors.subtle : Colors.accent
+                showArrow: true
                 onIconClicked: muteVolProc.running = true
                 onSliderScrubbed: (r) => {
                     setVolProc.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", Math.round(r * 100) + "%"];
                     setVolProc.running = true;
+                }
+                onArrowClicked: {
+                    openMixerPanel();
                 }
             }
 
