@@ -15,18 +15,18 @@ Item {
         anchors.centerIn: parent
         text: {
             if (charging)
-                return "󰂄 " + batLevel + "%";
+                return "\udb80\udc84 " + batLevel + "%";
 
             if (batLevel > 80)
-                return "󰁹 " + batLevel + "%";
+                return "\udb80\udc79 " + batLevel + "%";
 
             if (batLevel > 50)
-                return "󰁾 " + batLevel + "%";
+                return "\udb80\udc7e " + batLevel + "%";
 
             if (batLevel > 20)
-                return "󰁻 " + batLevel + "%";
+                return "\udb80\udc7b " + batLevel + "%";
 
-            return "󰁺 " + batLevel + "%";
+            return "\udb80\udc7a " + batLevel + "%";
         }
         color: batLevel < 20 && !charging ? Colors.red : Colors.text
         font.pixelSize: 13
