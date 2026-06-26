@@ -2,10 +2,23 @@ import os
 import glob
 import subprocess
 
+HOME = os.path.expanduser("~")
+
 ICON_DIRS = [
+    # User-level icon theme dirs (Steam game icons, user-installed apps, etc.)
+    # checked first since they're more likely to be the "personal" override.
+    f"{HOME}/.local/share/icons/hicolor/48x48/apps",
+    f"{HOME}/.local/share/icons/hicolor/32x32/apps",
+    f"{HOME}/.local/share/icons/hicolor/64x64/apps",
+    f"{HOME}/.local/share/icons/hicolor/128x128/apps",
+    f"{HOME}/.local/share/icons/hicolor/scalable/apps",
+    f"{HOME}/.local/share/pixmaps",
+    # System-wide icon theme dirs
     "/usr/share/icons/hicolor/48x48/apps",
     "/usr/share/icons/hicolor/32x32/apps",
     "/usr/share/icons/hicolor/64x64/apps",
+    "/usr/share/icons/hicolor/128x128/apps",
+    "/usr/share/icons/hicolor/scalable/apps",
     "/usr/share/pixmaps",
 ]
 
@@ -24,7 +37,8 @@ def resolve_icon(icon_name):
     # Fallback: broader search
     try:
         result = subprocess.run(
-            ["find", "/usr/share/icons", "/usr/share/pixmaps",
+            ["find", f"{HOME}/.local/share/icons", f"{HOME}/.local/share/pixmaps",
+             "/usr/share/icons", "/usr/share/pixmaps",
              "-name", f"{icon_name}.png",
              "-o", "-name", f"{icon_name}.svg"],
             capture_output=True, text=True, timeout=3
